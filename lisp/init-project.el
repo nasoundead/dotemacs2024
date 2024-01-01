@@ -21,26 +21,26 @@
 ;;                     (cons 'vc root)
 ;;                   (list 'vc backend root)))))
 
-;; (defun project-root-override (dir)
-;;   "Determine if DIR is a non-Git project."
-;;   (catch 'ret
-;;     (let ((pr-flags '((".project")
-;;                       ("go.mod" "Cargo.toml" "pom.xml" "package.json") ;; higher priority
-;;                       ("Makefile" "README.org" "README.md"))))
-;;       (dolist (current-level pr-flags)
-;;         (dolist (f current-level)
-;;           (when-let ((root (locate-dominating-file dir f)))
-;;             (throw 'ret (cons 'local root))))))))
+(defun project-root-override (dir)
+  "Determine if DIR is a non-Git project."
+  (catch 'ret
+    (let ((pr-flags '((".project")
+                      ("go.mod" "Cargo.toml" "pom.xml" "package.json") ;; higher priority
+                      ("Makefile" "README.org" "README.md"))))
+      (dolist (current-level pr-flags)
+        (dolist (f current-level)
+          (when-let ((root (locate-dominating-file dir f)))
+            (throw 'ret (cons 'local root))))))))
 
 ;; (setq project-find-functions '(project-root-override project-try-vc))
 
 ;; Returns the parent directory containing a .project.el file, if any,
 ;; to override the standard project.el detection logic when needed.
-(defun project-root-override (dir)
-  (let ((override (locate-dominating-file dir ".project.el")))
-    (if override
-      (cons 'vc override)
-      nil)))
+;; (defun project-root-override (dir)
+;;   (let ((override (locate-dominating-file dir ".project.el")))
+;;     (if override
+;;       (cons 'vc override)
+;;       nil)))
 
 (use-package project
   ;; Cannot use :hook because 'project-find-functions does not end in -hook
