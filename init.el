@@ -10,9 +10,9 @@
 
 ;; (require 'init-key)
 
-;; (require 'init-ui)
-;; (require 'init-mode)
-
+(require 'init-flycheck)
+(require 'init-ui)
+(require 'init-modeline)
 (when (display-graphic-p)
   (require 'init-font))
 
