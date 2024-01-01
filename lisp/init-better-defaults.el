@@ -124,12 +124,13 @@
 
 
 ;; Environment
-(use-package exec-path-from-shell
+(when (or (eq system-type 'darwin) (eq system-type 'gnu/linux))
+  (use-package exec-path-from-shell
     :init
     (setq exec-path-from-shell-check-startup-files nil)
     (setq exec-path-from-shell-variables '("PATH" "MANPATH" "PYTHONPATH" "GOPATH"))
     (setq exec-path-from-shell-arguments '("-l"))
-    (exec-path-from-shell-initialize))
+    (exec-path-from-shell-initialize)))
 
 
 (defcustom sea/buffer-skip-regexp

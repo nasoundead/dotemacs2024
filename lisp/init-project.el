@@ -7,26 +7,47 @@
 ;; with Projectile, '.projectile' is also considered a project root marker.
 
 ;; https://blog.jmthornton.net/p/emacs-project-override"
-;;   (let ((root (or (locate-dominating-file dir ".project.el")
-;;                   (locate-dominating-file dir ".projectile")))
+;;   (let ((root (or (locate-dominating-file dir ".project")
+;;                   (locate-dominating-file dir ".projectile")
+;;                   (locate-dominating-file dir "go.mod")
+;;                   (locate-dominating-file dir "Cargo.toml")
+;;                   (locate-dominating-file dir "pom.xml")
+;;                   (locate-dominating-file dir "package.json")
+;;                   (locate-dominating-file dir "README.org")
+;;                   (locate-dominating-file dir "README.md")
+;;                   ))
 ;;         (backend (ignore-errors (vc-responsible-backend dir))))
 ;;     (when root (if (version<= emacs-version "28")
 ;;                     (cons 'vc root)
 ;;                   (list 'vc backend root)))))
 
+;; (defun project-root-override (dir)
+;;   "Determine if DIR is a non-Git project."
+;;   (catch 'ret
+;;     (let ((pr-flags '((".project")
+;;                       ("go.mod" "Cargo.toml" "pom.xml" "package.json") ;; higher priority
+;;                       ("Makefile" "README.org" "README.md"))))
+;;       (dolist (current-level pr-flags)
+;;         (dolist (f current-level)
+;;           (when-let ((root (locate-dominating-file dir f)))
+;;             (throw 'ret (cons 'local root))))))))
+
+;; (setq project-find-functions '(project-root-override project-try-vc))
+
+;; Returns the parent directory containing a .project.el file, if any,
+;; to override the standard project.el detection logic when needed.
 (defun project-root-override (dir)
-  "Determine if DIR is a non-Git project."
-  (catch 'ret
-    (let ((pr-flags '((".project")
-                      ("go.mod" "Cargo.toml" "pom.xml" "package.json") ;; higher priority
-                      ("Makefile" "README.org" "README.md"))))
-      (dolist (current-level pr-flags)
-        (dolist (f current-level)
-          (when-let ((root (locate-dominating-file dir f)))
-            (throw 'ret (cons 'local root))))))))
+  (let ((override (locate-dominating-file dir ".project.el")))
+    (if override
+      (cons 'vc override)
+      nil)))
 
-(setq project-find-functions '(project-root-override project-try-vc))
-
+(use-package project
+  ;; Cannot use :hook because 'project-find-functions does not end in -hook
+  ;; Cannot use :init (must use :config) because otherwise
+  ;; project-find-functions is not yet initialized.
+  :config
+  (add-hook 'project-find-functions #'project-root-override))
 
 (define-key project-prefix-map (kbd "b") #'+project-blink-search)
 (define-key project-prefix-map (kbd "m") #'+project-magit)
@@ -63,25 +84,25 @@
 ;;;###autoload
 (defun +project-rg ()
   (interactive)
-  (let ((default-directory (project-root-override (project-current nil))))
+  (let ((default-directory (project-root (project-current nil))))
     (consult-ripgrep default-directory)))
 
 ;;;###autoload
 (defun +project-magit ()
   (interactive)
   (require 'magit)
-  (magit-status (project-root-override (project-current nil))))
+  (magit-status (project-root (project-current nil))))
 
 ;;;###autoload
 (defun +project-dired ()
   (interactive)
-  (let ((default-directory (project-root-override (project-current nil))))
+  (let ((default-directory (project-root (project-current nil))))
     (dired default-directory)))
 
 ;;;###autoload
 (defun +project-blink-search ()
   (interactive)
-  (let ((default-directory (project-root-override (project-current nil))))
+  (let ((default-directory (project-root (project-current nil))))
     (require 'blink-search)
     (blink-search)))
 
@@ -100,7 +121,7 @@
 (defun sea/add-dot-project ()
   (interactive)
   (let* ((root-dir (read-directory-name "Root: "))
-         (f (expand-file-name ".project" root-dir)))
+         (f (expand-file-name ".project.el" root-dir)))
     (message "Create %s..." f)
     (make-empty-file f)))
 

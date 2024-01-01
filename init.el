@@ -6,6 +6,7 @@
 (require 'init-corfu)
 (require 'init-utils)
 (require 'init-hydra)
+(require 'init-folding)
 
 ;; (require 'init-key)
 
