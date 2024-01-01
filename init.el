@@ -2,6 +2,8 @@
 (require 'init-better-defaults)
 (require 'init-project)
 (require 'init-evil)
+(require 'init-vertico)
+(require 'init-corfu)
 
 ;; (require 'init-key)
 
