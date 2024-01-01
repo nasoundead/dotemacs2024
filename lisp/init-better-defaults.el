@@ -39,6 +39,7 @@
 
 ;; 环境变量
 (setq-default recentf-max-saved-items 1000)
+(put 'dired-find-alternate-file 'disabled nil)
 
 ;; Making electric-indent behave sanely
 (setq-default electric-indent-inhibit t)
@@ -46,10 +47,8 @@
 ;; removing 1 space at a time.
 (setq backward-delete-char-untabify-method 'hungry)
 
-
 (delete-selection-mode 1)
 (electric-pair-mode)
-
 
 ;; savehist / saveplace
 (setq savehist-file (concat sea-cache-dir "savehist")

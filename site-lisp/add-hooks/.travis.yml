@@ -1,0 +1,7 @@
+language: generic
+dist: trusty
+addons:
+  apt:
+    packages:
+      - emacs
+script: emacs -batch -l add-hooks.el -l add-hooks-test.el -f ert-run-tests-batch-and-exit

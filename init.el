@@ -16,11 +16,8 @@
 (when (display-graphic-p)
   (require 'init-font))
 
-;; (require 'init-flycheck)
 ;; (require 'init-lsp)
-;; (require 'init-treesit)
-;; (require 'init-minibuffer)
-;; (require 'init-corfu)
+(require 'init-treesitter)
 
 ;; (require 'init-org)
 ;; (require 'init-web)
@@ -28,3 +25,6 @@
 
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (load custom-file t t)
+(dolist (dir (list sea-cache-dir sea-etc-dir))
+  (unless (file-directory-p dir)
+    (make-directory dir t)))
