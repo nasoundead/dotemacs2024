@@ -6,3 +6,5 @@ elpa/
 cache/recentf
 cache/savehist
 cache/saveplace
+auto-save-list/
+blink-search.db
