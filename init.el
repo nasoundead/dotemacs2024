@@ -1,6 +1,8 @@
 (require 'init-package)
 (require 'init-better-defaults)
 (require 'init-project)
+(require 'init-evil)
+
 ;; (require 'init-key)
 
 ;; (require 'init-ui)

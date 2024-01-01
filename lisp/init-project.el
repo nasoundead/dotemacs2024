@@ -93,5 +93,19 @@
 				  (s-contains? (car (-take-last 1 (project-current))) it)) recentf-list)
 		       )))
 
+;; use fd to find file
+(defun sea--project-files-in-directory (dir)
+  "Use `fd' to list files in DIR."
+  (let* ((default-directory dir)
+         (localdir (file-local-name (expand-file-name dir)))
+         (command (format "fd -H -t f -0 . %s" localdir)))
+    (project--remote-file-names
+     (sort (split-string (shell-command-to-string command) "\0" t)
+           #'string<))))
+
+(cl-defmethod project-files ((project (head local)) &optional dirs)
+  "Override `project-files' to use `fd' in local projects."
+  (mapcan #'sea--project-files-in-directory
+          (or dirs (list (project-root-override project)))))
 
 (provide 'init-project)
