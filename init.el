@@ -4,6 +4,8 @@
 (require 'init-evil)
 (require 'init-vertico)
 (require 'init-corfu)
+(require 'init-utils)
+(require 'init-hydra)
 
 ;; (require 'init-key)
 
