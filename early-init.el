@@ -87,6 +87,10 @@
   (expand-file-name "etc/" user-emacs-directory)
   "etc directory.")
 
+(defconst sea-cache-dir
+  (expand-file-name "cache/" user-emacs-directory)
+  "Cache directory.")
+
 (defconst sea-site-lisp-dir
   (expand-file-name "site-lisp/" user-emacs-directory)
   "site-lisp directory.")

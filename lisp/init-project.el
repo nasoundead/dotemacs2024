@@ -93,6 +93,18 @@
 				  (s-contains? (car (-take-last 1 (project-current))) it)) recentf-list)
 		       )))
 
+(defun sea/project-info ()
+  (interactive)
+  (message "%s" (project-current t)))
+
+(defun sea/add-dot-project ()
+  (interactive)
+  (let* ((root-dir (read-directory-name "Root: "))
+         (f (expand-file-name ".project" root-dir)))
+    (message "Create %s..." f)
+    (make-empty-file f)))
+
+
 ;; use fd to find file
 (defun sea--project-files-in-directory (dir)
   "Use `fd' to list files in DIR."

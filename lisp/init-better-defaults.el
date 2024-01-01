@@ -27,10 +27,16 @@
 ;; 关闭dir local
 (setq enable-dir-local-variables t)
 (setq scroll-margin 0); 设定滚动边距
-(setq-default truncate-lines t) ; 不要换行
+(setq-default 
+  truncate-lines t     ; 不要换行
+  vc-follow-symlinks t
+  ;; Save clipboard contents into kill-ring before replacing them
+  save-interprogram-paste-before-kill t
+  ) 
 (setq truncate-partial-width-windows nil)
 (setq fill-column 180)
 (setq lexical-binding t)
+
 ;; 环境变量
 (setq-default recentf-max-saved-items 1000)
 
@@ -39,6 +45,38 @@
 ;; Make the backspace properly erase the tab instead of
 ;; removing 1 space at a time.
 (setq backward-delete-char-untabify-method 'hungry)
+
+
+(delete-selection-mode 1)
+(electric-pair-mode)
+
+
+;; savehist / saveplace
+(setq savehist-file (concat sea-cache-dir "savehist")
+      savehist-save-minibuffer-history t
+      savehist-autosave-interval nil ; save on kill only
+      savehist-additional-variables '(kill-ring search-ring regexp-search-ring)
+      save-place-file (concat sea-cache-dir "saveplace"))
+(add-hook 'after-init-hook #'savehist-mode)
+(add-hook 'after-init-hook #'save-place-mode)
+
+;; Keep track of recently opened files
+(use-package recentf
+  :init
+  (add-hook 'find-file-hook (lambda ()
+                              (unless recentf-mode
+                                (recentf-mode)
+                                (recentf-track-opened-file))))
+  :config
+  (setq recentf-save-file (concat sea-cache-dir "recentf")
+        recentf-max-menu-items 0
+        recentf-max-saved-items 300
+        recentf-filename-handlers '(file-truename)
+        recentf-exclude
+        (list "^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$"
+              "^/var/folders/.+$"
+              ;; ignore private sea temp files (but not all of them)
+              (concat "^" (file-truename sea-cache-dir)))))
 
 (when sys/winp
   ;; make PC keyboard's Win key or other to type Super or Hyper, for emacs running on Windows.
@@ -169,6 +207,16 @@
 (use-package shrink-path
   :commands (shrink-path-prompt shrink-path-file-mixed))
 
+(use-package anzu
+  :init (global-anzu-mode +1)
+  :bind (([remap query-replace] . anzu-query-replace)
+         ([remap query-replace-regexp] . anzu-query-replace-regexp)
+         :map isearch-mode-map
+         ([remap isearch-query-replace] . anzu-isearch-query-replace)
+         ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
+  :config (setq anzu-replace-to-string-separator
+                (if (char-displayable-p ?→) " → " " -> ")))
+
 (setq isearch-lazy-count t)
 (setq lazy-count-prefix-format "%s/%s ")
 (setq lazy-highlight-cleanup nil)
@@ -198,8 +246,57 @@
     (ad-activate 'isearch-search)
     (isearch-repeat (if isearch-forward 'forward))
     (ad-enable-advice 'isearch-search 'after 'isearch-no-fail)
-    (ad-activate 'isearch-search)))
-)
+    (ad-activate 'isearch-search))))
+
+
+;; An all-in-one comment command to rule them all
+(use-package comment-dwim-2
+  :bind ("M-;" . comment-dwim-2))
+
+;; A comprehensive visual interface to diff & patch
+(use-package ediff
+  :ensure nil
+  :init
+  ;; show org ediffs unfolded
+  (with-eval-after-load 'outline
+    (add-hook 'ediff-prepare-buffer-hook #'show-all))
+  ;; restore window layout when done
+  (with-eval-after-load 'winner
+    (add-hook 'ediff-quit-hook #'winner-undo))
+  :config
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setq ediff-split-window-function 'split-window-horizontally)
+  (setq ediff-merge-split-window-function 'split-window-horizontally))
+
+(use-package aggressive-indent
+  :init
+  (dolist (hook '(emacs-lisp-mode-hook css-mode-hook))
+    (add-hook hook #'aggressive-indent-mode)))
+
+;; Increase selected region by semantic units
+(use-package expand-region
+  :commands (er/expand-region er/contract-region er/mark-symbol er/mark-word))
+
+(use-package pcre2el
+  :commands rxt-quote-pcre
+  :init (add-hook 'after-init-hook #'rxt-global-mode))
+(use-package ialign
+  :init
+  (setq ialign-pcre-mode t)
+  (setq ialign-initial-group -1)
+  (setq ialign-initial-repeat t)
+  (setq ialign-initial-regexp "([ ,=])"))
+;; Treat undo history as a tree
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :init (add-hook 'after-init-hook #'global-undo-tree-mode)
+  :config
+  (setq
+    undo-tree-auto-save-history nil
+    undo-tree-history-directory-alist `(("." . ,(concat sea-cache-dir "undo/")))))
+
+(use-package hungry-delete)
+(global-hungry-delete-mode)
 
 (provide 'init-better-defaults)
 ;;; base ends here
