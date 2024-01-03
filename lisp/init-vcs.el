@@ -20,10 +20,6 @@
   :diminish magit-gitflow-mode
   :init (add-hook 'magit-mode-hook #'turn-on-magit-gitflow))
 
-;; Git-Svn extension for Magit
-(use-package magit-svn
-  :diminish magit-svn-mode
-  :init (add-hook 'magit-mode-hook #'magit-svn-mode))
 
 ;;; Pop up last commit information of current line
 (use-package git-messenger
@@ -45,8 +41,6 @@
          ("C-x v R" . smeargle-clear)))
 
 
-;; Open github/gitlab/bitbucket page
-(use-package browse-at-remote)
 
 (provide 'init-vcs)
 
