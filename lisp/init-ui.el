@@ -40,30 +40,6 @@
   (setq custom-enabled-themes '(sanityinc-tomorrow-bright))
   (reapply-themes))
 
-(use-package dashboard
-  :ensure t
-  :init
-  (dashboard-setup-startup-hook)
-  :config
-  ;; Set the title
-  (setq dashboard-banner-logo-title "Welcome to Sea Emacs. Enjoy!")
-
-  ;; Set the banner
-  ;; (setq dashboard-startup-banner 'logo)
-  (setq dashboard-startup-banner (or sea-logo 'official))
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-set-navigator t)
-
-  (setq dashboard-set-init-info t)
-  (setq dashboard-items '((recents  . 9)
-                          (bookmarks . 5)
-                          (projects . 9)
-                          (agenda . 5)
-                          (registers . 5)))
-  (setq show-week-agenda-p t)
-  )
-
 ;; highlight matching delimiters
 (setq show-paren-delay 0.1
       show-paren-highlight-openparen t

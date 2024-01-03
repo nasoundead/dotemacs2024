@@ -74,7 +74,7 @@
           :map minibuffer-local-completion-map
           ("C-x C-d" . consult-dir)
           ("C-x C-j" . consult-dir-jump-file)))
-(use-package consult-projectile)
+;; (use-package consult-projectile)
 (use-package embark
   :defer t
   :init

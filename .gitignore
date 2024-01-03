@@ -10,3 +10,5 @@ auto-save-list/
 blink-search.db
 blink-search/
 straight/
+.cache/
+etc/transient/

@@ -24,7 +24,7 @@
 (defun project-root-override (dir)
   "Determine if DIR is a non-Git project."
   (catch 'ret
-    (let ((pr-flags '((".project")
+    (let ((pr-flags '((".project.el")
                       ("go.mod" "Cargo.toml" "pom.xml" "package.json") ;; higher priority
                       ("Makefile" "README.org" "README.md"))))
       (dolist (current-level pr-flags)
