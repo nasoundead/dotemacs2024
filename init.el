@@ -18,6 +18,11 @@
 (require 'init-treemacs)
 (require 'init-treesitter)
 (require 'init-lsp)
+(require 'init-org)
+(require 'init-go)
+(require 'init-rust)
+
+
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (load custom-file t t)
 (dolist (dir (list sea-cache-dir sea-etc-dir))
