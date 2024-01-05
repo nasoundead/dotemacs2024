@@ -1,26 +1,5 @@
 (require 'project)
 
-;; (defun project-root-override (dir)
-;;   "Find DIR's project root by searching for a '.project.el' file.
-
-;; If this file exists, it marks the project root. For convenient compatibility
-;; with Projectile, '.projectile' is also considered a project root marker.
-
-;; https://blog.jmthornton.net/p/emacs-project-override"
-;;   (let ((root (or (locate-dominating-file dir ".project")
-;;                   (locate-dominating-file dir ".projectile")
-;;                   (locate-dominating-file dir "go.mod")
-;;                   (locate-dominating-file dir "Cargo.toml")
-;;                   (locate-dominating-file dir "pom.xml")
-;;                   (locate-dominating-file dir "package.json")
-;;                   (locate-dominating-file dir "README.org")
-;;                   (locate-dominating-file dir "README.md")
-;;                   ))
-;;         (backend (ignore-errors (vc-responsible-backend dir))))
-;;     (when root (if (version<= emacs-version "28")
-;;                     (cons 'vc root)
-;;                   (list 'vc backend root)))))
-
 (defun project-root-override (dir)
   "Determine if DIR is a non-Git project."
   (catch 'ret
@@ -31,7 +10,7 @@
         (dolist (f current-level)
           (when-let ((root (locate-dominating-file dir f)))
             (throw 'ret (cons 'local root))))))))
-
+(add-hook 'project-find-functions #'project-root-override)
 ;; (setq project-find-functions '(project-root-override project-try-vc))
 
 ;; Returns the parent directory containing a .project.el file, if any,
@@ -42,12 +21,12 @@
 ;;       (cons 'vc override)
 ;;       nil)))
 
-(use-package project
-  ;; Cannot use :hook because 'project-find-functions does not end in -hook
-  ;; Cannot use :init (must use :config) because otherwise
-  ;; project-find-functions is not yet initialized.
-  :config
-  (add-hook 'project-find-functions #'project-root-override))
+;; (use-package project
+;;   ;; Cannot use :hook because 'project-find-functions does not end in -hook
+;;   ;; Cannot use :init (must use :config) because otherwise
+;;   ;; project-find-functions is not yet initialized.
+;;   :config
+;;   (add-hook 'project-find-functions #'project-root-override))
 
 (define-key project-prefix-map (kbd "b") #'+project-blink-search)
 (define-key project-prefix-map (kbd "m") #'+project-magit)

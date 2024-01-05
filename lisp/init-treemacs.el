@@ -62,12 +62,6 @@
      (treemacs-git-mode 'simple)))
   )
 
-(use-package treemacs-icons-dired
-  :after (treemacs dired)
-  :ensure t
-  :hook (dired-mode . treemacs-icons-dired-mode)
-  )
-
 (use-package treemacs-evil
   :after (treemacs evil))
 
