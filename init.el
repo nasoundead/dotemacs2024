@@ -4,6 +4,7 @@
 (require 'init-better-defaults)
 (require 'init-project)
 (require 'init-evil)
+(require 'init-keybindings)
 (require 'init-vertico)
 (require 'init-corfu)
 (require 'init-utils)
