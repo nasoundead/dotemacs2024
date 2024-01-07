@@ -70,6 +70,10 @@
   (>= emacs-major-version 29)
   "Emacs is 29 or above.")
 
+(defvar sea-debug-mode (or (getenv "DEBUG") init-file-debug)
+  "If non-nil, all sea functions will be verbose. Set DEBUG=1 in the command
+line or use --debug-init to enable this.")
+
 ;;; Directories/files
 (defvar sea-emacs-dir
   (eval-when-compile (file-truename user-emacs-directory))

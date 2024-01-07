@@ -309,5 +309,6 @@ Example
          :i \"M-o\" (lambda (interactive) (message \"Hi\"))))"
   (sea--map-process rest))
 
+(load! "+bindings")
 
 (provide 'init-keybindings)

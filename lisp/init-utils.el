@@ -100,4 +100,46 @@ compilation. This will no-op on features that have been disabled by the user."
                (car body))
               (_ `(after! (:and ,@targets) ,@body)))))))
 
+(defun FILE! ()
+  "Return the emacs lisp file this macro is called from."
+  (cond ((bound-and-true-p byte-compile-current-file))
+        (load-file-name)
+        (buffer-file-name)
+        ((stringp (car-safe current-load-list)) (car current-load-list))))
+
+(defun DIR! ()
+  "Returns the directory of the emacs lisp file this macro is called from."
+  (let ((file (FILE!)))
+    (and file (file-name-directory file))))
+
+(defmacro load! (filename &optional path noerror)
+  "Load a file relative to the current executing file (`load-file-name').
+
+FILENAME is either a file path string or a form that should evaluate to such a
+string at run time. PATH is where to look for the file (a string representing a
+directory path). If omitted, the lookup is relative to either `load-file-name',
+`byte-compile-current-file' or `buffer-file-name' (checked in that order).
+
+If NOERROR is non-nil, don't throw an error if the file doesn't exist."
+  (unless path
+    (setq path (or (DIR!)
+                   (error "Could not detect path to look for '%s' in"
+                          filename))))
+  (let ((file (if path `(expand-file-name ,filename ,path) filename)))
+    `(condition-case e
+         (load ,file ,noerror ,(not sea-debug-mode))
+       ((debug sea-error) (signal (car e) (cdr e)))
+       ((debug error)
+        (let* ((source (file-name-sans-extension ,file))
+               (err (cond 
+                          ((cons 'sea-module-error sea-emacs-dir)))))
+          (signal (car err)
+                  (list (file-relative-name
+                         (concat source ".el")
+                         (cdr err))
+                        e)))))))
+
+(load! "lookup")
+(load! "text")
+
 (provide 'init-utils)

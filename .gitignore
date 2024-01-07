@@ -12,3 +12,4 @@ blink-search/
 straight/
 .cache/
 etc/transient/
+.lsp-session*

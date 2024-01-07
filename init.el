@@ -14,6 +14,7 @@
 (require 'init-vcs)
 (require 'init-ui)
 (require 'init-modeline)
+(require 'init-highlight)
 (when (display-graphic-p)
   (require 'init-font))
 (require 'init-treemacs)

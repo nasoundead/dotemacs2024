@@ -62,12 +62,12 @@
   (keymap-set corfu-map "M-m" #'corfu-move-to-minibuffer)
   (add-to-list 'corfu-continue-commands #'corfu-move-to-minibuffer)
 
-  (defun corfu-enable-always-in-minibuffer ()
-    "Enable Corfu in the minibuffer if Vertico/Mct are not active."
-    (unless (or (bound-and-true-p mct--active)
-                (bound-and-true-p vertico--input))
-      (corfu-mode 1)))
-  (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+  ;; (defun corfu-enable-always-in-minibuffer ()
+  ;;   "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+  ;;   (unless (or (bound-and-true-p mct--active)
+  ;;               (bound-and-true-p vertico--input))
+  ;;     (corfu-mode 1)))
+  ;; (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
 
   ;; eshell or shell
   (add-hook 'eshell-mode-hook
