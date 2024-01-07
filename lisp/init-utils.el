@@ -100,6 +100,34 @@ compilation. This will no-op on features that have been disabled by the user."
                (car body))
               (_ `(after! (:and ,@targets) ,@body)))))))
 
+(defun sea-keyword-intern (str)
+  "Converts STR (a string) into a keyword (`keywordp')."
+  (declare (pure t) (side-effect-free t))
+  (cl-check-type str string)
+  (intern (concat ":" str)))
+
+(defun sea-keyword-name (keyword)
+  "Returns the string name of KEYWORD (`keywordp') minus the leading colon."
+  (declare (pure t) (side-effect-free t))
+  (cl-check-type :test keyword)
+  (substring (symbol-name keyword) 1))
+
+(defmacro sea-log (format-string &rest args)
+  "Log to *Messages* if `sea-debug-mode' is on.
+Does not interrupt the minibuffer if it is in use, but still logs to *Messages*.
+Accepts the same arguments as `message'."
+  `(when sea-debug-mode
+     (let ((inhibit-message (active-minibuffer-window)))
+       (message
+        ,(concat (propertize "sea " 'face 'font-lock-comment-face)
+                 (when (bound-and-true-p sea--current-module)
+                   (propertize
+                    (format "[%s/%s] "
+                            (sea-keyword-name (car sea--current-module))
+                            (cdr sea--current-module))
+                    'face 'warning))
+                 format-string)
+        ,@args))))
 (defun FILE! ()
   "Return the emacs lisp file this macro is called from."
   (cond ((bound-and-true-p byte-compile-current-file))
@@ -139,6 +167,33 @@ If NOERROR is non-nil, don't throw an error if the file doesn't exist."
                          (cdr err))
                         e)))))))
 
+
+(defmacro defadvice! (symbol arglist &optional docstring &rest body)
+  "Define an advice called SYMBOL and add it to PLACES.
+
+ARGLIST is as in `defun'. WHERE is a keyword as passed to `advice-add', and
+PLACE is the function to which to add the advice, like in `advice-add'.
+DOCSTRING and BODY are as in `defun'.
+
+\(fn SYMBOL ARGLIST &optional DOCSTRING &rest [WHERE PLACES...] BODY\)"
+  (declare (doc-string 3) (indent defun))
+  (unless (stringp docstring)
+    (push docstring body)
+    (setq docstring nil))
+  (let (where-alist)
+    (while (keywordp (car body))
+      (push `(cons ,(pop body) (sea-enlist ,(pop body)))
+            where-alist))
+    `(progn
+       (defun ,symbol ,arglist ,docstring ,@body)
+       ,(when where-alist
+          `(dolist (targets (list ,@(nreverse where-alist)))
+             (dolist (target (cdr targets))
+               (advice-add target (car targets) #',symbol)))))))
+
+
+
+(load! "projects")
 (load! "lookup")
 (load! "text")
 (load! "windows")

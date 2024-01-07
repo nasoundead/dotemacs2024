@@ -7,6 +7,7 @@
 (require 'init-keybindings)
 (require 'init-vertico)
 (require 'init-corfu)
+(require 'init-lookup)
 (require 'init-utils)
 (require 'init-hydra)
 (require 'init-folding)

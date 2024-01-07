@@ -240,13 +240,14 @@ Will return nil if neither is available. These require ripgrep to be installed."
   (unless identifier
     (let ((query (rxt-quote-pcre identifier)))
       (ignore-errors
-        (cond ((modulep! :completion ivy)
-               (+ivy-file-search :query query)
-               t)
-              ((modulep! :completion helm)
-               (+helm-file-search :query query)
-               t)
-              ((modulep! :completion vertico)
+        (cond 
+              ;; ((modulep! :completion ivy)
+              ;;  (+ivy-file-search :query query)
+              ;;  t)
+              ;; ((modulep! :completion helm)
+              ;;  (+helm-file-search :query query)
+              ;;  t)
+              (t
                (+vertico-file-search :query query)
                t))))))
 
@@ -278,11 +279,10 @@ otherwise falling back to ffap.el (find-file-at-point)."
                 (or (file-exists-p guess)
                     (ffap-url-p guess)))
            (find-file-at-point guess))
-          ((and (modulep! :completion ivy)
-                (sea-project-p))
-           (counsel-file-jump guess (sea-project-root)))
-          ((and (modulep! :completion vertico)
-                (sea-project-p))
+          ;; ((and (modulep! :completion ivy)
+          ;;       (sea-project-p))
+          ;;  (counsel-file-jump guess (sea-project-root)))
+          ((sea-project-p)
            (+vertico/find-file-in (sea-project-root) guess))
           ((find-file-at-point (ffap-prompter guess))))
     t))
