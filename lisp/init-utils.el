@@ -141,5 +141,8 @@ If NOERROR is non-nil, don't throw an error if the file doesn't exist."
 
 (load! "lookup")
 (load! "text")
+(load! "windows")
+(load! "scratch")
+(load! "vertico")
 
 (provide 'init-utils)
