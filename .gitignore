@@ -13,3 +13,4 @@ straight/
 .cache/
 etc/transient/
 .lsp-session*
+lisp/core/.build/*

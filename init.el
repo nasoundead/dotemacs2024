@@ -1,6 +1,9 @@
 ;; (require 'init-package)
 (require 'init-straight)
 
+(require 'init-core)
+(require 'init-utils)
+
 (require 'init-better-defaults)
 (require 'init-project)
 (require 'init-evil)
@@ -8,7 +11,6 @@
 (require 'init-vertico)
 (require 'init-corfu)
 (require 'init-lookup)
-(require 'init-utils)
 (require 'init-hydra)
 (require 'init-folding)
 (require 'init-flycheck)

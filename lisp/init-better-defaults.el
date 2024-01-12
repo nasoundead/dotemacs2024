@@ -22,6 +22,8 @@
 
 ;; 关闭自动备份文件
 (setq make-backup-files nil)
+(setq backup-inhibited t)
+(setq version-control 'never)
 ;; 关闭启动页
 (setq inhibit-startup-screen nil)
 ;; 关闭dir local
