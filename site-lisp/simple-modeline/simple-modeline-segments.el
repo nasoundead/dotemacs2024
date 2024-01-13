@@ -45,7 +45,7 @@ corresponding to the mode line clicked."
             (face (cond (no-errors 'error)
                         (no-warnings 'warning)
                         (t 'success))))
-       (propertize (format "❌%s ⚠️%s" (or no-errors 0) (or no-warnings 0)) 'face face)
+       (propertize (format "E%s W%s" (or no-errors 0) (or no-warnings 0)) 'face face)
        ))
     (`interrupted " -")
     (`suspicious '(propertize " ?" 'face 'warning))))
@@ -56,7 +56,7 @@ corresponding to the mode line clicked."
       (let* ((read-only (and buffer-read-only (buffer-file-name)))
              (modified (buffer-modified-p)))
         (propertize
-         (if read-only " 🔒" (if modified " ●" " ○"))
+         (if read-only " ⚿" (if modified " ●" " ○"))
          'face `(:inherit
                  ,(if modified 'simple-modeline-status-modified
                     (if read-only 'simple-modeline-status-error

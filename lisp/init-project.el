@@ -1,32 +1,32 @@
 (require 'project)
 
-(defun project-root-override (dir)
-  "Determine if DIR is a non-Git project."
-  (catch 'ret
-    (let ((pr-flags '((".project.el")
-                      ("go.mod" "Cargo.toml" "pom.xml" "package.json") ;; higher priority
-                      ("Makefile" "README.org" "README.md"))))
-      (dolist (current-level pr-flags)
-        (dolist (f current-level)
-          (when-let ((root (locate-dominating-file dir f)))
-            (throw 'ret (cons 'local root))))))))
-(add-hook 'project-find-functions #'project-root-override)
+;; (defun project-root-override (dir)
+;;   "Determine if DIR is a non-Git project."
+;;   (catch 'ret
+;;     (let ((pr-flags '((".project.el")
+;;                       ("go.mod" "Cargo.toml" "pom.xml" "package.json") ;; higher priority
+;;                       ("Makefile" "README.org" "README.md"))))
+;;       (dolist (current-level pr-flags)
+;;         (dolist (f current-level)
+;;           (when-let ((root (locate-dominating-file dir f)))
+;;             (throw 'ret (cons 'local root))))))))
+;; (add-hook 'project-find-functions #'project-root-override)
 ;; (setq project-find-functions '(project-root-override project-try-vc))
 
 ;; Returns the parent directory containing a .project.el file, if any,
 ;; to override the standard project.el detection logic when needed.
-;; (defun project-root-override (dir)
-;;   (let ((override (locate-dominating-file dir ".project.el")))
-;;     (if override
-;;       (cons 'vc override)
-;;       nil)))
+(defun project-root-override (dir)
+  (let ((override (locate-dominating-file dir ".project.el")))
+    (if override
+      (cons 'vc override)
+      nil)))
 
-;; (use-package project
-;;   ;; Cannot use :hook because 'project-find-functions does not end in -hook
-;;   ;; Cannot use :init (must use :config) because otherwise
-;;   ;; project-find-functions is not yet initialized.
-;;   :config
-;;   (add-hook 'project-find-functions #'project-root-override))
+(use-package project
+  ;; Cannot use :hook because 'project-find-functions does not end in -hook
+  ;; Cannot use :init (must use :config) because otherwise
+  ;; project-find-functions is not yet initialized.
+  :config
+  (add-hook 'project-find-functions #'project-root-override))
 
 (define-key project-prefix-map (kbd "b") #'+project-blink-search)
 (define-key project-prefix-map (kbd "m") #'+project-magit)

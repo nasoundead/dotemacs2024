@@ -213,7 +213,7 @@ DOCSTRING and BODY are as in `defun'.
 ;; variable at byte-compile time.  See the comments in
 ;; `straight--generate-package-autoloads'.
 (eval-and-compile
-  (require 'autoload)
+  ;; (require 'autoload)
   (require 'bytecomp))
 
 (let* (;; Dir & files
