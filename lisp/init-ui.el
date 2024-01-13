@@ -102,6 +102,37 @@
   :hook ((prog-mode text-mode conf-mode) . page-break-lines-mode)
   )
 
+(use-package dashboard
+  :ensure t
+  :init
+  (dashboard-setup-startup-hook)
+  :config
+  ;; Set the title
+  (setq dashboard-banner-logo-title "Welcome to Sea Emacs. Enjoy!")
+
+  ;; Set the banner
+  ;; (setq dashboard-startup-banner 'logo)
+  (setq dashboard-startup-banner (or sea-logo 'official))
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-set-navigator t)
+
+  (setq dashboard-set-init-info t)
+  (setq show-week-agenda-p t)
+)
+
+;; (use-package nerd-icons-buffer-menu
+;;   :straight (nerd-icons-buffer-menu :type git :host github :repo "jcs-elpa/nerd-icons-buffer-menu")
+;;   :hook (Buffer-menu-mode . nerd-icons-buffer-menu-mode))
+
+;; Minibuffer completion icons
+(require 'nerd-svg-icons-completion)
+(nerd-svg-icons-completion-mode t)
+;; Dired icons
+(require 'nerd-svg-icons-dired)
+(add-hook 'dired-mode-hook 'nerd-svg-icons-dired-mode)
+;; Ibuffer icons
+(add-hook 'ibuffer-hook #'nerd-svg-icons-ibuffer-mode)
 
 
 (provide 'init-ui)
