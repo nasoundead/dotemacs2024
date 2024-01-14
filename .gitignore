@@ -14,3 +14,5 @@ straight/
 etc/transient/
 .lsp-session*
 lisp/core/.build/*
+.dap-breakpoints
+*.el#

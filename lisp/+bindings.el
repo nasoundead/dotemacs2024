@@ -64,6 +64,16 @@
       :gvnime "j" #'widget-forward
       :gvnime "k" #'widget-backward)
 
+      (:map blink-search-mode-map
+      :gvnime "C-j" #'blink-search-candidate-select-next
+      :gvnime "C-k" #'blink-search-candidate-select-prev
+      :gvnime "C-S-j" #'blink-search-candidate-group-select-next
+      :gvnime "C-S-k" #'blink-search-candidate-group-select-prev
+      :gvnime "M-j" #'blink-search-backend-select-next
+      :gvnime "M-k" #'blink-search-backend-select-prev
+      :gvnime "C-SPC" #'blink-search-preview
+      :gvnime "C-h" #'blink-search-parent)
+
       (:after evil
       :textobj "x" #'evil-inner-xml-attr               #'evil-outer-xml-attr
       :textobj "a" #'evil-inner-arg                    #'evil-outer-arg
