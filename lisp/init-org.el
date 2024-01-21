@@ -44,7 +44,7 @@
   ;; :ensure org-plus-contrib
   :pretty-hydra
   ((:title (pretty-hydra-title "Org Template" 'fileicon "org" :face 'all-the-icons-green :height 1.1 :v-adjust 0.0)
-           :color blue :quit-key "q")
+	   :color blue :quit-key "q")
    ("Basic"
     (("a" (hot-expand "<a") "ascii")
      ("c" (hot-expand "<c") "center")
@@ -66,28 +66,30 @@
     (("s" (hot-expand "<s") "src")
      ("m" (hot-expand "<s" "emacs-lisp") "emacs-lisp")
      ("y" (hot-expand "<s" "python :results output") "python")
+     ("z" (hot-expand "<s" "python :results graphics file output :file Figure.svg") "python")
+     ("Y" (hot-expand "<s" "jupyter-python :kernel python3 :async yes") "jupyter-python")
      ("S" (hot-expand "<s" "sh") "sh")
      ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)") "golang"))
     "Misc"
     (("u" (hot-expand "<s" "plantuml :cmdline -charset utf-8 :file /images/CHANGE.png") "plantuml")
-     ("Y" (hot-expand "<s" "ipython :session :exports both :results raw drawer") "ipython")
      ("<" self-insert-command "ins"))))
   :bind (("C-c a" . org-agenda)
-         ("C-c b" . org-switchb)
-         ("C-c x" . org-capture)
-         :map org-mode-map
-         ("<" . (lambda ()
-                  "Insert org template."
-                  (interactive)
-                  (if (or (region-active-p) (looking-back "^\s*" 1))
-                      (org-hydra/body)
-                    (self-insert-command 1)))))
+	 ("C-c b" . org-switchb)
+	 ("C-c x" . org-capture)
+	 :map org-mode-map
+	 ("<" . (lambda ()
+		  "Insert org template."
+		  (interactive)
+		  (if (or (region-active-p) (looking-back "^\s*" 1))
+		      (org-hydra/body)
+		    (self-insert-command 1))))
+  )
   :hook ((org-babel-after-execute org-mode) . org-redisplay-inline-images)
   :config
   (defun org-export-docx ()
     (interactive)
     (let ((docx-file (concat (file-name-sans-extension (buffer-file-name)) ".docx"))
-          (template-file (concat sea-site-lisp-dir "/template/template.docx")))
+	  (template-file (concat sea-site-lisp-dir "/template/template.docx")))
       (shell-command (format "pandoc %s -o %s --reference-doc=%s" (buffer-file-name) docx-file template-file))
       (message "Convert finish: %s" docx-file)))
   ;; For hydra
@@ -100,24 +102,29 @@
     prepended to the element after the #+HEADER: tag."
     (let (text)
       (when (region-active-p)
-        (setq text (buffer-substring (region-beginning) (region-end)))
-        (delete-region (region-beginning) (region-end)))
+	(setq text (buffer-substring (region-beginning) (region-end)))
+	(delete-region (region-beginning) (region-end)))
       (insert str)
       (if (fboundp 'org-try-structure-completion)
-          (org-try-structure-completion) ; < org 9
-        (progn
-          ;; New template expansion since org 9
-          (require 'org-tempo nil t)
-          (org-tempo-complete-tag)))
+	  (org-try-structure-completion) ; < org 9
+	(progn
+	  ;; New template expansion since org 9
+	  (require 'org-tempo nil t)
+	  (org-tempo-complete-tag)))
       (when mod (insert mod) (forward-line))
       (when text (insert text))))
 
+(use-package jupyter
+    :init
+    (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
+                                                         (:session . "py"))
+          org-babel-default-header-args:jupyter-R '((:async . "yes"))))
   ;; active Org-babel languages
   ;; ------------------------------------------------------------------------
   ;; Babel
   (setq org-confirm-babel-evaluate nil
-        org-src-fontify-natively t
-        org-src-tab-acts-natively t)
+	org-src-fontify-natively t
+	org-src-tab-acts-natively t)
 
   (defconst load-language-alist
     '((emacs-lisp . t)
@@ -126,7 +133,9 @@
       (css        . t)
       (C          . t)
       (java       . t)
-      (plantuml   . t))
+      (plantuml   . t)
+      (jupyter    . t)
+      )
     "Alist of org ob languages.")
 
   ;; ob-sh renamed to ob-shell since 26.1.
@@ -150,7 +159,7 @@
   (defun sea/plantuml-install()
     (let ((url "http://jaist.dl.sourceforge.net/project/plantuml/plantuml.jar"))
       (unless (file-exists-p org-plantuml-jar-path)
-        (url-copy-file url org-plantuml-jar-path))))
+	(url-copy-file url org-plantuml-jar-path))))
   (add-hook 'org-mode-hook #'(lambda () (eval-after-load 'ob-plantuml (sea/plantuml-install))))
 
   (org-babel-do-load-languages 'org-babel-load-languages load-language-alist)
@@ -158,7 +167,7 @@
   ;; Rich text clipboard
   (use-package org-rich-yank
     :bind (:map org-mode-map
-            ("C-M-y" . org-rich-yank)))
+	    ("C-M-y" . org-rich-yank)))
 
   (use-package valign
     :hook (org-mode . valign-mode))
@@ -176,37 +185,37 @@
   (use-package org-preview-html
     :diminish
     :bind (:map org-mode-map
-            ("C-c C-h" . org-preview-html-mode))
+	    ("C-c C-h" . org-preview-html-mode))
     :init (when (featurep 'xwidget-internal)
-            (setq org-preview-html-viewer 'xwidget)))
+	    (setq org-preview-html-viewer 'xwidget)))
 
   ;; Presentation
   (use-package org-tree-slide
     :diminish
     :functions (org-display-inline-images
-                org-remove-inline-images)
+		org-remove-inline-images)
     :bind (:map org-mode-map
-            ("s-<f7>" . org-tree-slide-mode)
-            :map org-tree-slide-mode-map
-            ("<left>" . org-tree-slide-move-previous-tree)
-            ("<right>" . org-tree-slide-move-next-tree)
-            )
+	    ("s-<f7>" . org-tree-slide-mode)
+	    :map org-tree-slide-mode-map
+	    ("<left>" . org-tree-slide-move-previous-tree)
+	    ("<right>" . org-tree-slide-move-next-tree)
+	    )
     :hook ((org-tree-slide-play . (lambda ()
-                                    (text-scale-increase 4)
-                                    (org-display-inline-images)
-                                    (read-only-mode 1)))
-           (org-tree-slide-stop . (lambda ()
-                                    (text-scale-increase 0)
-                                    (org-remove-inline-images)
-                                    (read-only-mode -1))))
+				    (text-scale-increase 4)
+				    (org-display-inline-images)
+				    (read-only-mode 1)))
+	   (org-tree-slide-stop . (lambda ()
+				    (text-scale-increase 0)
+				    (org-remove-inline-images)
+				    (read-only-mode -1))))
     :init (setq org-tree-slide-header nil
-                org-tree-slide-slide-in-effect t
-                org-tree-slide-heading-emphasis nil
-                org-tree-slide-cursor-init t
-                org-tree-slide-modeline-display 'outside
-                org-tree-slide-skip-done nil
-                org-tree-slide-skip-comments t
-                org-tree-slide-skip-outline-level 3))
+		org-tree-slide-slide-in-effect t
+		org-tree-slide-heading-emphasis nil
+		org-tree-slide-cursor-init t
+		org-tree-slide-modeline-display 'outside
+		org-tree-slide-skip-done nil
+		org-tree-slide-skip-comments t
+		org-tree-slide-skip-outline-level 3))
 
   (use-package org-superstar
     :hook (org-mode . org-superstar-mode)
@@ -220,16 +229,16 @@
   (use-package org-fancy-priorities
     :hook (org-mode . org-fancy-priorities-mode)
     :init (setq org-fancy-priorities-list
-                (if (and (display-graphic-p) (char-displayable-p ?🅐))
-                    '("🅐" "🅑" "🅒" "🅓")
-                  '("high" "medium" "low" "optional"))))
+		(if (and (display-graphic-p) (char-displayable-p ?🅐))
+		    '("🅐" "🅑" "🅒" "🅓")
+		  '("high" "medium" "low" "optional"))))
   ;; ui enhance
   (defun enhance-ui-for-orgmode ()
     "enhance ui for orgmode."
     (when sea-prettify-org-symbols-alist
       (if prettify-symbols-alist
-          (push sea-prettify-org-symbols-alist prettify-symbols-alist)
-        (setq prettify-symbols-alist sea-prettify-org-symbols-alist)))
+	  (push sea-prettify-org-symbols-alist prettify-symbols-alist)
+	(setq prettify-symbols-alist sea-prettify-org-symbols-alist)))
     (prettify-symbols-mode)
     (toggle-truncate-lines))
   (add-hook 'org-mode-hook #'enhance-ui-for-orgmode)
@@ -246,20 +255,20 @@
      ("n" "Note" entry (file ,(concat org-directory "/note.org"))
       "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
      ("j" "Journal" entry (file+olp+datetree
-                           ,(concat org-directory "/journal.org"))
+			   ,(concat org-directory "/journal.org"))
       "*  %^{Title} %?\n%U\n%a\n" :clock-in t :clock-resume t)
      ("b" "Book" entry (file+olp+datetree
-                        ,(concat org-directory "/book.org"))
+			,(concat org-directory "/book.org"))
       "* Topic: %^{Description}  %^g %? Added: %U"))
 
    org-todo-keywords
    '((sequence "TODO(t)" "DOING(i)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)")
      (sequence "⚑(T)" "🏴(I)" "❓(H)" "|" "✔(D)" "✘(C)"))
    org-todo-keyword-faces '(("HANGUP" . warning)
-                            ("❓" . warning))
+			    ("❓" . warning))
    org-priority-faces '((?A . error)
-                        (?B . warning)
-                        (?C . success))
+			(?B . warning)
+			(?C . success))
 
    org-M-RET-may-split-line '((:headline . nil))
    ;; Agenda styling
@@ -287,14 +296,14 @@
   (add-to-list 'org-structure-template-alist '("n" . "note"))
 
   (let* ((variable-tuple
-          (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
-                ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
-                ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
-                ((x-list-fonts "Verdana")         '(:font "Verdana"))
-                ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
-                (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
-         (base-font-color     (face-foreground 'default nil 'default))
-         (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
+	  (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+		((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+		((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+		((x-list-fonts "Verdana")         '(:font "Verdana"))
+		((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+		(nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+	 (base-font-color     (face-foreground 'default nil 'default))
+	 (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
 
     (custom-theme-set-faces
      'user
@@ -320,26 +329,26 @@
   (unless (file-exists-p target-dir)
     (make-directory target-dir))
   (setq filename-without-extension
-        (make-temp-name
-         (concat
-          (file-name-nondirectory
-           (buffer-file-name))
-          (format-time-string "_%Y%m%d_%H%M%S")))  )
+	(make-temp-name
+	 (concat
+	  (file-name-nondirectory
+	   (buffer-file-name))
+	  (format-time-string "_%Y%m%d_%H%M%S")))  )
   (insert
    (org-make-link-string
     (concat "file:"
-            (string-trim
-             (shell-command-to-string
-              (mapconcat #'identity
-                         `("java"
-                           "-jar"
-                           ,(expand-file-name clipjar-location)
-                           "--name"
-                           ,(concat filename-without-extension)
-                           ,(concat target-dir)
-                           )
-                         " "
-                         ))))))
+	    (string-trim
+	     (shell-command-to-string
+	      (mapconcat #'identity
+			 `("java"
+			   "-jar"
+			   ,(expand-file-name clipjar-location)
+			   "--name"
+			   ,(concat filename-without-extension)
+			   ,(concat target-dir)
+			   )
+			 " "
+			 ))))))
   (org-display-inline-images))
 (defun org-paste-image-ask-dir ()
   (interactive)
@@ -347,49 +356,49 @@
     (insert
      (org-make-link-string
       (concat "file:"
-              (shell-command-to-string
-               (mapconcat #'identity
-                          `("java"
-                            "-jar"
-                            ,(expand-file-name clipjar-location)
-                            "--uuid"
-                            ,(file-relative-name dir default-directory)
-                            )
-                          " "
-                          )))))))
+	      (shell-command-to-string
+	       (mapconcat #'identity
+			  `("java"
+			    "-jar"
+			    ,(expand-file-name clipjar-location)
+			    "--uuid"
+			    ,(file-relative-name dir default-directory)
+			    )
+			  " "
+			  )))))))
 (defun org-paste-image-ask-name ()
   (interactive)
   (let* ((image-name (string-trim (read-string "Image name: "))))
     (insert
      (org-make-link-string
       (concat "file:"
-              (shell-command-to-string
-               (mapconcat #'identity
-                          `("java"
-                            "-jar"
-                            ,(expand-file-name clipjar-location)
-                            "--name"
-                            ,(concat "'" image-name "'")        ;; image name without extension must be quoted
-                            "'/images'"               ;; Directory which the image will be saved '/tmp/images scala'
-                            )
-                          " "
-                          )))))))
+	      (shell-command-to-string
+	       (mapconcat #'identity
+			  `("java"
+			    "-jar"
+			    ,(expand-file-name clipjar-location)
+			    "--name"
+			    ,(concat "'" image-name "'")        ;; image name without extension must be quoted
+			    "'/images'"               ;; Directory which the image will be saved '/tmp/images scala'
+			    )
+			  " "
+			  )))))))
 (defun org-screenshot-and-paste-image-use-powershell()
   "Take a screenshot into a time stamped unique-named file in the
-        same directory as the org-buffer and insert a link to this file."
+	same directory as the org-buffer and insert a link to this file."
   (interactive)
   ;; create images dir
   (setq target-dir (concat (file-name-directory (buffer-file-name)) "images/"))
   (unless (file-exists-p target-dir)
     (make-directory target-dir))
   (setq filename
-        (concat
-         (make-temp-name
-          (concat
-           target-dir
-           (file-name-nondirectory
-            (buffer-file-name))
-           (format-time-string "_%Y%m%d_%H%M%S_")) ) ".png"))
+	(concat
+	 (make-temp-name
+	  (concat
+	   target-dir
+	   (file-name-nondirectory
+	    (buffer-file-name))
+	   (format-time-string "_%Y%m%d_%H%M%S_")) ) ".png"))
   (shell-command "snippingtool /clip")
   (sleep-for 0.3)
   (shell-command (concat "powershell -command \"Add-Type -AssemblyName System.Windows.Forms;if ($([System.Windows.Forms.Clipboard]::ContainsImage())) {$image = [System.Windows.Forms.Clipboard]::GetImage();[System.Drawing.Bitmap]$image.Save('" filename "',[System.Drawing.Imaging.ImageFormat]::Png); Write-Output 'clipboard content saved as file'} else {Write-Output 'clipboard does not contain image data'}\""))
@@ -398,10 +407,10 @@
 ;; Use embedded webkit browser if possible
 (when (featurep 'xwidget-internal)
   (push '("\\.\\(x?html?\\|pdf\\)\\'"
-          .
-          (lambda (file _link)
-            (centaur-webkit-browse-url (concat "file://" file) t)))
-        org-file-apps))
+	  .
+	  (lambda (file _link)
+	    (centaur-webkit-browse-url (concat "file://" file) t)))
+	org-file-apps))
 
 (use-package deft)
 

@@ -58,7 +58,6 @@
 ;; https://github.com/emacs-lsp/lsp-mode/issues/377
 (cl-defmacro lsp-org-babel-enable (lang)
   "Support LANG in org source code block."
-  ;; (cl-check-type lang stringp)
   (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
          (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
     `(progn
@@ -83,7 +82,7 @@
                         (upcase ,lang))))))))
 
 (defvar org-babel-lang-list
-  '("go" "python" "ipython" "ruby" "js" "css" "sass" "c" "rust" "java" "cpp" "c++"))
+  '("go" "python" "js" "css" "c" "rust" "cpp" "c++"))
 (add-to-list 'org-babel-lang-list  "shell")
 (dolist (lang org-babel-lang-list)
   (eval `(lsp-org-babel-enable ,lang)))

@@ -24,6 +24,7 @@
 (require 'init-treesitter)
 (require 'init-lsp)
 (require 'init-org)
+(require 'init-py)
 (require 'init-go)
 (require 'init-rust)
 
