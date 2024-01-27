@@ -5,9 +5,9 @@
 ;; Title
 (setq frame-title-format
       '("GNU Emacs " emacs-version "@" user-login-name " : "
-        (:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name))
-                 "%b"))))
+	(:eval (if (buffer-file-name)
+		   (abbreviate-file-name (buffer-file-name))
+		 "%b"))))
 (setq icon-title-format frame-title-format)
 
 (when emacs/>=29p
@@ -16,7 +16,7 @@
 
 (setq custom-safe-themes t)
 (use-package color-theme-sanityinc-tomorrow)
-(setq-default custom-enabled-themes '(sanityinc-tomorrow-bright))
+;; (setq-default custom-enabled-themes '(sanityinc-tomorrow-day))
 
 ;; Ensure that themes will be applied even if they have not been customized
 (defun reapply-themes ()
@@ -60,15 +60,15 @@
   :ensure nil
   :init
   (setq winner-boring-buffers '("*Completions*"
-                                "*Compile-Log*"
-                                "*inferior-lisp*"
-                                "*Fuzzy Completions*"
-                                "*Apropos*"
-                                "*Help*"
-                                "*cvs*"
-                                "*Buffer List*"
-                                "*Ibuffer*"
-                                "*esh command on file*")))
+				"*Compile-Log*"
+				"*inferior-lisp*"
+				"*Fuzzy Completions*"
+				"*Apropos*"
+				"*Help*"
+				"*cvs*"
+				"*Buffer List*"
+				"*Ibuffer*"
+				"*esh command on file*")))
 
 
 
@@ -93,10 +93,10 @@
   :config
   (add-hook 'focus-in-hook #'highlight-indent-guides-auto-set-faces)
   ;; `highlight-indent-guides' breaks in these modes
-  :hook ((org-indent-mode-hook) 
-            . (lambda () 
-                (when highlight-indent-guides-mode
-                        (highlight-indent-guides-mode -1)))))
+  :hook ((org-indent-mode-hook)
+	    . (lambda ()
+		(when highlight-indent-guides-mode
+			(highlight-indent-guides-mode -1)))))
 
 (use-package page-break-lines
   :hook ((prog-mode text-mode conf-mode) . page-break-lines-mode)
@@ -126,13 +126,13 @@
 ;;   :hook (Buffer-menu-mode . nerd-icons-buffer-menu-mode))
 
 ;; Minibuffer completion icons
-(require 'nerd-svg-icons-completion)
-(nerd-svg-icons-completion-mode t)
-;; Dired icons
-(require 'nerd-svg-icons-dired)
-(add-hook 'dired-mode-hook 'nerd-svg-icons-dired-mode)
-;; Ibuffer icons
-(add-hook 'ibuffer-hook #'nerd-svg-icons-ibuffer-mode)
+;; (require 'nerd-svg-icons-completion)
+;; (nerd-svg-icons-completion-mode t)
+;; ;; Dired icons
+;; (require 'nerd-svg-icons-dired)
+;; (add-hook 'dired-mode-hook 'nerd-svg-icons-dired-mode)
+;; ;; Ibuffer icons
+;; (add-hook 'ibuffer-hook #'nerd-svg-icons-ibuffer-mode)
 
 
 (provide 'init-ui)

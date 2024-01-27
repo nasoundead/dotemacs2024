@@ -16,3 +16,6 @@ etc/transient/
 lisp/core/.build/*
 .dap-breakpoints
 *.el#
+etc/plantuml.jar
+eshell/history
+tramp
