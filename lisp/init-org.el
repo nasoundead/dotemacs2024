@@ -66,7 +66,7 @@
     (("s" (hot-expand "<s") "src")
      ("m" (hot-expand "<s" "emacs-lisp") "emacs-lisp")
      ("y" (hot-expand "<s" "python :results output") "python")
-     ("z" (hot-expand "<s" "python :results graphics file output :file Figure.svg") "python")
+     ("z" (hot-expand "<s" "python :results graphics file output :file Figure.svg") "python graphics")
      ("Y" (hot-expand "<s" "jupyter-python :kernel python3 :async yes") "jupyter-python")
      ("S" (hot-expand "<s" "sh") "sh")
      ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)") "golang"))
@@ -83,7 +83,7 @@
 		  (if (or (region-active-p) (looking-back "^\s*" 1))
 		      (org-hydra/body)
 		    (self-insert-command 1))))
-  )
+	 )
   :hook ((org-babel-after-execute org-mode) . org-redisplay-inline-images)
   :config
   (defun org-export-docx ()
@@ -114,11 +114,11 @@
       (when mod (insert mod) (forward-line))
       (when text (insert text))))
 
-(use-package jupyter
+  (use-package jupyter
     :init
     (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
-                                                         (:session . "py"))
-          org-babel-default-header-args:jupyter-R '((:async . "yes"))))
+							 (:session . "py"))
+	  org-babel-default-header-args:jupyter-R '((:async . "yes"))))
   ;; active Org-babel languages
   ;; ------------------------------------------------------------------------
   ;; Babel
