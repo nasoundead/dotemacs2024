@@ -2,7 +2,7 @@
 (defvar sea-font-size 12
     "Current font size.")
 
-(defvar sea-fonts '((default . "FiraCode Nerd Font")
+(defvar sea-fonts '((default . "JetBrains Mono")
                         (cjk . "Microsoft Yahei")
                         (symbol . "Symbola")
                         (fixed . "Fira Code")
