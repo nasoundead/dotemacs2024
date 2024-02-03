@@ -1,7 +1,7 @@
 ;;; init-org.el
 ;;; Code:
 (defconst sea-org-directory
-  (expand-file-name "~/org/")
+  (expand-file-name "~/Org/")
   "org dir")
 
 (defconst sea-prettify-symbols-alist

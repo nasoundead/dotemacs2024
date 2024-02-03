@@ -8,9 +8,9 @@
 
       ;; treemacs
       (:after treemacs
-        (:map treemacs-mode-map
-          :n "h" #'treemacs-goto-parent-node
-          :n "l" #'treemacs-RET-action))
+	(:map treemacs-mode-map
+	  :n "h" #'treemacs-goto-parent-node
+	  :n "l" #'treemacs-RET-action))
 
       ;; --- Global keybindings ---------------------------
       ;; Make M-x available everywhere
@@ -56,54 +56,54 @@
       :v  "V"  #'er/contract-region
 
       (:map xref--xref-buffer-mode-map
-      :n "RET" #'xref-goto-xref
-      :n "j" #'xref-next-line
-      :n "k" #'xref-prev-line)
+	:n "RET" #'xref-goto-xref
+	:n "j" #'xref-next-line
+	:n "k" #'xref-prev-line)
 
       (:map custom-theme-choose-mode-map
-      :gvnime "j" #'widget-forward
-      :gvnime "k" #'widget-backward)
+	:gvnime "j" #'widget-forward
+	:gvnime "k" #'widget-backward)
 
       (:map blink-search-mode-map
-      :gvnime "C-j" #'blink-search-candidate-select-next
-      :gvnime "C-k" #'blink-search-candidate-select-prev
-      :gvnime "C-S-j" #'blink-search-candidate-group-select-next
-      :gvnime "C-S-k" #'blink-search-candidate-group-select-prev
-      :gvnime "M-j" #'blink-search-backend-select-next
-      :gvnime "M-k" #'blink-search-backend-select-prev
-      :gvnime "C-SPC" #'blink-search-preview
-      :gvnime "C-h" #'blink-search-parent)
+	:gvnime "C-j" #'blink-search-candidate-select-next
+	:gvnime "C-k" #'blink-search-candidate-select-prev
+	:gvnime "C-S-j" #'blink-search-candidate-group-select-next
+	:gvnime "C-S-k" #'blink-search-candidate-group-select-prev
+	:gvnime "M-j" #'blink-search-backend-select-next
+	:gvnime "M-k" #'blink-search-backend-select-prev
+	:gvnime "C-SPC" #'blink-search-preview
+	:gvnime "C-h" #'blink-search-parent)
 
       (:after evil
-      :textobj "x" #'evil-inner-xml-attr               #'evil-outer-xml-attr
-      :textobj "a" #'evil-inner-arg                    #'evil-outer-arg
-      :textobj "B" #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
-      :textobj "i" #'evil-indent-plus-i-indent         #'evil-indent-plus-a-indent
-      :textobj "k" #'evil-indent-plus-i-indent-up      #'evil-indent-plus-a-indent-up
-      :textobj "j" #'evil-indent-plus-i-indent-up-down #'evil-indent-plus-a-indent-up-down
+	:textobj "x" #'evil-inner-xml-attr               #'evil-outer-xml-attr
+	:textobj "a" #'evil-inner-arg                    #'evil-outer-arg
+	:textobj "B" #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
+	:textobj "i" #'evil-indent-plus-i-indent         #'evil-indent-plus-a-indent
+	:textobj "k" #'evil-indent-plus-i-indent-up      #'evil-indent-plus-a-indent-up
+	:textobj "j" #'evil-indent-plus-i-indent-up-down #'evil-indent-plus-a-indent-up-down
 
-      (:map evil-window-map           ; prefix "C-w"
-        ;; Navigation
-        "C-h"     #'evil-window-left
-        "C-j"     #'evil-window-down
-        "C-k"     #'evil-window-up
-        "C-l"     #'evil-window-right
-        "C-w"     #'other-window
-        "C-S-w"   #'ace-swap-window
-        ;; Window undo/redo
-        "u"       #'winner-undo
-        "C-u"     #'winner-undo
-        "C-r"     #'winner-redo
-        ;; split
-        "s"       #'sea/split-window-horizontally-instead
-        "v"       #'sea/split-window-vertically-instead
-        ;; Delete window
-        "c"     #'delete-window
-        "h"     #'shrink-window-horizontally
-        "l"     #'enlarge-window-horizontally
-        "j"     #'enlarge-window
-        "k"     #'shrink-window
-        ))
+	(:map evil-window-map           ; prefix "C-w"
+	  ;; Navigation
+	  "C-h"     #'evil-window-left
+	  "C-j"     #'evil-window-down
+	  "C-k"     #'evil-window-up
+	  "C-l"     #'evil-window-right
+	  "C-w"     #'other-window
+	  "C-S-w"   #'ace-swap-window
+	  ;; Window undo/redo
+	  "u"       #'winner-undo
+	  "C-u"     #'winner-undo
+	  "C-r"     #'winner-redo
+	  ;; split
+	  "s"       #'split-window-horizontally-instead
+	  "v"       #'split-window-vertically-instead
+	  ;; Delete window
+	  "c"     #'delete-window
+	  "h"     #'shrink-window-horizontally
+	  "l"     #'enlarge-window-horizontally
+	  "j"     #'enlarge-window
+	  "k"     #'shrink-window
+	  ))
 
       ;; evil-commentary
       :n  "gc"  #'evil-commentary
@@ -124,24 +124,24 @@
 
       ;; evil-mc
       (:prefix "gz"
-      :nv "m" #'evil-mc-make-all-cursors
-      :nv "u" #'evil-mc-undo-all-cursors
-      :nv "z" #'+evil/mc-make-cursor-here
-      :nv "t" #'+evil/mc-toggle-cursors
-      :nv "n" #'evil-mc-make-and-goto-next-cursor
-      :nv "p" #'evil-mc-make-and-goto-prev-cursor
-      :nv "N" #'evil-mc-make-and-goto-last-cursor
-      :nv "P" #'evil-mc-make-and-goto-first-cursor
-      :nv "d" #'evil-mc-make-and-goto-next-match
-      :nv "D" #'evil-mc-make-and-goto-prev-match
-      :nv "j" #'evil-mc-make-cursor-move-next-line
-      :nv "k" #'evil-mc-make-cursor-move-prev-line)
+	:nv "m" #'evil-mc-make-all-cursors
+	:nv "u" #'evil-mc-undo-all-cursors
+	:nv "z" #'+evil/mc-make-cursor-here
+	:nv "t" #'+evil/mc-toggle-cursors
+	:nv "n" #'evil-mc-make-and-goto-next-cursor
+	:nv "p" #'evil-mc-make-and-goto-prev-cursor
+	:nv "N" #'evil-mc-make-and-goto-last-cursor
+	:nv "P" #'evil-mc-make-and-goto-first-cursor
+	:nv "d" #'evil-mc-make-and-goto-next-match
+	:nv "D" #'evil-mc-make-and-goto-prev-match
+	:nv "j" #'evil-mc-make-cursor-move-next-line
+	:nv "k" #'evil-mc-make-cursor-move-prev-line)
       (:after evil-mc
-      :map evil-mc-key-map
-      :nv "C-n" #'evil-mc-make-and-goto-next-cursor
-      :nv "C-N" #'evil-mc-make-and-goto-last-cursor
-      :nv "C-p" #'evil-mc-make-and-goto-prev-cursor
-      :nv "C-P" #'evil-mc-make-and-goto-first-cursor)
+	:map evil-mc-key-map
+	:nv "C-n" #'evil-mc-make-and-goto-next-cursor
+	:nv "C-N" #'evil-mc-make-and-goto-last-cursor
+	:nv "C-p" #'evil-mc-make-and-goto-prev-cursor
+	:nv "C-P" #'evil-mc-make-and-goto-first-cursor)
 
       ;; evil-multiedit
       :v  "R"     #'evil-multiedit-match-all
@@ -151,13 +151,13 @@
       :v  "M-D"   #'evil-multiedit-match-and-prev
       :nv "C-M-d" #'evil-multiedit-restore
       (:after evil-multiedit
-      (:map evil-multiedit-state-map
-        "M-d" #'evil-multiedit-match-and-next
-        "M-D" #'evil-multiedit-match-and-prev
-        "RET" #'evil-multiedit-toggle-or-restrict-region)
-      (:map (evil-multiedit-state-map evil-multiedit-insert-state-map)
-        "C-n" #'evil-multiedit-next
-        "C-p" #'evil-multiedit-prev))
+	(:map evil-multiedit-state-map
+	  "M-d" #'evil-multiedit-match-and-next
+	  "M-D" #'evil-multiedit-match-and-prev
+	  "RET" #'evil-multiedit-toggle-or-restrict-region)
+	(:map (evil-multiedit-state-map evil-multiedit-insert-state-map)
+	  "C-n" #'evil-multiedit-next
+	  "C-p" #'evil-multiedit-prev))
 
       ;; auto-yasnippet
       :i  [C-tab] #'aya-expand
@@ -169,39 +169,39 @@
       :m  "]S" #'flyspell-correct-word-generic
       :m  "[S" #'flyspell-correct-previous-word-generic
       (:after flyspell
-      ;; Press RET on misspelled words to correct them
-      (:map flyspell-mouse-map
-        "RET" #'flyspell-correct-word-generic
-        "<mouse-1>" #'flyspell-correct-word-generic))
+	;; Press RET on misspelled words to correct them
+	(:map flyspell-mouse-map
+	  "RET" #'flyspell-correct-word-generic
+	  "<mouse-1>" #'flyspell-correct-word-generic))
 
-          ;; git-gutter
-          :m  "]d" #'git-gutter:next-hunk
-          :m  "[d" #'git-gutter:previous-hunk
+      ;; git-gutter
+      :m  "]d" #'git-gutter:next-hunk
+      :m  "[d" #'git-gutter:previous-hunk
 
-          ;; git-timemachine
-          (:after git-timemachine
-      (:map git-timemachine-mode-map
-        :n "C-p" #'git-timemachine-show-previous-revision
-        :n "C-n" #'git-timemachine-show-next-revision
-        :n "C-k" #'git-timemachine-show-previous-revision
-        :n "C-j" #'git-timemachine-show-next-revision
-        :n "[["  #'git-timemachine-show-previous-revision
-        :n "]]"  #'git-timemachine-show-next-revision
-        :n "q"   #'git-timemachine-quit
-        :n "gb"  #'git-timemachine-blame))
+      ;; git-timemachine
+      (:after git-timemachine
+	(:map git-timemachine-mode-map
+	  :n "C-p" #'git-timemachine-show-previous-revision
+	  :n "C-n" #'git-timemachine-show-next-revision
+	  :n "C-k" #'git-timemachine-show-previous-revision
+	  :n "C-j" #'git-timemachine-show-next-revision
+	  :n "[["  #'git-timemachine-show-previous-revision
+	  :n "]]"  #'git-timemachine-show-next-revision
+	  :n "q"   #'git-timemachine-quit
+	  :n "gb"  #'git-timemachine-blame))
 
       ;; gist
       (:after gist
-      :map gist-list-menu-mode-map
-      :n "b"   #'gist-browse-current-url
-      :n "c"   #'gist-add-buffer
-      :n "d"   #'gist-kill-current
-      :n "f"   #'gist-fork
-      :n "q"   #'quit-window
-      :n "r"   #'gist-list-reload
-      :n "s"   #'gist-star
-      :n "S"   #'gist-unstar
-      :n "y"   #'gist-print-current-url)
+	:map gist-list-menu-mode-map
+	:n "b"   #'gist-browse-current-url
+	:n "c"   #'gist-add-buffer
+	:n "d"   #'gist-kill-current
+	:n "f"   #'gist-fork
+	:n "q"   #'quit-window
+	:n "r"   #'gist-list-reload
+	:n "s"   #'gist-star
+	:n "S"   #'gist-unstar
+	:n "y"   #'gist-print-current-url)
 
       ;; --- Built-in plugins -----------------------------
       (:map* (help-mode-map helpful-mode-map)
@@ -210,8 +210,8 @@
 	     :n "]l" #'forward-button
 	     :n "[l" #'backward-button)
       (:after vc-annotate
-      :map vc-annotate-mode-map
-      [remap quit-window] #'kill-this-buffer)
+	:map vc-annotate-mode-map
+	[remap quit-window] #'kill-this-buffer)
       )
 
 ;; <leader>
