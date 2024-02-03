@@ -1,5 +1,5 @@
-(defvar sea-font-size 12
-    "Current font size.")
+(defvar sea-font-size 11
+  "Current font size.")
 
 (defvar sea-fonts '((default . "JetBrainsMono Nerd Font")
 		    (cjk . "Microsoft Yahei")

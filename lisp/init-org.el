@@ -414,20 +414,20 @@
 
 (use-package deft)
 
-;; (use-package org-roam
-;;   :custom
-;;   (org-roam-directory "~/roam-notes/") ;; 默认笔记目录, 提前手动创建好
-;;   (org-roam-dailies-directory "daily/") ;; 默认日记目录, 上一目录的相对路径
-;;   (org-roam-db-gc-threshold most-positive-fixnum) ;; 提高性能
-;;   :bind (("C-c n f" . org-roam-node-find)
-;;          ;; 如果你的中文输入法会拦截非 ctrl 开头的快捷键, 也可考虑类似如下的设置
-;;          ("C-c n f" . org-roam-node-find)
-;;          ("C-c n i" . org-roam-node-insert)
-;;          ("C-c n c" . org-roam-capture)
-;;          ("C-c n l" . org-roam-buffer-toggle)
-;;          ("C-c n d" . org-roam-dailies-map)
-;;          ("C-c n u" . org-roam-ui-mode))
-;;   )
+(use-package org-roam
+  :custom
+  (org-roam-directory "~/roam-notes/") ;; 默认笔记目录, 提前手动创建好
+  (org-roam-dailies-directory "daily/") ;; 默认日记目录, 上一目录的相对路径
+  (org-roam-db-gc-threshold most-positive-fixnum) ;; 提高性能
+  :bind (("C-c n f" . org-roam-node-find)
+	 ;; 如果你的中文输入法会拦截非 ctrl 开头的快捷键, 也可考虑类似如下的设置
+	 ("C-c n f" . org-roam-node-find)
+	 ("C-c n i" . org-roam-node-insert)
+	 ("C-c n c" . org-roam-capture)
+	 ("C-c n l" . org-roam-buffer-toggle)
+	 ("C-c n d" . org-roam-dailies-map)
+	 ("C-c n u" . org-roam-ui-mode))
+  )
 
 ;; (use-package org-roam-ui
 ;;   :custom
