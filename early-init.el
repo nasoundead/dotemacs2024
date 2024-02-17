@@ -106,7 +106,10 @@ line or use --debug-init to enable this.")
     (normal-top-level-add-subdirs-to-load-path)))
 
 (add-subdirs-to-load-path sea-core-dir)
-(add-subdirs-to-load-path sea-site-lisp-dir)
+;; (add-subdirs-to-load-path sea-site-lisp-dir)
+(add-to-list 'load-path "~/.emacs.d/site-lisp/blink-search/")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/simple-modeline/")
+;; (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
 
 
 (defconst sea-logo (expand-file-name
