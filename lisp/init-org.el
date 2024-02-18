@@ -67,7 +67,7 @@
      ("m" (hot-expand "<s" "emacs-lisp") "emacs-lisp")
      ("y" (hot-expand "<s" "python :results output") "python")
      ("z" (hot-expand "<s" "python :results graphics file output :file Figure.svg") "python graphics")
-     ("Y" (hot-expand "<s" "jupyter-python :kernel python3 :async yes") "jupyter-python")
+     ("Y" (hot-expand "<s" "jupyter-python :display plain") "jupyter-python")
      ("S" (hot-expand "<s" "sh") "sh")
      ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)") "golang"))
     "Misc"

@@ -1,14 +1,21 @@
 (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
 (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/app/pdf-viewer")
 (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/app/browser")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/app/netease-cloud-music")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/app/git")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/app/jupyter")
 (require 'eaf)
 (require 'eaf-pdf-viewer)
 (require 'eaf-browser)
+(require 'eaf-git)
+(require 'eaf-netease-cloud-music)
+(require 'eaf-jupyter)
+
 
 (use-package eaf
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
   :custom
-  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+					; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   (eaf-browser-continue-where-left-off t)
   (eaf-browser-enable-adblocker t)
   (browse-url-browser-function 'eaf-open-browser)
