@@ -19,3 +19,8 @@ lisp/core/.build/*
 etc/plantuml.jar
 eshell/history
 tramp
+/emacs_backtrace.txt
+/server/server1032
+/server/server10888
+eaf/session.json
+eaf/pdf/history/

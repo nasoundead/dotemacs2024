@@ -35,10 +35,10 @@
   :custom-face
   (cfrs-border-color ((t (:inherit posframe-border))))
   :bind (
-         ([f8]        . treemacs)
-         ("M-0"       . treemacs-select-window)
-         :map treemacs-mode-map
-         ([mouse-1]   . treemacs-single-click-expand-action))
+	 ([f8]        . treemacs)
+	 ("M-0"       . treemacs-select-window)
+	 :map treemacs-mode-map
+	 ([mouse-1]   . treemacs-single-click-expand-action))
 
   :config
   (setq
@@ -46,7 +46,21 @@
    treemacs-width                   30
    treemacs-missing-project-action  'remove
    treemacs-follow-after-init       t
+   treemacs-text-scale                      nil
+   treemacs-user-mode-line-format           nil
+   treemacs-user-header-line-format         nil
+   treemacs-select-when-already-in-treemacs 'move-back
+   treemacs-space-between-root-nodes        t
+   treemacs-litter-directories              '("/node_modules" "/.venv" "/.cask")
+   treemacs-project-follow-into-home        nil
+   treemacs-show-cursor                     nil
+   treemacs-show-hidden-files               t
+   treemacs-silent-filewatch                nil
+   treemacs-silent-refresh                  nil
    treemacs-sorting                 'alphabetic-asc
+   treemacs-hide-dot-git-directory          t
+   treemacs-indentation                     2
+   treemacs-indentation-string              " "
    )
 
   (treemacs-follow-mode t)
@@ -55,11 +69,14 @@
   (treemacs-fringe-indicator-mode 'always)
   (treemacs-hide-gitignored-files-mode nil)
   (pcase (cons (not (null (executable-find "git")))
-               (not (null treemacs-python-executable)))
+	       (not (null treemacs-python-executable)))
     (`(t . t)
      (treemacs-git-mode 'deferred))
     (`(t . _)
      (treemacs-git-mode 'simple)))
+  (when treemacs-python-executable
+    (treemacs-git-commit-diff-mode t))
+  (treemacs-hide-gitignored-files-mode nil)
   )
 
 (use-package treemacs-evil
@@ -69,18 +86,19 @@
   :after treemacs magit
   :commands treemacs-magit--schedule-update
   :hook ((magit-post-commit
-          git-commit-post-finish
-          magit-post-stage
-          magit-post-unstage)
-         . treemacs-magit--schedule-update))
+	  git-commit-post-finish
+	  magit-post-stage
+	  magit-post-unstage)
+	 . treemacs-magit--schedule-update))
 
-;; (use-package treemacs-nerd-icons
-;;     :demand t
-;;     :custom-face
-;;     (treemacs-nerd-icons-root-face ((t (:inherit nerd-icons-green :height 1.3))))
-;;     (treemacs-nerd-icons-file-face ((t (:inherit nerd-icons-dsilver))))
-;;     :config (treemacs-load-theme "nerd-icons"))
+(use-package treemacs-nerd-icons
+  :demand t
+  :custom-face
+  (treemacs-nerd-icons-root-face ((t (:inherit nerd-icons-green :height 1.3))))
+  (treemacs-nerd-icons-file-face ((t (:inherit nerd-icons-dsilver))))
+  :config (treemacs-load-theme "nerd-icons"))
 
+;; (use-package treemacs-all-the-icons)
 
 (provide 'init-treemacs)
 
