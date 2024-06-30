@@ -60,7 +60,8 @@
    treemacs-sorting                 'alphabetic-asc
    treemacs-hide-dot-git-directory          t
    treemacs-indentation                     2
-   treemacs-indentation-string              " "
+  ;;  treemacs-indentation-string              " "
+   treemacs-indent-guide-style              'line
    )
 
   (treemacs-follow-mode t)
@@ -93,9 +94,10 @@
 
 (use-package treemacs-nerd-icons
   :demand t
-  :custom-face
-  (treemacs-nerd-icons-root-face ((t (:inherit nerd-icons-green :height 1.3))))
-  (treemacs-nerd-icons-file-face ((t (:inherit nerd-icons-dsilver))))
+  :after treemacs
+  ;; :custom-face
+  ;; (treemacs-nerd-icons-root-face ((t (:inherit nerd-icons-green :height 1.3))))
+  ;; (treemacs-nerd-icons-file-face ((t (:inherit nerd-icons-dsilver))))
   :config (treemacs-load-theme "nerd-icons"))
 
 ;; (use-package treemacs-all-the-icons)

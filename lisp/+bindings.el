@@ -40,6 +40,8 @@
       :n  "zx" #'kill-this-buffer
       :m  "]a" #'evil-forward-arg
       :m  "[a" #'evil-backward-arg
+      :n  "H" #'next-buffer
+      :n  "L" #'previous-buffer
       :n  "]b" #'next-buffer
       :n  "[b" #'previous-buffer
       :nv "gd" #'+lookup/definition
