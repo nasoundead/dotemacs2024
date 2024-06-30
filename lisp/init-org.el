@@ -67,9 +67,10 @@
      ("m" (hot-expand "<s" "emacs-lisp") "emacs-lisp")
      ("y" (hot-expand "<s" "python :results output") "python")
      ("z" (hot-expand "<s" "python :results graphics file output :file Figure.svg") "python graphics")
-     ("Y" (hot-expand "<s" "jupyter-python :display plain") "jupyter-python")
+     ("Y" (hot-expand "<s" "jupyter-python") "jupyter-python")
      ("S" (hot-expand "<s" "sh") "sh")
-     ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)") "golang"))
+     ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)") "golang")
+     ("r" (hot-expand "<s" "rust") "rust"))
     "Misc"
     (("u" (hot-expand "<s" "plantuml :cmdline -charset utf-8 :file /images/CHANGE.png") "plantuml")
      ("<" self-insert-command "ins"))))
