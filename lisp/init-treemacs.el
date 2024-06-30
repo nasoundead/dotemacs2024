@@ -60,8 +60,8 @@
    treemacs-sorting                 'alphabetic-asc
    treemacs-hide-dot-git-directory          t
    treemacs-indentation                     2
-  ;;  treemacs-indentation-string              " "
-   treemacs-indent-guide-style              'line
+   ;;  treemacs-indentation-string              " "
+   treemacs-indent-guide-style              'block
    )
 
   (treemacs-follow-mode t)

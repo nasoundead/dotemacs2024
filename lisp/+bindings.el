@@ -10,7 +10,19 @@
       (:after treemacs
 	(:map treemacs-mode-map
 	  :n "h" #'treemacs-goto-parent-node
-	  :n "l" #'treemacs-RET-action))
+	  :n "l" #'treemacs-RET-action
+	  :n "d" #'treemacs-delete-file
+	  :n "R" #'treemacs-rename-file
+	  :n "cf" #'treemacs-create-file
+	  :n "cd" #'treemacs-create-dir
+	  :n "ya" #'treemacs-copy-absolute-path-at-point
+	  :n "yr" #'treemacs-copy-relative-path-at-point
+	  :n "yp" #'treemacs-copy-project-path-at-point
+	  :n "yf" #'treemacs-copy-file
+	  :n "q" #'treemacs-quit
+	  :n "M-j" #'treemacs-next-neighbour
+	  :n "M-k" #'treemacs-previous-neighbour
+	  ))
 
       ;; --- Global keybindings ---------------------------
       ;; Make M-x available everywhere
