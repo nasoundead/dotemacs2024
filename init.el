@@ -6,7 +6,8 @@
 
 (require 'init-better-defaults)
 (require 'init-project)
-;; (require 'init-eaf)
+(require 'init-dired)
+
 (require 'init-evil)
 (require 'init-keybindings)
 (require 'init-vertico)

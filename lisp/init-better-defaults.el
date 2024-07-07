@@ -1,7 +1,7 @@
 (setq initial-buffer-choice t)
 (setq user-full-name "nasoundead")       ;设置用户名
 (setq user-mail-address
-      "nasoundead@163.com") 	;设置邮箱
+      "nasoundead@163.com")	;设置邮箱
 (setq use-dialog-box nil)               ;never pop dialog
 (setq ring-bell-function 'ignore)       ;关闭烦人的出错时的提示声
 (setq mouse-yank-at-point t)            ;粘贴于光标处,而不是鼠标指针处
@@ -29,12 +29,12 @@
 ;; 关闭dir local
 (setq enable-dir-local-variables t)
 (setq scroll-margin 0); 设定滚动边距
-(setq-default 
+(setq-default
   truncate-lines t     ; 不要换行
   vc-follow-symlinks t
   ;; Save clipboard contents into kill-ring before replacing them
   save-interprogram-paste-before-kill t
-  ) 
+  )
 (setq truncate-partial-width-windows nil)
 (setq fill-column 180)
 (setq lexical-binding t)
@@ -65,19 +65,19 @@
 (use-package recentf
   :init
   (add-hook 'find-file-hook (lambda ()
-                              (unless recentf-mode
-                                (recentf-mode)
-                                (recentf-track-opened-file))))
+			      (unless recentf-mode
+				(recentf-mode)
+				(recentf-track-opened-file))))
   :config
   (setq recentf-save-file (concat sea-cache-dir "recentf")
-        recentf-max-menu-items 0
-        recentf-max-saved-items 300
-        recentf-filename-handlers '(file-truename)
-        recentf-exclude
-        (list "^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$"
-              "^/var/folders/.+$"
-              ;; ignore private sea temp files (but not all of them)
-              (concat "^" (file-truename sea-cache-dir)))))
+	recentf-max-menu-items 0
+	recentf-max-saved-items 300
+	recentf-filename-handlers '(file-truename)
+	recentf-exclude
+	(list "^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$"
+	      "^/var/folders/.+$"
+	      ;; ignore private sea temp files (but not all of them)
+	      (concat "^" (file-truename sea-cache-dir)))))
 
 (when sys/winp
   ;; make PC keyboard's Win key or other to type Super or Hyper, for emacs running on Windows.
@@ -94,14 +94,14 @@
   )
 
 (setq byte-compile-warnings '(not nresolved
-                                  free-vars
-                                  callargs
-                                  redefine
-                                  obsolete
-                                  noruntime
-                                  cl-functions
-                                  interactive-only
-                                  ))
+				  free-vars
+				  callargs
+				  redefine
+				  obsolete
+				  noruntime
+				  cl-functions
+				  interactive-only
+				  ))
 ;; coding
 (defun windows-shell-mode-coding ()
   (set-buffer-file-coding-system 'gbk)
@@ -118,7 +118,7 @@
   (add-hook 'shell-mode-hook #'windows-shell-mode-coding)
   (add-hook 'inferior-python-mode-hook #'windows-shell-mode-coding)
   (advice-add #'org-babel-execute:python :around
-              #'python-encode-in-org-babel-execute))
+	      #'python-encode-in-org-babel-execute))
  (t
   (set-language-environment "UTF-8")
   (prefer-coding-system 'utf-8)))
@@ -137,13 +137,13 @@
 (defcustom sea/buffer-skip-regexp
   (rx bos
       (or (or "*Backtrace*" "*Compile-Log*" "*Completions*"
-              "*Messages*" "*scratch*" "*Help*"
-              "*package*" "*Warnings*"
-              "*Async-native-compile-log*")
-          (seq "magit-diff" (zero-or-more anything))
-          (seq "magit-process" (zero-or-more anything))
-          (seq "magit-revision" (zero-or-more anything))
-          (seq "magit-stash" (zero-or-more anything)))
+	      "*Messages*" "*scratch*" "*Help*"
+	      "*package*" "*Warnings*" "*Dashboard*"
+	      "*Async-native-compile-log*")
+	  (seq "magit-diff" (zero-or-more anything))
+	  (seq "magit-process" (zero-or-more anything))
+	  (seq "magit-revision" (zero-or-more anything))
+	  (seq "magit-stash" (zero-or-more anything)))
       eos)
   "Regular expression matching buffers ignored by `next-buffer' and
 `previous-buffer'."
@@ -164,10 +164,10 @@
   (which-key-mode)
   :config
   (setq which-key-sort-order #'which-key-prefix-then-key-order
-        which-key-sort-uppercase-first nil
-        which-key-add-column-padding 1
-        which-key-max-display-columns nil
-        which-key-min-display-lines 5)
+	which-key-sort-uppercase-first nil
+	which-key-add-column-padding 1
+	which-key-max-display-columns nil
+	which-key-min-display-lines 5)
   ;; embolden local bindings
   (set-face-attribute 'which-key-local-map-description-face nil :weight 'bold)
   (which-key-setup-side-window-bottom))
@@ -194,12 +194,12 @@
 (use-package anzu
   :init (global-anzu-mode +1)
   :bind (([remap query-replace] . anzu-query-replace)
-         ([remap query-replace-regexp] . anzu-query-replace-regexp)
-         :map isearch-mode-map
-         ([remap isearch-query-replace] . anzu-isearch-query-replace)
-         ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
+	 ([remap query-replace-regexp] . anzu-query-replace-regexp)
+	 :map isearch-mode-map
+	 ([remap isearch-query-replace] . anzu-isearch-query-replace)
+	 ([remap isearch-query-replace-regexp] . anzu-isearch-query-replace-regexp))
   :config (setq anzu-replace-to-string-separator
-                (if (char-displayable-p ?→) " → " " -> ")))
+		(if (char-displayable-p ?→) " → " " -> ")))
 
 (setq isearch-lazy-count t)
 (setq lazy-count-prefix-format "%s/%s ")
