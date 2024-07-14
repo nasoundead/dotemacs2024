@@ -23,13 +23,12 @@
 	  company-preview-frontend
 	  company-echo-metadata-frontend))
 
-  (add-hook 'company-mode-hook #'(lambda ()
-				   (setq company-backends
-					 (delete 'company-bbdb
-						 (delete 'company-oddmuse
-							 (delete 'company-cmake
-								 (delete 'company-clang company-backends)))))
-				   ))
+  ;; (add-hook 'company-mode-hook #'(lambda ()
+  ;;				   (setq company-backends
+  ;;					 (delete 'company-bbdb
+  ;;						 (delete 'company-oddmuse
+  ;;							 (delete 'company-cmake
+  ;;								 (delete 'company-clang company-backends)))))))
 
   (defun advice-only-show-tooltip-when-invoked (orig-fun command)
     "原始的 company-pseudo-tooltip-unless-just-one-frontend-with-delay, 它一直会显示

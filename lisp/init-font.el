@@ -1,18 +1,19 @@
-(defvar sea-font-size 11
+(defvar sea-font-size 15
   "Current font size.")
 
 (defvar sea-fonts '(
-		    (default . "JetBrains Mono")
+		    (default . "Fira Code")
+		    ;; (default . "JetBrains Mono")
 		    ;; (default . "FiraCode Nerd Font")
 		    (cjk . "Microsoft Yahei")
 		    (symbol . "Symbola")
 		    (fixed . "Fira Code")
-		    (fixed-serif . "Fira Code")
-		    ;; (fixed-serif . "Monospace Serif")
+		    ;; (fixed-serif . "Fira Code")
+		    (fixed-serif . "Monospace Serif")
 		    (variable . "Fira Code")
 		    ;; (variable . "Sans Serif")
-		    (wide . "Fira Code")
-		    ;; (wide . "Monospace")
+		    ;; (wide . "Fira Code")
+		    (wide . "Monospace")
 		    (tall . "Fira Code"))
   ;; (tall . "Monospace"))
   "Fonts to use.")
