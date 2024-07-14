@@ -1,6 +1,5 @@
 (use-package company-lsp)
-(use-package company-tabnine)
-
+;; (use-package company-tabnine)
 (use-package company
   :ensure t
   :config
@@ -15,7 +14,7 @@
 	  company-keywords
 	  company-files
 	  company-yasnippet
-	  Company-tabnine
+	  ;; Company-tabnine
 	  company-lsp
 	  ))
   (setq company-frontends
@@ -83,10 +82,24 @@
     ("C-j"    . company-select-next-if-tooltip-visible-or-complete-selection)
     ("C-k"    . company-select-previous)
     )
-  :hook ((after-init . global-corfu-mode))
+  :hook ((after-init . global-corfu-mode)))
+
+(use-package tabnine
+  :custom
+  (tabnine-wait 1)
+  (tabnine-minimum-prefix-length 0)
+  ;; (tabnine-executable-args (list "--log-level" "Error" "--no-lsp" "false"))
+  :hook
+  (on-first-input . tabnine-start-process)
+  (prog-mode . tabnine-mode)
+  (text-mode . tabnine-mode)
+  (kill-emacs . tabnine-kill-process)
+  :config
+  (define-key tabnine-completion-map [tab] nil)
+  (define-key tabnine-completion-map (kbd "M-f") #'tabnine-accept-completion-by-word)
+  (define-key tabnine-completion-map (kbd "M-<return>") #'tabnine-accept-completion-by-line)
+  (define-key tabnine-completion-map (kbd "C-g") #'tabnine-clear-overlay)
+  (define-key tabnine-completion-map (kbd "M-[") #'tabnine-next-completion)
+  (define-key tabnine-completion-map (kbd "M-]") #'tabnine-previous-completion)
   )
-
 (provide 'init-company)
-
-;; (require 'company)
-;; (add-hook 'after-init-hook 'global-company-mode)
