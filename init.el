@@ -3,6 +3,7 @@
 
 (require 'init-core)
 (require 'init-utils)
+(require 'init-yasnippet)
 
 (require 'init-better-defaults)
 (require 'init-project)
