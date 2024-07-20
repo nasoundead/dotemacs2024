@@ -32,7 +32,7 @@
 (require 'init-py)
 (require 'init-go)
 (require 'init-rust)
-
+(require 'init-web)
 
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (load custom-file t t)
