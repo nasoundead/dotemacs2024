@@ -50,23 +50,23 @@
 ;;       tsx-ts-mode) . combobulate-mode)))
 
 
-(use-package combobulate
-  :straight (combobulate
-             :type git
-             :host github
-             :repo "mickeynp/combobulate")
-  :custom
-  (combobulate-key-prefix "C-c o")
-  :hook
-  ((python-ts-mode
-    js-ts-mode
-    css-ts-mode
-    yaml-ts-mode
-    typescript-ts-mode
-    tsx-ts-mode
-    rust-ts-mode
-    go-ts-mode) . combobulate-mode)
-  )
+;; (use-package combobulate
+;;   :straight (combobulate
+;;              :type git
+;;              :host github
+;;              :repo "mickeynp/combobulate")
+;;   :custom
+;;   (combobulate-key-prefix "C-c o")
+;;   :hook
+;;   ((python-ts-mode
+;;     js-ts-mode
+;;     css-ts-mode
+;;     yaml-ts-mode
+;;     typescript-ts-mode
+;;     tsx-ts-mode
+;;     rust-ts-mode
+;;     go-ts-mode) . combobulate-mode)
+;;   )
 
 (provide 'init-treesitter)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
