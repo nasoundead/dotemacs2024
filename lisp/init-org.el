@@ -338,13 +338,13 @@
      'user
      `(org-level-8 ((t (,@headline ,@variable-tuple))))
      `(org-level-7 ((t (,@headline ,@variable-tuple))))
-     `(org-level-6 ((t (,@headline ,@variable-tuple))))
-     `(org-level-5 ((t (,@headline ,@variable-tuple))))
-     `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
-     `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.2))))
-     `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.3))))
-     `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.4))))
-     `(org-document-title ((t (,@headline ,@variable-tuple :height 1.7 :underline nil))))))
+     `(org-level-6 ((t (,@headline ,@variable-tuple :height 1.03))))
+     `(org-level-5 ((t (,@headline ,@variable-tuple :height 1.06))))
+     `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.09))))
+     `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.12))))
+     `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.15))))
+     `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.25))))
+     `(org-document-title ((t (,@headline ,@variable-tuple :height 1.2 :underline nil))))))
 
   )
 
