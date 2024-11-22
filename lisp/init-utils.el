@@ -11,6 +11,8 @@
 		     ;; fanyi-longman-provider)
 		     )))
 
-
+;; (use-package ace-pinyin
+;;   :config
+;;   (ace-pinyin-global-mode +1))
 
 (provide 'init-utils)

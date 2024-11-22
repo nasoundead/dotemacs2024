@@ -171,6 +171,7 @@
 	    ("C-M-y" . org-rich-yank)))
 
   (use-package valign
+    :custom (valign-fancy-bar t)
     :hook (org-mode . valign-mode))
 
   ;; Table of contents
@@ -218,10 +219,26 @@
 		org-tree-slide-skip-comments t
 		org-tree-slide-skip-outline-level 3))
 
+;; Hexagrams
+;; "✡" "⎈" "✽" "✲" "✱" "✻" "✼" "✽" "✾" "✿" "❀" "❁" "❂" "❃" "❄" "❅" "❆" "❇"
+;; Circles
+;; "○" "☉" "◎" "◉" "○" "◌" "◎" "●" "◦" "◯" "⚪" "⚫" "⚬" "❍" "￮" "⊙" "⊚" "⊛" "∙" "∘"
+;; Special Circles
+;; "◐" "◑" "◒" "◓" "◴" "◵" "◶" "◷" "⚆" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"
+;; Crosses
+;; "✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"
+;; Poker Sybmols
+;; "♠" "♣" "♥" "♦" "♤" "♧" "♡" "♢"
+;; Yinyang
+;; "☯" "☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷"
+;; Special Symbols
+;; "☀" "♼" "☼" "☾" "☽" "☣" "§" "¶" "‡" "※" "✕" "△" "◇" "▶" "◀" "◈"
   (use-package org-superstar
     :hook (org-mode . org-superstar-mode)
     :init
-    (setq org-superstar-headline-bullets-list '("◉""○""◈""◇""⁕")))
+    ;; (setq org-superstar-headline-bullets-list '("◉""○""◈""◇""⁕"))
+    (setq org-superstar-headline-bullets-list '("○" "◎" "◉" "○" "◌" "◦" "∙"))
+    )
 
   ;; (use-package org-bullets
   ;;   :config
@@ -291,6 +308,17 @@
    org-eldoc-breadcrumb-separator " → "
    org-confirm-babel-evaluate nil
    org-hide-emphasis-markers t
+   org-special-ctrl-a/e t
+   org-html-coding-system 'utf-8
+   org-html-doctype "html5"
+   org-html-head  "<link rel='stylesheet' type='text/css' href='https://gongzhitaao.org/orgcss/org.css'/> "
+  ;;  如何在 Source Block 中像在语言 mode 中一样的缩进
+   org-src-tab-acts-natively t
+   org-src-preserve-indentation nil
+  ;; code block 默认折叠展示
+   org-hide-block-startup t
+
+   org-startup-numerated t
    )
 
   ;; Add new template

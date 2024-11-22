@@ -25,3 +25,4 @@ tramp
 eaf/session.json
 eaf/pdf/history/
 server*
+org-persist/
