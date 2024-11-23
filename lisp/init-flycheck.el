@@ -40,6 +40,19 @@
   (setq flycheck-emacs-lisp-load-path 'inherit)
   )
 
+;;; On Windows, commands run by flycheck may have CRs (\r\n line endings).
+;;; Strip them out before parsing.
+(defun flycheck-parse-output (output checker buffer)
+  "Parse OUTPUT from CHECKER in BUFFER.
+
+OUTPUT is a string with the output from the checker symbol
+CHECKER.  BUFFER is the buffer which was checked.
+
+Return the errors parsed with the error patterns of CHECKER."
+  (let ((sanitized-output (replace-regexp-in-string "\r" "" output))
+        )
+    (funcall (flycheck-checker-get checker 'error-parser) sanitized-output checker buffer)))
+
 (provide 'init-flycheck)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

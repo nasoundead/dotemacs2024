@@ -27,16 +27,17 @@
 
 (defconst sea-prettify-org-symbols-alist
   '(
-    ("#+BEGIN_SRC"    . ?⌜)
-    ("#+END_SRC"      . ?⌞)
-    ("#+begin_src"    . ?⌜)
-    ("#+end_src"      . ?⌞)
+    ;; ("#+BEGIN_SRC"    . ?⌜)
+    ;; ("#+END_SRC"      . ?⌞)
+    ;; ("#+begin_src"    . ?⌜)
+    ;; ("#+end_src"      . ?⌞)
 
-    ("#+BEGIN_QUOTE"  . ?«)
-    ("#+END_QUOTE"    . ?»)
-    ("#+begin_quote"  . ?«)
-    ("#+end_quote"    . ?»)
-    ("#+RESULTS:"     . ?💻))
+    ;; ("#+BEGIN_QUOTE"  . ?«)
+    ;; ("#+END_QUOTE"    . ?»)
+    ;; ("#+begin_quote"  . ?«)
+    ;; ("#+end_quote"    . ?»)
+    ;; ("#+RESULTS:"     . ?💻)
+    )
   "sea-prettify-org-symbols-alist")
 
 (use-package org
@@ -240,10 +241,6 @@
     (setq org-superstar-headline-bullets-list '("○" "◎" "◉" "○" "◌" "◦" "∙"))
     )
 
-  ;; (use-package org-bullets
-  ;;   :config
-  ;;   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
   (use-package org-fancy-priorities
     :hook (org-mode . org-fancy-priorities-mode)
     :init (setq org-fancy-priorities-list
@@ -328,6 +325,7 @@
 	  (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
 		((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
 		((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+		((x-list-fonts "FiraCode Nerd Font")   '(:font "FiraCode Nerd Font"))
 		((x-list-fonts "Verdana")         '(:font "Verdana"))
 		((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
 		(nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
@@ -534,5 +532,24 @@ it can be passed in POS."
 ;;   (org-roam-ui-sync-theme t)
 ;;   (org-roam-ui-follow t)
 ;;   (org-roam-ui-update-on-save t))
+
+(use-package org-download
+    :after org
+    :defer nil
+    :custom
+    (org-download-method 'directory)
+    (org-download-image-dir "images")
+    (org-download-heading-lvl nil)
+    (org-download-timestamp "%Y%m%d-%H%M%S_")
+    (org-image-actual-width 300)
+    (when (eq system-type 'windows-nt)
+      (setq org-download-screenshot-method "convert clipboard: %s"))
+    (org-download-annotate-function 'ignore)
+    ;; :bind
+    ;; ("C-M-y" . org-download-screenshot)
+    :bind (:map org-mode-map
+              ("<f2>" . org-download-screenshot))
+    :config
+    (require 'org-download))
 
 (provide 'init-org)

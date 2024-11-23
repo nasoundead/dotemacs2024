@@ -30,6 +30,9 @@
 
       ;; A little sandbox to run code in
       :gnvime "M-:" #'eval-expression
+      :gnvime "M-;" #'comment-dwim-2
+      :gnvime "C-a" #'smarter-move-beginning-of-line
+      :gnvime "C-e" #'move-end-of-line
 
       ;; Text-scaling
       :n "M-="   #'text-scale-increase

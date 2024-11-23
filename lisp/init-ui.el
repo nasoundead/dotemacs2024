@@ -16,7 +16,8 @@
 
 (setq custom-safe-themes t)
 (use-package color-theme-sanityinc-tomorrow)
-(setq-default custom-enabled-themes '(sanityinc-tomorrow-day))
+;; (setq-default custom-enabled-themes '(sanityinc-tomorrow-day))
+;; (setq-default custom-enabled-themes '(sanityinc-tomorrow-day))
 
 ;; Ensure that themes will be applied even if they have not been customized
 (defun reapply-themes ()

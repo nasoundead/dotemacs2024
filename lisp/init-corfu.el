@@ -95,32 +95,32 @@
   ;;(add-to-list 'completion-at-point-functions #'cape-line)
   )
 
-(use-package kind-icon
-  :ensure t
-  :after corfu
-  :custom
-  (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+;; (use-package kind-icon
+;;   :ensure t
+;;   :after corfu
+;;   :custom
+;;   (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+;;   :config
+;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-(use-package tabnine
-  :custom
-  (tabnine-wait 1)
-  (tabnine-minimum-prefix-length 0)
-  ;; (tabnine-executable-args (list "--log-level" "Error" "--no-lsp" "false"))
-  :hook
-  (on-first-input . tabnine-start-process)
-  (prog-mode . tabnine-mode)
-  (text-mode . tabnine-mode)
-  (kill-emacs . tabnine-kill-process)
-  :config
-  (define-key tabnine-completion-map [tab] nil)
-  (define-key tabnine-completion-map (kbd "M-f") #'tabnine-accept-completion-by-word)
-  (define-key tabnine-completion-map (kbd "M-<return>") #'tabnine-accept-completion-by-line)
-  (define-key tabnine-completion-map (kbd "C-g") #'tabnine-clear-overlay)
-  (define-key tabnine-completion-map (kbd "M-[") #'tabnine-next-completion)
-  (define-key tabnine-completion-map (kbd "M-]") #'tabnine-previous-completion)
-  )
+;; (use-package tabnine
+;;   :custom
+;;   (tabnine-wait 1)
+;;   (tabnine-minimum-prefix-length 0)
+;;   ;; (tabnine-executable-args (list "--log-level" "Error" "--no-lsp" "false"))
+;;   :hook
+;;   (on-first-input . tabnine-start-process)
+;;   (prog-mode . tabnine-mode)
+;;   (text-mode . tabnine-mode)
+;;   (kill-emacs . tabnine-kill-process)
+;;   :config
+;;   (define-key tabnine-completion-map [tab] nil)
+;;   (define-key tabnine-completion-map (kbd "M-f") #'tabnine-accept-completion-by-word)
+;;   (define-key tabnine-completion-map (kbd "M-<return>") #'tabnine-accept-completion-by-line)
+;;   (define-key tabnine-completion-map (kbd "C-g") #'tabnine-clear-overlay)
+;;   (define-key tabnine-completion-map (kbd "M-[") #'tabnine-next-completion)
+;;   (define-key tabnine-completion-map (kbd "M-]") #'tabnine-previous-completion)
+;;   )
 
 
 (provide 'init-corfu)
