@@ -142,6 +142,16 @@
               ;; For clients
               lsp-clients-python-library-directories '("/usr/local/" "/usr/"))
   :config
+  ;; tabnine配合工作
+  ;; (when (fboundp #'tabnine-completion-at-point)
+  ;; (add-hook 'lsp-completion-mode-hook
+  ;;           (defun lsp-capf ()
+  ;;             (remove-hook 'completion-at-point-functions #'lsp-completion-at-point t)
+  ;;             (add-hook 'completion-at-point-functions
+  ;;                       (cape-capf-super
+  ;;                        #'lsp-completion-at-point
+  ;;                        #'tabnine-completion-at-point) nil t))))
+
   (use-package consult-lsp
     :bind (:map lsp-mode-map
             ("C-M-." . consult-lsp-symbols)))
