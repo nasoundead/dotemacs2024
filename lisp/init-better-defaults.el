@@ -1,7 +1,7 @@
 (setq initial-buffer-choice t)
-(setq user-full-name "nasoundead")       ;设置用户名
+(setq user-full-name "nasoundead")      ;设置用户名
 (setq user-mail-address
-      "nasoundead@163.com")	;设置邮箱
+      "nasoundead@163.com")		;设置邮箱
 (setq use-dialog-box nil)               ;never pop dialog
 (setq ring-bell-function 'ignore)       ;关闭烦人的出错时的提示声
 (setq mouse-yank-at-point t)            ;粘贴于光标处,而不是鼠标指针处
@@ -11,7 +11,7 @@
 (setq inhibit-compacting-font-caches t) ;使用字体缓存，避免卡顿
 (setq word-wrap-by-category t)          ;按照中文折行
 (setq garbage-collection-messages t)	;gc时显示消息
-(setq byte-compile-warnings nil)	    ;关闭字节编译警告
+(setq byte-compile-warnings nil)	;关闭字节编译警告
 (setq load-prefer-newer nil)
 (setq ad-redefinition-action 'accept)   ;不要烦人的 redefine warning
 ;; 增加长行处理性能
@@ -139,7 +139,11 @@
       (or (or "*Backtrace*" "*Compile-Log*" "*Completions*"
 	      "*Messages*" "*scratch*" "*Help*"
 	      "*package*" "*Warnings*" "*Dashboard*"
-	      "*Async-native-compile-log*")
+	      "*Async-native-compile-log*" "*eshell*" "*lsp-log*"
+	      "*pyright*" "*pyright::stderr*"
+	      "*tabnine stderr*" "*tabnine-log*"
+	      )
+	  (seq "Treemacs" (zero-or-more anything))
 	  (seq "magit-diff" (zero-or-more anything))
 	  (seq "magit-process" (zero-or-more anything))
 	  (seq "magit-revision" (zero-or-more anything))
@@ -303,7 +307,7 @@ point reaches the beginning or end of the buffer, stop there."
 
 ;; remap C-a to `smarter-move-beginning-of-line'
 (global-set-key [remap move-beginning-of-line]
-                'smarter-move-beginning-of-line)
+		'smarter-move-beginning-of-line)
 
 (provide 'init-better-defaults)
 ;;; base ends here
