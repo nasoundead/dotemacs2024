@@ -2,8 +2,8 @@
   "Current font size.")
 
 (defvar sea-fonts '(
-		    (default . "Fira Code")
-		    ;; (default . "JetBrains Mono")
+		    ;; (default . "Fira Code")
+		    (default . "JetBrains Mono")
 		    ;; (default . "FiraCode Nerd Font")
 		    (cjk . "Microsoft Yahei")
 		    (symbol . "Symbola")
