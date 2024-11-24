@@ -41,24 +41,25 @@
   (setq custom-enabled-themes '(sanityinc-tomorrow-bright))
   (reapply-themes))
 
-;; (use-package doom-themes
-;;   :ensure t
-;;   :config
-;;   ;; Global settings (defaults)
-;;   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-;; 	doom-themes-enable-italic t) ; if nil, italics is universally disabled
-;;   ;; (load-theme 'doom-one t)
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+	doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; (load-theme 'doom-one t)
 
-;;   ;; Enable flashing mode-line on errors
-;;   (doom-themes-visual-bell-config)
-;;   ;; Enable custom neotree theme (all-the-icons must be installed!)
-;;   ;; (doom-themes-neotree-config)
-;;   ;; or for treemacs users
-;;   ;; (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-;;   ;; (setq doom-themes-treemacs-theme "doom-colos") ; use "doom-colors" for less minimal icon theme
-;;   ;; (doom-themes-treemacs-config)
-;;   ;; Corrects (and improves) org-mode's native fontification.
-;;   (doom-themes-org-config))
+  ;; Enable flashing mode-line on errors
+  ;; (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  ;; (doom-themes-neotree-config)
+  ;; or for treemacs users
+  ;; (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  ;; (setq doom-themes-treemacs-theme "doom-colos") ; use "doom-colors" for less minimal icon theme
+  ;; (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  ;; (doom-themes-org-config)
+  )
 
 ;; highlight matching delimiters
 (setq show-paren-delay 0.1
@@ -139,12 +140,12 @@
 
   (setq dashboard-set-init-info t)
   (setq dashboard-items '((recents  . 9)
-                          (bookmarks . 5)
-                          (projects . 9)
-                          (agenda . 5)
-                          (registers . 5)))
+			  (bookmarks . 5)
+			  (projects . 9)
+			  (agenda . 5)
+			  (registers . 5)))
   (setq show-week-agenda-p t)
-)
+  )
 
 ;; (use-package nerd-icons-buffer-menu
 ;;   :straight (nerd-icons-buffer-menu :type git :host github :repo "jcs-elpa/nerd-icons-buffer-menu")
