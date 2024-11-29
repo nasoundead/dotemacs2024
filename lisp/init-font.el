@@ -1,21 +1,21 @@
-(defvar sea-font-size 12
+(defvar sea-font-size 11
   "Current font size.")
 
 (defvar sea-fonts '(
 		    ;; (default . "Fira Code")
-		    (default . "Manaco Nerd Font")
+		    (default . "Monaco Nerd Font")
 		    ;; (default . "JetBrains Mono")
 		    ;; (default . "FiraCode Nerd Font")
 		    (cjk . "Microsoft Yahei")
 		    (symbol . "Symbola")
-		    (fixed . "Manaco Nerd Font")
-		    (fixed-serif . "Manaco Nerd Font")
+		    (fixed . "Monaco Nerd Font")
+		    (fixed-serif . "Monaco Nerd Font")
 		    ;; (fixed-serif . "Monospace Serif")
-		    (variable . "Manaco Nerd Font")
+		    (variable . "Monaco Nerd Font")
 		    ;; (variable . "Sans Serif")
-		    (wide . "Manaco Nerd Font")
+		    (wide . "Monaco Nerd Font")
 		    ;; (wide . "Monospace")
-		    (tall . "Manaco Nerd Font"))
+		    (tall . "Monaco Nerd Font"))
   ;; (tall . "Monospace"))
   "Fonts to use.")
 
@@ -85,9 +85,9 @@
 
 ;; Run after startup
 (add-hook 'after-init-hook
-	(lambda ()
+	  (lambda ()
 	    (when window-system
-	    (sea-load-charset-font))))
+	      (sea-load-charset-font))))
 
 
 (use-package all-the-icons
