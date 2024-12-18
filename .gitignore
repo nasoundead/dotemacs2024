@@ -27,3 +27,4 @@ eaf/pdf/history/
 server*
 org-persist/
 eshell/lastdir
+.#*
