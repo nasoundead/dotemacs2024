@@ -180,6 +180,9 @@
 ;; Save clipboard contents into kill-ring before replace them
 (setq save-interprogram-paste-before-kill t)
 
+;; 抑制自动弹出warning窗口
+(setq-default inhibit-message t)
+
 (global-hl-line-mode)
 
 (use-package dash
