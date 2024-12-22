@@ -5,6 +5,7 @@
 (map! [remap evil-jump-to-tag] #'projectile-find-tag
       [remap find-tag]         #'projectile-find-tag
       [remap describe-bindings] #'embark-bindings
+      [remap dired-diff] #'sea/dired-diff
 
       ;; treemacs
       (:after treemacs
