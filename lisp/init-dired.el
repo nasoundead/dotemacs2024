@@ -41,35 +41,10 @@
 	  (lambda ()
 	    (define-key dired-mode-map (kbd "^")
 	      (lambda () (interactive) (find-alternate-file "..")))))
-(eval-after-load 'dired '(lambda () (;; Always delete and copy recursively
-				     (setq dired-recursive-deletes 'always
-					   dired-recursive-copies 'always)
-				     ;; we want dired not not make always a new buffer if visiting a directory
-				     ;; but using only one dired buffer for all directories.
-				     (defadvice dired-advertised-find-file (around dired-subst-directory activate)
-				       "Replace current buffer if file is a directory."
-				       (interactive)
-				       (let ((orig (current-buffer))
-					     (filename (dired-get-filename)))
-					 ad-do-it
-					 (when (and (file-directory-p filename)
-						    (not (eq (current-buffer) orig)))
-					   (kill-buffer orig))))
-				     (when  IS-MAC
-				       ;; Suppress the warning: `ls does not support --dired'.
-				       (setq dired-use-ls-dired nil)
-
-				       (when (executable-find "gls")
-					 ;; Use GNU ls as `gls' from `coreutils' if available.
-					 (setq insert-directory-program "gls")))
-
-				     (when (or (and IS-MAC (executable-find "gls"))
-					       (and (or IS-LINUX IS-MAC) (executable-find "ls")))
-				       ;; Using `insert-directory-program'
-				       (setq ls-lisp-use-insert-directory-program t)
-				       ;; Show directory first
-				       (setq dired-listing-switches "-alh --group-directories-first"))
-				     )))
+;; (with-eval-after-load 'dired
+;;   (define-key dired-mode-map (kbd "C-x C-d") 'dired-diff)
+;;   (define-key dired-mode-map (kbd "C-x C-e") 'dired-ediff-files)
+;;   (define-key dired-mode-map (kbd "C-x C-r") 'dired-do-rsync))
 
 
 ;; Directory operations
@@ -116,13 +91,7 @@
   (use-package diredfl
     :hook (dired-mode . diredfl-mode))
 
-  ;; Shows icons
-  ;; (use-package nerd-icons-dired
-  ;;   :diminish
-  ;;   :custom-face
-  ;;   (nerd-icons-dired-dir-face ((t (:inherit nerd-icons-dsilver :foreground unspecified))))
-  ;;   :hook (dired-mode . nerd-icons-dired-mode))
-  ;; )
+)
 
 ;; `find-dired' alternative using `fd'
 (when (executable-find "fd")
