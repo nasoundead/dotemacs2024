@@ -8,6 +8,7 @@
 (require 'init-better-defaults)
 (require 'init-project)
 (require 'init-dired)
+;; (require 'init-term)
 
 (require 'init-evil)
 (require 'init-keybindings)
