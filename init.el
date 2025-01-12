@@ -8,7 +8,7 @@
 (require 'init-better-defaults)
 (require 'init-project)
 (require 'init-dired)
-;; (require 'init-term)
+(require 'init-term)
 
 (require 'init-evil)
 (require 'init-keybindings)
@@ -16,6 +16,7 @@
 (require 'init-vertico)
 ;; (require 'init-company)
 (require 'init-corfu)
+(require 'init-gpt)
 (require 'init-hydra)
 (require 'init-folding)
 (require 'init-flycheck)

@@ -103,26 +103,33 @@
 				  interactive-only
 				  ))
 ;; coding
-(defun windows-shell-mode-coding ()
-  (set-buffer-file-coding-system 'gbk)
-  (set-buffer-process-coding-system 'gbk 'gbk))
-(defun python-encode-in-org-babel-execute (func body params)
-    (let ((coding-system-for-write 'utf-8))
-      (funcall func body params)))
-(cond
- ((eq system-type 'sys/winp)
-  (set-language-environment "chinese-gbk")
-  (prefer-coding-system 'utf-8)
-  (set-terminal-coding-system 'gbk)
-  (modify-coding-system-alist 'process "*" 'gbk)
-  (add-hook 'shell-mode-hook #'windows-shell-mode-coding)
-  (add-hook 'inferior-python-mode-hook #'windows-shell-mode-coding)
-  (advice-add #'org-babel-execute:python :around
-	      #'python-encode-in-org-babel-execute))
- (t
-  (set-language-environment "UTF-8")
-  (prefer-coding-system 'utf-8)))
+;; (defun windows-shell-mode-coding ()
+;;   (set-buffer-file-coding-system 'gbk)
+;;   (set-buffer-process-coding-system 'gbk 'gbk))
+;; (defun python-encode-in-org-babel-execute (func body params)
+;;     (let ((coding-system-for-write 'utf-8))
+;;       (funcall func body params)))
+;; (cond
+;;  ((eq system-type 'sys/winp)
+;;   (set-language-environment "chinese-gbk")
+;;   (prefer-coding-system 'utf-8)
+;;   (set-terminal-coding-system 'gbk)
+;;   (modify-coding-system-alist 'process "*" 'gbk)
+;;   (add-hook 'shell-mode-hook #'windows-shell-mode-coding)
+;;   (add-hook 'inferior-python-mode-hook #'windows-shell-mode-coding)
+;;   (advice-add #'org-babel-execute:python :around
+;;	      #'python-encode-in-org-babel-execute))
+;;  (t
+;;   (set-language-environment "UTF-8")
+;;   (prefer-coding-system 'utf-8)))
 
+;; 设置默认编码为 UTF-8
+(setq default-buffer-file-coding-system 'utf-8-unix)
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
 
 ;; Environment
 (when (or (eq system-type 'darwin) (eq system-type 'gnu/linux))
