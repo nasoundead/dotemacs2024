@@ -12,5 +12,5 @@
                 .s       `++``o:  ``   
                         `:- `:-                     
          
-   CENTAUR EMACS - Enjoy Programming & Writing
+   NASO EMACS - Enjoy Programming & Writing
 
