@@ -348,7 +348,7 @@
 
 
 ;; snipshort
-(defvar clipjar-location (concat sea-bin-dir "Clip.jar"))
+(defvar clipjar-location (concat sea-etc-dir "Clip.jar"))
 (defun org-paste-image ()
   (interactive)
   ;; create images dir
