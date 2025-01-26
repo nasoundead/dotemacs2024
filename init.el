@@ -9,6 +9,7 @@
 (require 'init-project)
 (require 'init-dired)
 (require 'init-term)
+(require 'init-rime)
 
 (require 'init-evil)
 (require 'init-keybindings)

@@ -32,8 +32,10 @@
 ;;
 ;;
 (use-package vterm
-    :ensure t)
+  :when sys/linux-x-p
+  :ensure t)
 (use-package multi-vterm
+  :when sys/linux-x-p
   :config
   (add-hook 'vterm-mode-hook
 	    (lambda ()

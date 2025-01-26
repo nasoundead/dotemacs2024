@@ -33,30 +33,31 @@
 ;;
 
 
-(defvar sea-font-size 11
+(defvar sea-font-size 12
  "Current font size.")
 
 (defvar sea-fonts '(
 		    ;; (default . "Fira Code")
 		    ;; (default . "Comic Code")
 		    ;; (default . "Monaco Nerd Font")
-		    (default . "JetBrains Mono")
+		    ;; (default . "JetBrains Mono")
+		    (default . "Iosevka NF")
 		    ;; (default . "FiraCode Nerd Font")
 		    (cjk . "Microsoft Yahei")
 		    (symbol . "Symbola")
 		    ;; (fixed . "Comic Code")
-		    (fixed . "JetBrains Mono")
+		    (fixed . "Iosevka NF")
 		    ;; (fixed-serif . "Comic Code")
-		    (fixed-serif . "JetBrains Mono")
+		    (fixed-serif . "Iosevka NF")
 		    ;; (fixed-serif . "Monospace Serif")
 		    ;; (variable . "Comic Code")
-		    (variable . "JetBrains Mono")
+		    (variable . "Iosevka NF")
 		    ;; (variable . "Sans Serif")
 		    ;; (wide . "Comic Code")
-		    (wide . "JetBrains Mono")
+		    (wide . "Iosevka NF")
 		    ;; (wide . "Monospace")
 		    ;; (tall . "Comic Code"))
-		    (tall . "JetBrains Mono"))
+		    (tall . "Iosevka NF"))
   ;; (tall . "Monospace"))
   "Fonts to use.")
 

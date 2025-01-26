@@ -292,7 +292,18 @@
   (setq
     undo-tree-auto-save-history nil
     undo-tree-history-directory-alist `(("." . ,(concat sea-cache-dir "undo/")))))
+;; 输入法切换
+(when sys/winp
+  (defun emacs-ime-disable ()
+    ;; (setq pgtk-use-im-context-on-new-connection nil)
+    (w32-set-ime-open-status nil))
 
+  (defun emacs-ime-enable ()
+    (w32-set-ime-open-status t))
+  (add-hook 'after-init-hook 'emacs-ime-disable)
+  (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
+  (add-hook 'evil-insert-state-entry-hook 'emacs-ime-enable)
+  )
 (use-package hungry-delete)
 (global-hungry-delete-mode)
 

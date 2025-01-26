@@ -42,7 +42,7 @@
 
 (use-package org
   ;; :mode (("\\.org$" . org-mode))
-  ;; :ensure org-plus-contrib
+  :ensure org-plus-contrib
   :pretty-hydra
   ((:title (pretty-hydra-title "Org Template" 'fileicon "org" :face 'all-the-icons-green :height 1.1 :v-adjust 0.0)
 	   :color blue :quit-key "q")
@@ -220,25 +220,10 @@
 		org-tree-slide-skip-comments t
 		org-tree-slide-skip-outline-level 3))
 
-;; Hexagrams
-;; "✡" "⎈" "✽" "✲" "✱" "✻" "✼" "✽" "✾" "✿" "❀" "❁" "❂" "❃" "❄" "❅" "❆" "❇"
-;; Circles
-;; "○" "☉" "◎" "◉" "○" "◌" "◎" "●" "◦" "◯" "⚪" "⚫" "⚬" "❍" "￮" "⊙" "⊚" "⊛" "∙" "∘"
-;; Special Circles
-;; "◐" "◑" "◒" "◓" "◴" "◵" "◶" "◷" "⚆" "⚇" "⚈" "⚉" "♁" "⊖" "⊗" "⊘"
-;; Crosses
-;; "✙" "♱" "♰" "☥" "✞" "✟" "✝" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"
-;; Poker Sybmols
-;; "♠" "♣" "♥" "♦" "♤" "♧" "♡" "♢"
-;; Yinyang
-;; "☯" "☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷"
-;; Special Symbols
-;; "☀" "♼" "☼" "☾" "☽" "☣" "§" "¶" "‡" "※" "✕" "△" "◇" "▶" "◀" "◈"
-  (use-package org-superstar
-    :hook (org-mode . org-superstar-mode)
-    :init
-    ;; (setq org-superstar-headline-bullets-list '("◉""○""◈""◇""⁕"))
-    (setq org-superstar-headline-bullets-list '("○" "◎" "◉" "○" "◌" "◦" "∙"))
+  (use-package org-bars
+    :straight (:host github
+                :repo "tonyaldon/org-bars")
+    :hook (org-mode . org-bars-mode)
     )
 
   (use-package org-fancy-priorities
@@ -343,6 +328,19 @@
      `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.15))))
      `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.25))))
      `(org-document-title ((t (,@headline ,@variable-tuple :height 1.2 :underline nil))))))
+
+    ;; Make verbatim with highlight text background.
+    (add-to-list 'org-emphasis-alist
+              '("=" (:background "#fef7ca")))
+    ;; Make deletion(obsolote) text foreground with dark gray.
+    (add-to-list 'org-emphasis-alist
+              '("+" (:foreground "dark gray"
+                      :strike-through t)))
+    ;; Make code style around with box.
+    (add-to-list 'org-emphasis-alist
+              '("~" (:box (:line-width 1
+                            :color "grey75"
+                            :style released-button))))
 
   )
 
