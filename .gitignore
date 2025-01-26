@@ -28,3 +28,4 @@ server*
 org-persist/
 eshell/lastdir
 .#*
+eln-cache/*
