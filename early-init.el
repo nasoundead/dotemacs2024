@@ -92,7 +92,7 @@ line or use --debug-init to enable this.")
   "etc directory.")
 
 (defconst sea-cache-dir
-  (expand-file-name "cache/" user-emacs-directory)
+  (expand-file-name ".cache/" user-emacs-directory)
   "Cache directory.")
 
 (defconst sea-site-lisp-dir
@@ -116,3 +116,13 @@ line or use --debug-init to enable this.")
                     (if (display-graphic-p) "logo.png" "banner.txt")
                     sea-etc-dir)
   "Set logo. nil means official logo.")
+
+(setq byte-compile-warnings '(not nresolved
+                                  free-vars
+                                  callargs
+                                  redefine
+                                  obsolete
+                                  noruntime
+                                  cl-functions
+                                  interactive-only
+                                  ))

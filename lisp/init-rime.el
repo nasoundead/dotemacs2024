@@ -21,6 +21,11 @@
 ;;   :bind ("M-j" . pyim-convert-string-at-point))
 
 (use-package rime
+  :when sys/linuxp
+  :straight (rime :type git
+                  :host github
+                  :repo "DogLooksGood/emacs-rime"
+                  :files ("*.el" "Makefile" "lib.c"))
   :custom
   (default-input-method "rime"))
 

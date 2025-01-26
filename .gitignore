@@ -3,6 +3,7 @@ projects
 custom.el
 elpa/
 *.el~
+.cache/
 cache/recentf
 cache/savehist
 cache/saveplace
