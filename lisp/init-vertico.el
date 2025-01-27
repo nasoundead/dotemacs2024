@@ -22,7 +22,13 @@
   ;;       orderless-component-separator #'orderless-escapable-split-on-space)
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion))))))
+        completion-category-overrides '((file (styles . (partial-completion)))))
+  :config
+  (defun my-orderless-regexp (orig-func component)
+    (let ((result (funcall orig-func component)))
+      (pyim-cregexp-build result)))
+  (advice-add 'orderless-regexp :around #'my-orderless-regexp)
+)
 
 (use-package marginalia
   :after vertico
@@ -34,7 +40,7 @@
 
 (use-package vertico-posframe
   :init
-  ;; (vertico-posframe-mode)
+  (vertico-posframe-mode)
   (setq vertico-posframe-parameters
         '((left-fringe . 8)
           (right-fringe . 8)))

@@ -30,3 +30,4 @@ org-persist/
 eshell/lastdir
 .#*
 eln-cache/*
+pyim/*
