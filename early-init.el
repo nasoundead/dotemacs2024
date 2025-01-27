@@ -116,7 +116,8 @@ line or use --debug-init to enable this.")
                     (if (display-graphic-p) "logo.png" "banner.txt")
                     sea-etc-dir)
   "Set logo. nil means official logo.")
-
+(setq warning-minimum-level :error)
+(setq native-comp-jit-compilation nil)
 (setq byte-compile-warnings '(not nresolved
                                   free-vars
                                   callargs
