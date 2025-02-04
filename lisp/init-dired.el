@@ -40,53 +40,77 @@
 
 
 (with-eval-after-load 'dired
-  (defun my-dired-init ()
-	"to be run as hook for `dired-mode'."
-	;; (dired-hide-details-mode 1)
-	;; Guess a default target directory
-	(setq dired-dwim-target t)
+ (defun my-dired-init ()
+ "to be run as hook for `dired-mode'."
+ ;; (dired-hide-details-mode 1)
+    (setq delete-by-moving-to-trash t)
+ ;; Guess a default target directory
+ (setq dired-dwim-target t)
 
-	;; Always delete and copy recursively
-	(setq dired-recursive-deletes 'always
-		dired-recursive-copies 'always)
+ ;; Always delete and copy recursively
+ (setq dired-recursive-deletes 'always
+	dired-recursive-copies 'always)
 
-	;; Show directory first
-	(setq dired-listing-switches "-alh --group-directories-first")
+ ;; Show directory first
+ (setq dired-listing-switches "-alh --group-directories-first")
 
-	;; Quick sort dired buffers via hydra
-	(use-package dired-quick-sort
-		:bind (:map dired-mode-map
-			("S" . hydra-dired-quick-sort/body)))
+ ;; Quick sort dired buffers via hydra
+ (use-package dired-quick-sort
+ :bind (:map dired-mode-map
+	("S" . hydra-dired-quick-sort/body)))
 
-	;; Show git info in dired
-	(use-package dired-git-info
-		:bind (:map dired-mode-map
-			(")" . dired-git-info-mode)))
+ ;; Show git info in dired
+ (use-package dired-git-info
+ :bind (:map dired-mode-map
+	(")" . dired-git-info-mode)))
 
-	;; Allow rsync from dired buffers
-	(use-package dired-rsync
-		:bind (:map dired-mode-map
-			("C-c C-r" . dired-rsync)))
+ ;; Allow rsync from dired buffers
+ (use-package dired-rsync
+ :bind (:map dired-mode-map
+	("C-c C-r" . dired-rsync)))
 
-	;; Colorful dired
-	(use-package diredfl
-		:hook (dired-mode . diredfl-mode))
+ ;; Colorful dired
+ (use-package diredfl
+ :hook (dired-mode . diredfl-mode))
 
-	;; `find-dired' alternative using `fd'
-	(when (executable-find "fd")
-		(use-package fd-dired))
-	)
+ ;; `find-dired' alternative using `fd'
+ (when (executable-find "fd")
+ (use-package fd-dired))
+ )
 
-	(add-hook 'dired-mode-hook 'my-dired-init)
+ (add-hook 'dired-mode-hook 'my-dired-init)
 
-	(when (>= emacs-major-version 28)
-		(setq dired-kill-when-opening-new-dired-buffer t))
-	
-	(when (< emacs-major-version 28)
-		(progn
-			(define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
-			(define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))))
-)
+ (when (>= emacs-major-version 28)
+ (setq dired-kill-when-opening-new-dired-buffer t))
+ (when (< emacs-major-version 28)
+ (progn
+ (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+ (define-key dired-mode-map (kbd "^") (lambda () (interactive) (find-alternate-file "..")))))
+ )
+(use-package nerd-icons-dired
+ :ensure t
+ :hook
+ (dired-mode . nerd-icons-dired-mode))
 
+(use-package dired-subtree
+ :ensure t
+ :after dired
+ :bind
+ ( :map dired-mode-map
+  ("<tab>" . dired-subtree-toggle)
+  ("TAB" . dired-subtree-toggle)
+  ("<backtab>" . dired-subtree-remove)
+  ("S-TAB" . dired-subtree-remove))
+ :config
+ (setq dired-subtree-use-backgrounds nil))
+
+(use-package trashed
+ :ensure t
+ :commands (trashed)
+ :config
+ (setq trashed-action-confirmer 'y-or-n-p)
+ (setq trashed-use-header-line t)
+ (setq trashed-sort-key '("Date deleted" . t))
+ (setq trashed-date-format "%Y-%m-%d %H:%M:%S"))
 
 (provide 'init-dired)

@@ -2,10 +2,10 @@
 (use-package vertico
   :ensure t
   :bind (:map vertico-map
-          ("C-j" . vertico-next)
-          ("C-k" . vertico-previous)
-          :map minibuffer-local-map
-          ("M-h" . backward-kill-word))
+	  ("C-j" . vertico-next)
+	  ("C-k" . vertico-previous)
+	  :map minibuffer-local-map
+	  ("M-h" . backward-kill-word))
   :custom
   (vertico-cycle t)
   :config
@@ -21,8 +21,8 @@
   ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
   ;;       orderless-component-separator #'orderless-escapable-split-on-space)
   (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion)))))
+	completion-category-defaults nil
+	completion-category-overrides '((file (styles . (partial-completion)))))
   :config
   (defun my-orderless-regexp (orig-func component)
     (let ((result (funcall orig-func component)))
@@ -31,32 +31,38 @@
 )
 
 (use-package marginalia
-  :after vertico
-  :ensure t
-  :custom
-  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  :init
-  (marginalia-mode))
+ :after vertico
+ :ensure t
+ :custom
+ (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+ :init
+ (marginalia-mode))
+
+(use-package nerd-icons-completion
+ :ensure t
+ :after marginalia
+ :config
+ (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
 (use-package vertico-posframe
-  :init
-  (vertico-posframe-mode)
-  (setq vertico-posframe-parameters
-        '((left-fringe . 8)
-          (right-fringe . 8)))
-  :hook (vertico-mode . vertico-posframe-mode))
+ :init
+ (vertico-posframe-mode)
+ (setq vertico-posframe-parameters
+ '((left-fringe . 8)
+  (right-fringe . 8)))
+ :hook (vertico-mode . vertico-posframe-mode))
 
 (use-package consult
   :init
   (if sys/winp
       (progn
-        (add-to-list 'process-coding-system-alist '("es" gbk . gbk))
-        (add-to-list 'process-coding-system-alist '("explorer" gbk . gbk))
-        (setq consult-locate-args (encode-coding-string "es.exe -i -p -r" 'gbk))))
+	(add-to-list 'process-coding-system-alist '("es" gbk . gbk))
+	(add-to-list 'process-coding-system-alist '("explorer" gbk . gbk))
+	(setq consult-locate-args (encode-coding-string "es.exe -i -p -r" 'gbk))))
   (advice-add #'multi-occur :override #'consult-multi-occur)
   :config
   (global-set-key (kbd "M-y") 'consult-yank-pop)
-  (setq 
+  (setq
   ;; consult-project-root-function #'doom-project-root
    consult-narrow-key "<"
    consult-line-numbers-widen t
@@ -77,15 +83,15 @@
 (use-package consult-dir
   :ensure t
   :bind (("C-x C-d" . consult-dir)
-          :map minibuffer-local-completion-map
-          ("C-x C-d" . consult-dir)
-          ("C-x C-j" . consult-dir-jump-file)))
+	  :map minibuffer-local-completion-map
+	  ("C-x C-d" . consult-dir)
+	  ("C-x C-j" . consult-dir-jump-file)))
 ;; (use-package consult-projectile)
 (use-package embark
   :defer t
   :init
   (setq which-key-use-C-h-commands nil
-        prefix-help-command #'embark-prefix-help-command)
+	prefix-help-command #'embark-prefix-help-command)
   :config
   (require 'consult)
   (require 'consult)
@@ -98,19 +104,19 @@
   ;; add the package! target finder before the file target finder,
   ;; so we don't get a false positive match.
   (let ((pos (or (cl-position
-                  'embark-target-file-at-point
-                  embark-target-finders)
-                 (length embark-target-finders))))
+		  'embark-target-file-at-point
+		  embark-target-finders)
+		 (length embark-target-finders))))
     (cl-callf2
-        cons
-        '+vertico-embark-target-package-fn
-        (nthcdr pos embark-target-finders)))
+	cons
+	'+vertico-embark-target-package-fn
+	(nthcdr pos embark-target-finders)))
 
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
+	       '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+		 nil
+		 (window-parameters (mode-line-format . none)))))
 
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult

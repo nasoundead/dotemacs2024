@@ -1,3 +1,7 @@
+(defconst sea-logo (expand-file-name
+		    (if (display-graphic-p) "logo.png" "banner.txt")
+		    sea-etc-dir)
+  "Set logo. nil means official logo.")
 ;; (require 'init-package)
 (require 'init-straight)
 
@@ -6,7 +10,8 @@
 (require 'init-yasnippet)
 
 (require 'init-better-defaults)
-(require 'init-project)
+;; (require 'init-project)
+(require 'init-projectile)
 (require 'init-dired)
 (require 'init-term)
 (require 'init-rime)

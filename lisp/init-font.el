@@ -33,16 +33,16 @@
 ;;
 
 
-(defvar sea-font-size 12
+(defvar sea-font-size 13
  "Current font size.")
 
 (defvar sea-fonts '(
 		    ;; (default . "Fira Code")
 		    ;; (default . "Comic Code")
 		    ;; (default . "Monaco Nerd Font")
-		    ;; (default . "JetBrains Mono")
-		    (default . "Iosevka NF")
+		    ;; (default . "FantasqueSansM Nerd Font")
 		    ;; (default . "FiraCode Nerd Font")
+		    (default . "Iosevka NF")
 		    (cjk . "Microsoft Yahei")
 		    (symbol . "Symbola")
 		    ;; (fixed . "Comic Code")
@@ -58,8 +58,8 @@
 		    ;; (wide . "Monospace")
 		    ;; (tall . "Comic Code"))
 		    (tall . "Iosevka NF"))
-  ;; (tall . "Monospace"))
-  "Fonts to use.")
+ ;; (tall . "Monospace"))
+ "Fonts to use.")
 
 (defun sea--get-font-family (key)
     (let ((font (alist-get key sea-fonts)))

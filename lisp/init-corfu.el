@@ -1,4 +1,4 @@
-;; init-company.el --- Initialize company configurations.	-*- lexical-binding: t -*-
+;; init-corfu.el --- Initialize company configurations.	-*- lexical-binding: t -*-
 
 ;; Copyright (C) 2019 Bruce Wong
 
@@ -44,40 +44,45 @@
  :bind
  ("M-/" . completion-at-point)
  (:map corfu-map
- ("TAB"    . corfu-next)
- ("C-n"    . corfu-next)
-  ("C-p"    . corfu-previous)
-  ("C-j"    . corfu-next)
-  ("C-k"    . corfu-previous)
-  ([tab]    . corfu-next)
-  ([backtab]    . corfu-previous)
-  ("<escape>" . corfu-quit)
-  ("S-TAB"  . corfu-previous)
-  )
+      ("TAB"         . corfu-next)
+      ("C-n"         . corfu-next)
+      ("C-p"         . corfu-previous)
+      ("C-j"         . corfu-next)
+      ("C-k"         . corfu-previous)
+      ([tab]         . corfu-next)
+      ([backtab]     . corfu-previous)
+      ("<escape>"    . corfu-quit)
+      ("S-TAB"       . corfu-previous))
  :hook ((after-init . global-corfu-mode)
-	(global-corfu-mode . corfu-popupinfo-mode)))
+	 (global-corfu-mode . corfu-popupinfo-mode))
+  :config
+    ;; Sort by input history (no need to modify `corfu-sort-function').
+  (with-eval-after-load 'savehist
+    (corfu-history-mode 1)
+    (add-to-list 'savehist-additional-variables 'corfu-history))
+  )
 
 ;; Add extensions
 (use-package cape
  ;; Bind dedicated completion commands
  ;; Alternative prefix keys: C-c p, M-p, M-+, ...
  ;; :bind (("C-c p p" . completion-at-point) ;; capf
-  ;;  ("C-c p t" . complete-tag)        ;; etags
-  ;;  ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
-  ;;  ("C-c p h" . cape-history)
-  ;;  ("C-c p f" . cape-file)
-  ;;  ("C-c p k" . cape-keyword)
-  ;;  ("C-c p s" . cape-elisp-symbol)
-  ;;  ("C-c p e" . cape-elisp-block)
-  ;;  ("C-c p a" . cape-abbrev)
-  ;;  ("C-c p l" . cape-line)
-  ;;  ("C-c p w" . cape-dict)
-  ;;  ("C-c p :" . cape-emoji)
-  ;;  ("C-c p \\" . cape-tex)
-  ;;  ("C-c p _" . cape-tex)
-  ;;  ("C-c p ^" . cape-tex)
-  ;;  ("C-c p &" . cape-sgml)
-  ;;  ("C-c p r" . cape-rfc1345))
+ ;;  ("C-c p t" . complete-tag)        ;; etags
+ ;;  ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+ ;;  ("C-c p h" . cape-history)
+ ;;  ("C-c p f" . cape-file)
+ ;;  ("C-c p k" . cape-keyword)
+ ;;  ("C-c p s" . cape-elisp-symbol)
+ ;;  ("C-c p e" . cape-elisp-block)
+ ;;  ("C-c p a" . cape-abbrev)
+ ;;  ("C-c p l" . cape-line)
+ ;;  ("C-c p w" . cape-dict)
+ ;;  ("C-c p :" . cape-emoji)
+ ;;  ("C-c p \\" . cape-tex)
+ ;;  ("C-c p _" . cape-tex)
+ ;;  ("C-c p ^" . cape-tex)
+ ;;  ("C-c p &" . cape-sgml)
+ ;;  ("C-c p r" . cape-rfc1345))
  :init
  ;; Add to the global default value of `completion-at-point-functions' which is
  ;; used by `completion-at-point'.  The order of the functions matters, the
@@ -101,6 +106,16 @@
  (add-to-list 'completion-at-point-functions #'yasnippet-capf)
  (setq yasnippet-capf-lookup-by 'name) ;; Prefer the name of the snippet instead
  )
+
+;; (use-package nerd-icons-corfu
+;;  :straight (nerd-icons-corfu
+;;	     :type git
+;;	     :host github
+;;	     :repo "LuigiPiucco/nerd-icons-corfu")
+;;  :after corfu
+;;  :config
+;;  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
 ;; (use-package kind-icon
 ;;   :ensure t
 ;;   :after corfu
@@ -109,24 +124,24 @@
 ;;   :config
 ;;   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
-(use-package tabnine
- :custom
- (tabnine-wait 1)
- (tabnine-minimum-prefix-length 0)
- ;; (tabnine-executable-args (list "--log-level" "Error" "--no-lsp" "false"))
- :hook
- (on-first-input . tabnine-start-process)
- (prog-mode . tabnine-mode)
- (text-mode . tabnine-mode)
- (kill-emacs . tabnine-kill-process)
- :config
- (define-key tabnine-completion-map [tab] nil)
- (define-key tabnine-completion-map (kbd "M-f") #'tabnine-accept-completion-by-word)
- (define-key tabnine-completion-map (kbd "M-<return>") #'tabnine-accept-completion-by-line)
- (define-key tabnine-completion-map (kbd "C-g") #'tabnine-clear-overlay)
- (define-key tabnine-completion-map (kbd "M-[") #'tabnine-next-completion)
- (define-key tabnine-completion-map (kbd "M-]") #'tabnine-previous-completion)
- )
+;; (use-package tabnine
+;;  :custom
+;;  (tabnine-wait 1)
+;;  (tabnine-minimum-prefix-length 0)
+;;  ;; (tabnine-executable-args (list "--log-level" "Error" "--no-lsp" "false"))
+;;  :hook
+;;  (on-first-input . tabnine-start-process)
+;;  (prog-mode . tabnine-mode)
+;;  (text-mode . tabnine-mode)
+;;  (kill-emacs . tabnine-kill-process)
+;;  :config
+;;  (define-key tabnine-completion-map [tab] nil)
+;;  (define-key tabnine-completion-map (kbd "M-f") #'tabnine-accept-completion-by-word)
+;;  (define-key tabnine-completion-map (kbd "M-<return>") #'tabnine-accept-completion-by-line)
+;;  (define-key tabnine-completion-map (kbd "C-g") #'tabnine-clear-overlay)
+;;  (define-key tabnine-completion-map (kbd "M-[") #'tabnine-next-completion)
+;;  (define-key tabnine-completion-map (kbd "M-]") #'tabnine-previous-completion)
+;;  )
 ;; The free version of TabNine is good enough,
 ;; and below code is recommended that TabNine not always
 ;; prompt me to purchase a paid version in a large project.

@@ -42,10 +42,10 @@
 
   :config
   (setq
-   treemacs-collapse-dirs           (if treemacs-python-executable 3 0)
-   treemacs-width                   30
-   treemacs-missing-project-action  'remove
-   treemacs-follow-after-init       t
+   treemacs-collapse-dirs                   (if treemacs-python-executable 3 0)
+   treemacs-width                           30
+   treemacs-missing-project-action          'remove
+   treemacs-follow-after-init               t
    treemacs-text-scale                      nil
    treemacs-user-mode-line-format           nil
    treemacs-user-header-line-format         nil
@@ -57,7 +57,7 @@
    treemacs-show-hidden-files               t
    treemacs-silent-filewatch                nil
    treemacs-silent-refresh                  nil
-   treemacs-sorting                 'alphabetic-asc
+   treemacs-sorting                         'alphabetic-asc
    treemacs-hide-dot-git-directory          t
    treemacs-indentation                     2
    ;;  treemacs-indentation-string              " "
@@ -93,12 +93,12 @@
 	 . treemacs-magit--schedule-update))
 
 (use-package treemacs-nerd-icons
-  :demand t
   :after treemacs
-  :custom-face
-  (treemacs-nerd-icons-root-face ((t (:inherit nerd-icons-green :height 1.3))))
-  (treemacs-nerd-icons-file-face ((t (:inherit nerd-icons-dsilver))))
-  :config (treemacs-load-theme "nerd-icons"))
+  ;; :custom-face
+  ;; (treemacs-nerd-icons-root-face ((t (:inherit nerd-icons-green :height 1.3))))
+  ;; (treemacs-nerd-icons-file-face ((t (:inherit nerd-icons-dsilver))))
+  :config 
+  (treemacs-load-theme "nerd-icons"))
 
 ;; (use-package treemacs-all-the-icons)
 

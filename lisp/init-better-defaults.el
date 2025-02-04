@@ -124,7 +124,7 @@
 ;;   (prefer-coding-system 'utf-8)))
 
 ;; 设置默认编码为 UTF-8
-(setq default-buffer-file-coding-system 'utf-8-unix)
+(setq default-buffer-file-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
@@ -294,41 +294,66 @@
     undo-tree-history-directory-alist `(("." . ,(concat sea-cache-dir "undo/")))))
 ;; 输入法切换
 (when sys/winp
-  (defun emacs-ime-disable ()
-    ;; (setq pgtk-use-im-context-on-new-connection nil)
-    (w32-set-ime-open-status nil))
+ (defun emacs-ime-disable ()
+ ;; (setq pgtk-use-im-context-on-new-connection nil)
+ (w32-set-ime-open-status nil))
 
-  (defun emacs-ime-enable ()
-    (w32-set-ime-open-status t))
-  (add-hook 'after-init-hook 'emacs-ime-disable)
-  (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
-  (add-hook 'evil-insert-state-entry-hook 'emacs-ime-enable)
-  )
+ (defun emacs-ime-enable ()
+ (w32-set-ime-open-status t))
+ (add-hook 'after-init-hook 'emacs-ime-disable)
+ (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
+ (add-hook 'evil-insert-state-entry-hook 'emacs-ime-enable)
+ )
 (use-package hungry-delete)
 (global-hungry-delete-mode)
 
 (defun smarter-move-beginning-of-line (arg)
-  "Move point back to indentation of beginning of line.
+ "Move point back to indentation of beginning of line.
 Move point to the first non-whitespace character on this line.
 If point is already there, move to the beginning of the line.
 Effectively toggle between the first non-whitespace character and
 the beginning of the line.
 If ARG is not nil or 1, move forward ARG - 1 lines first.  If
 point reaches the beginning or end of the buffer, stop there."
-  (interactive "^p")
-  (setq arg (or arg 1))
-  ;; Move lines first
-  (when (/= arg 1)
-    (let ((line-move-visual nil))
-      (forward-line (1- arg))))
-  (let ((orig-point (point)))
-    (back-to-indentation)
-    (when (= orig-point (point))
-      (move-beginning-of-line 1))))
+ (interactive "^p")
+ (setq arg (or arg 1))
+ ;; Move lines first
+ (when (/= arg 1)
+ (let ((line-move-visual nil))
+ (forward-line (1- arg))))
+ (let ((orig-point (point)))
+ (back-to-indentation)
+ (when (= orig-point (point))
+ (move-beginning-of-line 1))))
 
 ;; remap C-a to `smarter-move-beginning-of-line'
 (global-set-key [remap move-beginning-of-line]
 		'smarter-move-beginning-of-line)
+
+(defun prot/keyboard-quit-dwim ()
+ "Do-What-I-Mean behaviour for a general `keyboard-quit'.
+
+The generic `keyboard-quit' does not do the expected thing when
+the minibuffer is open.  Whereas we want it to close the
+minibuffer, even without explicitly focusing it.
+
+The DWIM behaviour of this command is as follows:
+
+- When the region is active, disable it.
+- When a minibuffer is open, but not focused, close the minibuffer.
+- When the Completions buffer is selected, close it.
+- In every other case use the regular `keyboard-quit'."
+ (interactive)
+ (cond
+ ((region-active-p)
+  (keyboard-quit))
+ ((derived-mode-p 'completion-list-mode)
+  (delete-completion-window))
+ ((> (minibuffer-depth) 0)
+  (abort-recursive-edit))
+ (t
+  (keyboard-quit))))
+(define-key global-map (kbd "C-g") #'prot/keyboard-quit-dwim)
 
 (provide 'init-better-defaults)
 ;;; base ends here

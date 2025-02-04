@@ -16,10 +16,10 @@
 ;; Returns the parent directory containing a .project.el file, if any,
 ;; to override the standard project.el detection logic when needed.
 (defun project-root-override (dir)
-  (let ((override (locate-dominating-file dir ".project.el")))
-    (if override
-      (cons 'vc override)
-      nil)))
+ (let ((override (locate-dominating-file dir ".project.el")))
+ (if override
+  (cons 'vc override)
+  nil)))
 
 (use-package project
   ;; Cannot use :hook because 'project-find-functions does not end in -hook
@@ -45,26 +45,11 @@
 (add-to-list 'project-switch-commands '(+project-rg "Ripgrep") t)
 (add-to-list 'project-switch-commands '(multi-vterm-project "Vterm") t)
 
-;; ;;;###autoload
-;; (one-key-create-menu
-;;   "Project"
-;;   '(
-;;     (("p" . "Switch project") . project-switch-project)
-;;     (("f" . "Find file in project") . project-find-file)
-;;     (("a". "Remmeber a proejct") . project-remember-projects-under)
-;;     (("R" . "Remove known project") . project-forget-project)
-;;     (("b" . "Project buffer") . consult-project-buffer)
-;;     (("s" . "Project blink search") . +project-blink-search)
-;;     (("r" . "Project rg") . +project-rg)
-;;     (("e" . "Project eshell") . project-eshell)
-;;     (("t" . "Project vterm") . multi-vterm-project)
-;;     ))
-
 ;;;###autoload
 (defun +project-rg ()
-  (interactive)
-  (let ((default-directory (project-root (project-current nil))))
-    (consult-ripgrep default-directory)))
+ (interactive)
+ (let ((default-directory (project-root (project-current nil))))
+ (consult-ripgrep default-directory)))
 
 ;;;###autoload
 (defun +project-magit ()
@@ -100,7 +85,7 @@
 (defun sea/add-dot-project ()
   (interactive)
   (let* ((root-dir (read-directory-name "Root: "))
-         (f (expand-file-name ".project.el" root-dir)))
+	 (f (expand-file-name ".project.el" root-dir)))
     (message "Create %s..." f)
     (make-empty-file f)))
 
@@ -109,15 +94,15 @@
 (defun sea--project-files-in-directory (dir)
   "Use `fd' to list files in DIR."
   (let* ((default-directory dir)
-         (localdir (file-local-name (expand-file-name dir)))
-         (command (format "fd -H -t f -0 . %s" localdir)))
+	 (localdir (file-local-name (expand-file-name dir)))
+	 (command (format "fd -H -t f -0 . %s" localdir)))
     (project--remote-file-names
      (sort (split-string (shell-command-to-string command) "\0" t)
-           #'string<))))
+	   #'string<))))
 
 (cl-defmethod project-files ((project (head local)) &optional dirs)
   "Override `project-files' to use `fd' in local projects."
   (mapcan #'sea--project-files-in-directory
-          (or dirs (list (project-root-override project)))))
+	  (or dirs (list (project-root-override project)))))
 
 (provide 'init-project)

@@ -235,85 +235,82 @@
 ;; <leader>
 ;;
 (map! :leader
-      :desc "M-x"                     :n "SPC" #'execute-extended-command
-      :desc "Pop up scratch buffer"   :nv "x"  #'sea/open-scratch-buffer
-      :desc "Org Capture"             :nv "X"  #'org-capture
-      :desc "Blink Search"            :nv "."  #'+project-blink-search
+     :desc "M-x"                     :n "SPC" #'execute-extended-command
+     :desc "Pop up scratch buffer"   :nv "x"  #'sea/open-scratch-buffer
+     :desc "Org Capture"             :nv "X"  #'org-capture
+     ;; :desc "Blink Search"            :nv "."  #'+project-blink-search
 
-      ;; C-u is used by evil
-      :desc "Universal argument"      :n "u"  #'universal-argument
-      :desc "window"                  :n "w"  #'evil-window-map
+     ;; C-u is used by evil
+     :desc "Universal argument"      :n "u"  #'universal-argument
+     :desc "window"                  :n "w"  #'evil-window-map
 
 
-      (:desc "quit" :prefix "q"
-      :desc "Quit Emacs"             :n "q" #'evil-quit-all
-      :desc "Save and quit"          :n "Q" #'evil-save-and-quit
-      :desc "Restart Doom"           :n "R" #'restart-emacs)
+   (:desc "quit" :prefix "q"
+   :desc "Quit Emacs"             :n "q" #'evil-quit-all
+   :desc "Save and quit"          :n "Q" #'evil-save-and-quit
+   :desc "Restart Doom"           :n "R" #'restart-emacs)
 
-      (:desc "help" :prefix "h"
-      :n "h" help-map
-      :desc "Apropos"               :n  "a" #'apropos
-      :desc "Describe char"         :n  "c" #'describe-char
-      :desc "Describe function"     :n  "f" #'describe-function
-      :desc "Describe face"         :n  "F" #'describe-face
-      :desc "Info"                  :n  "i" #'info-lookup-symbol
-      :desc "Describe key"          :n  "k" #'describe-key
-      :desc "Find library"          :n  "l" #'find-library
-      :desc "View *Messages*"       :n  "m" #'view-echo-area-messages
-      :desc "Describe mode"         :n  "M" #'describe-mode
-      :desc "Describe variable"     :n  "v" #'describe-variable
-      )
+  (:desc "help" :prefix "h"
+   :n "h" help-map
+   :desc "Apropos"               :n  "a" #'apropos
+   :desc "Describe char"         :n  "c" #'describe-char
+   :desc "Describe function"     :n  "f" #'describe-function
+   :desc "Describe face"         :n  "F" #'describe-face
+   :desc "Info"                  :n  "i" #'info-lookup-symbol
+   :desc "Describe key"          :n  "k" #'describe-key
+   :desc "Find library"          :n  "l" #'find-library
+   :desc "View *Messages*"       :n  "m" #'view-echo-area-messages
+   :desc "Describe mode"         :n  "M" #'describe-mode
+   :desc "Describe variable"     :n  "v" #'describe-variable
+   )
 
-      (:desc "Search" :prefix "s"
-      :desc "Buffer"                 :nv "b" #'consult-line
-      :desc "Project"                :nv "p" #'+project-rg
-      :desc "Directory"              :nv "d" #'+vertico/project-search-from-cwd
-      )
+ (:desc "Search" :prefix "s"
+  :desc "Buffer"                 :nv "b" #'consult-line
+  :desc "Project"                :nv "p" #'+project-rg
+  :desc "Directory"              :nv "d" #'+vertico/project-search-from-cwd
+  )
 
-      (:desc "project" :prefix "p"
-      :desc "Switch project"          :n  "p" #'project-switch-project
-      :desc "Find file in project"    :n  "f" #'project-find-file
-      :desc "Find dir in project"     :n  "F" #'project-find-dir
-      :desc "Dired in project"        :n  "d" #'project-dired
-      :desc "Find buffer in project"  :n  "b" #'consult-project-buffer
-      :desc "Recent project files"    :n  "K" #'project-kill-buffers
+  (:desc "project" :prefix "p"
+  :desc "Switch project"          :n  "p" #'projectile-switch-project
+  :desc "Find file in project"    :n  "f" #'projectile-find-file
+  :desc "Find dir in project"     :n  "F" #'projectile-find-dir
+  )
 
-      )
+  (:desc "buffer" :prefix "b"
+  :desc "New empty buffer"        :n "n" #'evil-buffer-new
+  :desc "Switch buffer"           :n "b" #'switch-to-buffer
+  :desc "Kill buffer"             :n "k" #'kill-this-buffer
+  :desc "Kill other buffers"      :n "o" #'kill-other-buffers
+  :desc "Save buffer"             :n "s" #'save-buffer
+  :desc "Bury buffer"             :n "z" #'bury-buffer
+  )
 
-      (:desc "buffer" :prefix "b"
-      :desc "New empty buffer"        :n "n" #'evil-buffer-new
-      :desc "Switch buffer"           :n "b" #'switch-to-buffer
-      :desc "Kill buffer"             :n "k" #'kill-this-buffer
-      :desc "Kill other buffers"      :n "o" #'kill-other-buffers
-      :desc "Save buffer"             :n "s" #'save-buffer
-      :desc "Bury buffer"             :n "z" #'bury-buffer
-      )
-
-      (:desc "file" :prefix "f"
-      :desc "Find file"                 :n "f" #'find-file
-      :desc "Open project editorconfig" :n "c" #'editorconfig-find-current-editorconfig
-      :desc "Find directory"            :n "d" #'dired
-      :desc "Rename buffer and file"    :n "R" #'sea/rename-this-file-and-buffer
-      :desc "Delete this file"          :n "X" #'sea/delete-this-file)
+  (:desc "file" :prefix "f"
+  :desc "Find file"                 :n "f" #'find-file
+  :desc "Find file in project"      :n "/" #'projectile-find-file
+  :desc "Open project editorconfig" :n "c" #'editorconfig-find-current-editorconfig
+  :desc "Find directory"            :n "d" #'dired
+  :desc "Rename buffer and file"    :n "R" #'sea/rename-this-file-and-buffer
+  :desc "Delete this file"          :n "X" #'sea/delete-this-file)
 
       (:desc "git" :prefix "g"
-      :desc "Magit blame"           :n  "b" #'magit-blame
-      :desc "Magit commit"          :n  "c" #'magit-commit
-      :desc "Magit dispatch"        :n  "d" #'magit-dispatch-popup
-      :desc "Magit find-file"       :n  "f" #'magit-find-file
-      :desc "Magit status"          :n  "g" #'magit-status
-      :desc "Magit file delete"     :n  "x" #'magit-file-delete
-      :desc "Initialize repo"       :n  "i" #'magit-init
-      :desc "Magit buffer log"      :n  "l" #'magit-log-buffer-file
+	:desc "Magit blame"           :n  "b" #'magit-blame
+	:desc "Magit commit"          :n  "c" #'magit-commit
+	:desc "Magit dispatch"        :n  "d" #'magit-dispatch-popup
+	:desc "Magit find-file"       :n  "f" #'magit-find-file
+	:desc "Magit status"          :n  "g" #'magit-status
+	:desc "Magit file delete"     :n  "x" #'magit-file-delete
+	:desc "Initialize repo"       :n  "i" #'magit-init
+	:desc "Magit buffer log"      :n  "l" #'magit-log-buffer-file
       :desc "List repositories"     :n  "L" #'magit-list-repositories
-      :desc "Magit push popup"      :n  "p" #'magit-push-popup
-      :desc "Magit pull popup"      :n  "P" #'magit-pull-popup
-      :desc "Git revert hunk"       :n  "r" #'git-gutter:revert-hunk
-      :desc "Git revert file"       :n  "R" #'vc-revert
-      :desc "Git stage hunk"        :n  "s" #'git-gutter:stage-hunk
-      :desc "Git stage file"        :n  "S" #'magit-stage-file
-      :desc "Git time machine"      :n  "t" #'git-timemachine-toggle
-      :desc "Git unstage file"      :n  "U" #'magit-unstage-file
-      :desc "Next hunk"             :nv "]" #'git-gutter:next-hunk
-      :desc "Previous hunk"         :nv "[" #'git-gutter:previous-hunk)
-)
+	:desc "Magit push popup"      :n  "p" #'magit-push-popup
+	:desc "Magit pull popup"      :n  "P" #'magit-pull-popup
+	:desc "Git revert hunk"       :n  "r" #'git-gutter:revert-hunk
+	:desc "Git revert file"       :n  "R" #'vc-revert
+	:desc "Git stage hunk"        :n  "s" #'git-gutter:stage-hunk
+	:desc "Git stage file"        :n  "S" #'magit-stage-file
+	:desc "Git time machine"      :n  "t" #'git-timemachine-toggle
+	:desc "Git unstage file"      :n  "U" #'magit-unstage-file
+	:desc "Next hunk"             :nv "]" #'git-gutter:next-hunk
+	:desc "Previous hunk"         :nv "[" #'git-gutter:previous-hunk)
+      )

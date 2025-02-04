@@ -107,23 +107,18 @@ line or use --debug-init to enable this.")
 
 (add-subdirs-to-load-path sea-core-dir)
 ;; (add-subdirs-to-load-path sea-site-lisp-dir)
-(add-to-list 'load-path "~/.emacs.d/site-lisp/blink-search/")
+;; (add-to-list 'load-path "~/.emacs.d/site-lisp/blink-search/")
 (add-to-list 'load-path "~/.emacs.d/site-lisp/simple-modeline/")
 ;; (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
 
-
-(defconst sea-logo (expand-file-name
-                    (if (display-graphic-p) "logo.png" "banner.txt")
-                    sea-etc-dir)
-  "Set logo. nil means official logo.")
-(setq warning-minimum-level :error)
+;; (setq warning-minimum-level :error)
 (setq native-comp-jit-compilation nil)
 (setq byte-compile-warnings '(not nresolved
-                                  free-vars
-                                  callargs
-                                  redefine
-                                  obsolete
-                                  noruntime
-                                  cl-functions
-                                  interactive-only
-                                  ))
+			      free-vars
+			      callargs
+			      redefine
+			      obsolete
+			      noruntime
+			      cl-functions
+			      interactive-only
+			      ))
