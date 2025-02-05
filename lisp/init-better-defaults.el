@@ -302,7 +302,7 @@
  (w32-set-ime-open-status t))
  (add-hook 'after-init-hook 'emacs-ime-disable)
  (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
- (add-hook 'evil-insert-state-entry-hook 'emacs-ime-enable)
+ (add-hook 'evil-insert-state-entry-hook 'emacs-ime-disable)
  )
 (use-package hungry-delete)
 (global-hungry-delete-mode)

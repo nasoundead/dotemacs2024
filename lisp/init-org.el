@@ -429,7 +429,6 @@
    :after org
    :init
    (setq org-roam-v2-ack t) ;; Acknowledge V2 upgrade
-    ;;  (require 'emacsql-sqlite)
    :custom
    (org-roam-database-connector 'sqlite-builtin)
    (org-roam-dailies-directory "daily/") ;; 默认日记目录, 上一目录的相对路径

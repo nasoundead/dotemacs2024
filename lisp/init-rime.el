@@ -26,12 +26,12 @@
  ;; 金手指设置，可以将光标处的编码（比如：拼音字符串）转换为中文。
  ("M-j" . pyim-convert-string-at-point))
 
-(use-package pyim-greatdict
-  :straight (pyim-greatdict :type git
-                  :host github
-                  :repo "tumashu/pyim-greatdict")
- :config
- (pyim-greatdict-enable))
+;; (use-package pyim-greatdict
+;;   :straight (pyim-greatdict :type git
+;;                   :host github
+;;                   :repo "tumashu/pyim-greatdict")
+;;  :config
+;;  (pyim-greatdict-enable))
 
  (use-package pyim-basedict
  :config
