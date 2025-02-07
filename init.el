@@ -42,6 +42,8 @@
 (require 'init-rust)
 (require 'init-web)
 
+;; (nerd-icons-set-font)
+
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (load custom-file t t)
 (dolist (dir (list sea-cache-dir sea-etc-dir))

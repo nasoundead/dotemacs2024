@@ -127,18 +127,20 @@
 (setq default-buffer-file-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
-
+(when sys/winp
+ (set-selection-coding-system 'utf-16-le)
+ (set-clipboard-coding-system 'utf-16-le))
 ;; Environment
 (when (or (eq system-type 'darwin) (eq system-type 'gnu/linux))
-  (use-package exec-path-from-shell
-    :init
-    (setq exec-path-from-shell-check-startup-files nil)
-    (setq exec-path-from-shell-variables '("PATH" "MANPATH" "PYTHONPATH" "GOPATH"))
-    (setq exec-path-from-shell-arguments '("-l"))
-    (exec-path-from-shell-initialize)))
+ (use-package exec-path-from-shell
+ :init
+ (setq exec-path-from-shell-check-startup-files nil)
+ (setq exec-path-from-shell-variables '("PATH" "MANPATH" "PYTHONPATH" "GOPATH"))
+ (setq exec-path-from-shell-arguments '("-l"))
+ (exec-path-from-shell-initialize)))
 
 
 (defcustom sea/buffer-skip-regexp

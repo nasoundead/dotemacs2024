@@ -109,6 +109,7 @@ line or use --debug-init to enable this.")
 ;; (add-subdirs-to-load-path sea-site-lisp-dir)
 ;; (add-to-list 'load-path "~/.emacs.d/site-lisp/blink-search/")
 (add-to-list 'load-path "~/.emacs.d/site-lisp/simple-modeline/")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/unicode-fonts/")
 ;; (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
 
 ;; (setq warning-minimum-level :error)
