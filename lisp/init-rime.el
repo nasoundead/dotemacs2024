@@ -3,11 +3,11 @@
  :diminish pyim-isearch-mode
  :init
  (setq default-input-method "pyim"
-     pyim-title "ㄓ"
-     pyim-page-length 5
-     ;; 设置 pyim 默认使用的输入法策略，我使用全拼。
-     pyim-default-scheme 'quanpin
-     pyim-page-tooltip '(posframe popup minibuffer))
+   pyim-title "ㄓ"
+   pyim-page-length 5
+   ;; 设置 pyim 默认使用的输入法策略，我使用全拼。
+   pyim-default-scheme 'quanpin
+   pyim-page-tooltip '(posframe popup minibuffer))
  :config
  (setq-default pyim-english-input-switch-functions
 		'(pyim-probe-dynamic-english
@@ -20,8 +20,8 @@
 	    pyim-probe-punctuation-after-punctuation))
  (pyim-isearch-mode t)
  :bind
- ("M-f". pyim-forward-word)
- ("M-b". pyim-backward-word)
+ ;; ("M-f". pyim-forward-word)
+ ;; ("M-b". pyim-backward-word)
  ("C-\\". toggle-input-method)
  ;; 金手指设置，可以将光标处的编码（比如：拼音字符串）转换为中文。
  ("M-j" . pyim-convert-string-at-point))

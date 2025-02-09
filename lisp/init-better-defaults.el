@@ -1,7 +1,7 @@
 (setq initial-buffer-choice t)
 (setq user-full-name "nasoundead")      ;设置用户名
 (setq user-mail-address
-      "nasoundead@163.com")		;设置邮箱
+    "nasoundead@163.com")		;设置邮箱
 (setq use-dialog-box nil)               ;never pop dialog
 (setq ring-bell-function 'ignore)       ;关闭烦人的出错时的提示声
 (setq mouse-yank-at-point t)            ;粘贴于光标处,而不是鼠标指针处
@@ -30,11 +30,11 @@
 (setq enable-dir-local-variables t)
 (setq scroll-margin 0); 设定滚动边距
 (setq-default
-  truncate-lines t     ; 不要换行
-  vc-follow-symlinks t
-  ;; Save clipboard contents into kill-ring before replacing them
-  save-interprogram-paste-before-kill t
-  )
+ truncate-lines t     ; 不要换行
+ vc-follow-symlinks t
+ ;; Save clipboard contents into kill-ring before replacing them
+ save-interprogram-paste-before-kill t
+ )
 (setq truncate-partial-width-windows nil)
 (setq fill-column 180)
 (setq lexical-binding t)
@@ -54,44 +54,44 @@
 
 ;; savehist / saveplace
 (setq savehist-file (concat sea-cache-dir "savehist")
-      savehist-save-minibuffer-history t
-      savehist-autosave-interval nil ; save on kill only
-      savehist-additional-variables '(kill-ring search-ring regexp-search-ring)
-      save-place-file (concat sea-cache-dir "saveplace"))
+     savehist-save-minibuffer-history t
+     savehist-autosave-interval nil ; save on kill only
+     savehist-additional-variables '(kill-ring search-ring regexp-search-ring)
+     save-place-file (concat sea-cache-dir "saveplace"))
 (add-hook 'after-init-hook #'savehist-mode)
 (add-hook 'after-init-hook #'save-place-mode)
 
 ;; Keep track of recently opened files
 (use-package recentf
-  :init
-  (add-hook 'find-file-hook (lambda ()
+ :init
+ (add-hook 'find-file-hook (lambda ()
 			      (unless recentf-mode
 				(recentf-mode)
 				(recentf-track-opened-file))))
-  :config
-  (setq recentf-save-file (concat sea-cache-dir "recentf")
+ :config
+ (setq recentf-save-file (concat sea-cache-dir "recentf")
 	recentf-max-menu-items 0
 	recentf-max-saved-items 300
 	recentf-filename-handlers '(file-truename)
 	recentf-exclude
 	(list "^/tmp/" "^/ssh:" "\\.?ido\\.last$" "\\.revive$" "/TAGS$"
-	      "^/var/folders/.+$"
-	      ;; ignore private sea temp files (but not all of them)
-	      (concat "^" (file-truename sea-cache-dir)))))
+	   "^/var/folders/.+$"
+	   ;; ignore private sea temp files (but not all of them)
+	   (concat "^" (file-truename sea-cache-dir)))))
 
 (when sys/winp
-  ;; make PC keyboard's Win key or other to type Super or Hyper, for emacs running on Windows.
-  (setq w32-pass-lwindow-to-system nil)
-  (setq w32-lwindow-modifier 'super) ; Left Windows key
+ ;; make PC keyboard's Win key or other to type Super or Hyper, for emacs running on Windows.
+ (setq w32-pass-lwindow-to-system nil)
+ (setq w32-lwindow-modifier 'super) ; Left Windows key
 
-  (setq w32-pass-rwindow-to-system nil)
-  (setq w32-rwindow-modifier 'super) ; Right Windows key
+ (setq w32-pass-rwindow-to-system nil)
+ (setq w32-rwindow-modifier 'super) ; Right Windows key
 
-  (setq w32-pass-apps-to-system nil)
+ (setq w32-pass-apps-to-system nil)
 
-  (setq w32-apps-modifier 'hyper)
-  (setq w32-rwindow-modifier 'hyper)
-  )
+ (setq w32-apps-modifier 'hyper)
+ (setq w32-rwindow-modifier 'hyper)
+ )
 
 (setq byte-compile-warnings '(not nresolved
 				  free-vars
@@ -136,54 +136,54 @@
 ;; Environment
 (when (or (eq system-type 'darwin) (eq system-type 'gnu/linux))
  (use-package exec-path-from-shell
- :init
- (setq exec-path-from-shell-check-startup-files nil)
- (setq exec-path-from-shell-variables '("PATH" "MANPATH" "PYTHONPATH" "GOPATH"))
- (setq exec-path-from-shell-arguments '("-l"))
- (exec-path-from-shell-initialize)))
+   :init
+   (setq exec-path-from-shell-check-startup-files nil)
+   (setq exec-path-from-shell-variables '("PATH" "MANPATH" "PYTHONPATH" "GOPATH"))
+   (setq exec-path-from-shell-arguments '("-l"))
+   (exec-path-from-shell-initialize)))
 
 
 (defcustom sea/buffer-skip-regexp
-  (rx bos
-      (or (or "*Backtrace*" "*Compile-Log*" "*Completions*"
-	      "*Messages*" "*scratch*" "*Help*"
-	      "*package*" "*Warnings*" "*Dashboard*"
-	      "*Async-native-compile-log*" "*eshell*" "*lsp-log*"
-	      "*pyright*" "*pyright::stderr*"
-	      "*tabnine stderr*" "*tabnine-log*"
-	      )
-	  (seq "Treemacs" (zero-or-more anything))
-	  (seq "magit-diff" (zero-or-more anything))
-	  (seq "magit-process" (zero-or-more anything))
-	  (seq "magit-revision" (zero-or-more anything))
-	  (seq "magit-stash" (zero-or-more anything)))
-      eos)
-  "Regular expression matching buffers ignored by `next-buffer' and
+ (rx bos
+   (or (or "*Backtrace*" "*Compile-Log*" "*Completions*"
+	       "*Messages*" "*scratch*" "*Help*"
+	       "*package*" "*Warnings*" "*Dashboard*"
+	       "*Async-native-compile-log*" "*eshell*" "*lsp-log*"
+	       "*pyright*" "*pyright::stderr*"
+	       "*tabnine stderr*" "*tabnine-log*"
+	       )
+	(seq "Treemacs" (zero-or-more anything))
+	(seq "magit-diff" (zero-or-more anything))
+	(seq "magit-process" (zero-or-more anything))
+	(seq "magit-revision" (zero-or-more anything))
+	(seq "magit-stash" (zero-or-more anything)))
+   eos)
+ "Regular expression matching buffers ignored by `next-buffer' and
 `previous-buffer'."
-  :type 'regexp)
+ :type 'regexp)
 (defun sea/buffer-skip-p (window buffer bury-or-kill)
-  "Return t if BUFFER name matches `sea/buffer-skip-regexp'."
-  (string-match-p sea/buffer-skip-regexp (buffer-name buffer)))
+ "Return t if BUFFER name matches `sea/buffer-skip-regexp'."
+ (string-match-p sea/buffer-skip-regexp (buffer-name buffer)))
 (setq switch-to-prev-buffer-skip 'sea/buffer-skip-p)
 
 
 (use-package display-line-numbers
-  :hook ((prog-mode yaml-mode conf-mode) . display-line-numbers-mode)
-  :init (setq display-line-numbers-width-start t))
+ :hook ((prog-mode yaml-mode conf-mode) . display-line-numbers-mode)
+ :init (setq display-line-numbers-width-start t))
 
 (use-package which-key
-  :diminish which-key-mode
-  :init
-  (which-key-mode)
-  :config
-  (setq which-key-sort-order #'which-key-prefix-then-key-order
+ :diminish which-key-mode
+ :init
+ (which-key-mode)
+ :config
+ (setq which-key-sort-order #'which-key-prefix-then-key-order
 	which-key-sort-uppercase-first nil
 	which-key-add-column-padding 1
 	which-key-max-display-columns nil
 	which-key-min-display-lines 5)
-  ;; embolden local bindings
-  (set-face-attribute 'which-key-local-map-description-face nil :weight 'bold)
-  (which-key-setup-side-window-bottom))
+ ;; embolden local bindings
+ (set-face-attribute 'which-key-local-map-description-face nil :weight 'bold)
+ (which-key-setup-side-window-bottom))
 
 (setq kill-ring-max 200)
 ;; Save clipboard contents into kill-ring before replace them
@@ -195,8 +195,8 @@
 (global-hl-line-mode)
 
 (use-package dash
-  :ensure t
-  :defer t)
+ :ensure t
+ :defer t)
 (use-package f
   :ensure t
   :defer t)
@@ -238,15 +238,15 @@
     ;; to match ivy conventions
     (define-key isearch-mode-map (kbd "C-c C-o") 'isearch-occur))
 
-;;   (define-key isearch-mode-map (kbd "<C-return>") 'swiper-from-isearch)
+  ;;   (define-key isearch-mode-map (kbd "<C-return>") 'swiper-from-isearch)
 
   (defadvice isearch-search (after isearch-no-fail activate)
-  (unless isearch-success
-    (ad-disable-advice 'isearch-search 'after 'isearch-no-fail)
-    (ad-activate 'isearch-search)
-    (isearch-repeat (if isearch-forward 'forward))
-    (ad-enable-advice 'isearch-search 'after 'isearch-no-fail)
-    (ad-activate 'isearch-search))))
+    (unless isearch-success
+      (ad-disable-advice 'isearch-search 'after 'isearch-no-fail)
+      (ad-activate 'isearch-search)
+      (isearch-repeat (if isearch-forward 'forward))
+      (ad-enable-advice 'isearch-search 'after 'isearch-no-fail)
+      (ad-activate 'isearch-search))))
 
 
 ;; An all-in-one comment command to rule them all
@@ -292,41 +292,41 @@
   :init (add-hook 'after-init-hook #'global-undo-tree-mode)
   :config
   (setq
-    undo-tree-auto-save-history nil
-    undo-tree-history-directory-alist `(("." . ,(concat sea-cache-dir "undo/")))))
+   undo-tree-auto-save-history nil
+   undo-tree-history-directory-alist `(("." . ,(concat sea-cache-dir "undo/")))))
 ;; 输入法切换
 (when sys/winp
- (defun emacs-ime-disable ()
- ;; (setq pgtk-use-im-context-on-new-connection nil)
- (w32-set-ime-open-status nil))
+  (defun emacs-ime-disable ()
+    ;; (setq pgtk-use-im-context-on-new-connection nil)
+    (w32-set-ime-open-status nil))
 
- (defun emacs-ime-enable ()
- (w32-set-ime-open-status t))
- (add-hook 'after-init-hook 'emacs-ime-disable)
- (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
- (add-hook 'evil-insert-state-entry-hook 'emacs-ime-disable)
- )
+  (defun emacs-ime-enable ()
+    (w32-set-ime-open-status t))
+  (add-hook 'after-init-hook 'emacs-ime-disable)
+  (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
+  (add-hook 'evil-insert-state-entry-hook 'emacs-ime-disable)
+  )
 (use-package hungry-delete)
 (global-hungry-delete-mode)
 
 (defun smarter-move-beginning-of-line (arg)
- "Move point back to indentation of beginning of line.
+  "Move point back to indentation of beginning of line.
 Move point to the first non-whitespace character on this line.
 If point is already there, move to the beginning of the line.
 Effectively toggle between the first non-whitespace character and
 the beginning of the line.
 If ARG is not nil or 1, move forward ARG - 1 lines first.  If
 point reaches the beginning or end of the buffer, stop there."
- (interactive "^p")
- (setq arg (or arg 1))
- ;; Move lines first
- (when (/= arg 1)
- (let ((line-move-visual nil))
- (forward-line (1- arg))))
- (let ((orig-point (point)))
- (back-to-indentation)
- (when (= orig-point (point))
- (move-beginning-of-line 1))))
+  (interactive "^p")
+  (setq arg (or arg 1))
+  ;; Move lines first
+  (when (/= arg 1)
+    (let ((line-move-visual nil))
+      (forward-line (1- arg))))
+  (let ((orig-point (point)))
+    (back-to-indentation)
+    (when (= orig-point (point))
+      (move-beginning-of-line 1))))
 
 ;; remap C-a to `smarter-move-beginning-of-line'
 (global-set-key [remap move-beginning-of-line]
@@ -347,13 +347,13 @@ The DWIM behaviour of this command is as follows:
 - In every other case use the regular `keyboard-quit'."
  (interactive)
  (cond
- ((region-active-p)
+  ((region-active-p)
   (keyboard-quit))
- ((derived-mode-p 'completion-list-mode)
+  ((derived-mode-p 'completion-list-mode)
   (delete-completion-window))
- ((> (minibuffer-depth) 0)
+  ((> (minibuffer-depth) 0)
   (abort-recursive-edit))
- (t
+  (t
   (keyboard-quit))))
 (define-key global-map (kbd "C-g") #'prot/keyboard-quit-dwim)
 
