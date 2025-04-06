@@ -306,6 +306,7 @@
   (add-hook 'evil-insert-state-exit-hook 'emacs-ime-disable)
   (add-hook 'evil-insert-state-entry-hook 'emacs-ime-disable)
   )
+
 (use-package hungry-delete)
 (global-hungry-delete-mode)
 

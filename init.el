@@ -14,7 +14,7 @@
 (require 'init-projectile)
 (require 'init-dired)
 (require 'init-term)
-(require 'init-rime)
+(require 'init-pyim)
 
 (require 'init-evil)
 (require 'init-keybindings)
@@ -22,7 +22,7 @@
 (require 'init-vertico)
 ;; (require 'init-company)
 (require 'init-corfu)
-(require 'init-gpt)
+(require 'init-ai)
 (require 'init-hydra)
 (require 'init-folding)
 (require 'init-flycheck)

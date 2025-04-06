@@ -48,4 +48,4 @@
 
 (use-package posframe)
 
-(provide 'init-rime)
+(provide 'init-pyim)
