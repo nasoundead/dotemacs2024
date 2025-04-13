@@ -238,6 +238,8 @@
   :desc "M-x"                     :n "SPC" #'execute-extended-command
   :desc "Pop up scratch buffer"   :nv "x"  #'sea/open-scratch-buffer
   :desc "Org Capture"             :nv "X"  #'org-capture
+  :desc "IMenu"                   :nv "i"  #'consult-imenu
+  :desc "IMenu"                   :nv "I"  #'consult-imenu-multi
   ;; :desc "Blink Search"            :nv "."  #'+project-blink-search
 
   ;; C-u is used by evil
@@ -293,16 +295,17 @@
  :desc "Rename buffer and file"    :n "R" #'sea/rename-this-file-and-buffer
  :desc "Delete this file"          :n "X" #'sea/delete-this-file)
 
- (:desc "git" :prefix "g"
- :desc "Magit blame"           :n  "b" #'magit-blame
- :desc "Magit commit"          :n  "c" #'magit-commit
- :desc "Magit dispatch"        :n  "d" #'magit-dispatch-popup
- :desc "Magit find-file"       :n  "f" #'magit-find-file
- :desc "Magit status"          :n  "g" #'magit-status
- :desc "Magit file delete"     :n  "x" #'magit-file-delete
- :desc "Initialize repo"       :n  "i" #'magit-init
- :desc "Magit buffer log"      :n  "l" #'magit-log-buffer-file
-  :desc "List repositories"     :n  "L" #'magit-list-repositories
+ (    
+      :desc "git" :prefix "g"
+      :desc "Magit blame"           :n  "b" #'magit-blame
+      :desc "Magit commit"          :n  "c" #'magit-commit
+      :desc "Magit dispatch"        :n  "d" #'magit-dispatch-popup
+      :desc "Magit find-file"       :n  "f" #'magit-find-file
+      :desc "Magit status"          :n  "g" #'magit-status
+      :desc "Magit file delete"     :n  "x" #'magit-file-delete
+      :desc "Initialize repo"       :n  "i" #'magit-init
+      :desc "Magit buffer log"      :n  "l" #'magit-log-buffer-file
+      :desc "List repositories"     :n  "L" #'magit-list-repositories
       :desc "Magit push popup"      :n  "p" #'magit-push-popup
       :desc "Magit pull popup"      :n  "P" #'magit-pull-popup
       :desc "Git revert hunk"       :n  "r" #'git-gutter:revert-hunk
