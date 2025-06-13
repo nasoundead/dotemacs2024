@@ -45,24 +45,24 @@
    :models '(deepseek-chat deepseek-coder))))
 
 
-(use-package tabnine
- :custom
- (tabnine-wait 1)
- (tabnine-minimum-prefix-length 0)
- ;; (tabnine-executable-args (list "--log-level" "Error" "--no-lsp" "false"))
- :hook
- (on-first-input . tabnine-start-process)
- (prog-mode . tabnine-mode)
- (text-mode . tabnine-mode)
- (kill-emacs . tabnine-kill-process)
- :config
- (define-key tabnine-completion-map [tab] nil)
- (define-key tabnine-completion-map (kbd "M-f") #'tabnine-accept-completion-by-word)
- (define-key tabnine-completion-map (kbd "M-<return>") #'tabnine-accept-completion-by-line)
- (define-key tabnine-completion-map (kbd "C-g") #'tabnine-clear-overlay)
- (define-key tabnine-completion-map (kbd "M-[") #'tabnine-next-completion)
- (define-key tabnine-completion-map (kbd "M-]") #'tabnine-previous-completion)
- )
+;; (use-package tabnine
+;;  :custom
+;;  (tabnine-wait 1)
+;;  (tabnine-minimum-prefix-length 0)
+;;  ;; (tabnine-executable-args (list "--log-level" "Error" "--no-lsp" "false"))
+;;  :hook
+;;  (on-first-input . tabnine-start-process)
+;;  (prog-mode . tabnine-mode)
+;;  (text-mode . tabnine-mode)
+;;  (kill-emacs . tabnine-kill-process)
+;;  :config
+;;  (define-key tabnine-completion-map [tab] nil)
+;;  (define-key tabnine-completion-map (kbd "M-f") #'tabnine-accept-completion-by-word)
+;;  (define-key tabnine-completion-map (kbd "M-<return>") #'tabnine-accept-completion-by-line)
+;;  (define-key tabnine-completion-map (kbd "C-g") #'tabnine-clear-overlay)
+;;  (define-key tabnine-completion-map (kbd "M-[") #'tabnine-next-completion)
+;;  (define-key tabnine-completion-map (kbd "M-]") #'tabnine-previous-completion)
+;;  )
 ;; The free version of TabNine is good enough,
 ;; and below code is recommended that TabNine not always
 ;; prompt me to purchase a paid version in a large project.

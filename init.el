@@ -34,6 +34,7 @@
   (require 'init-font))
 (require 'init-treemacs)
 (require 'init-treesitter)
+;; (require 'init-elgot)
 (require 'init-lsp)
 ;; (require 'init-lsp-bridge)
 (require 'init-org)

@@ -38,11 +38,11 @@
  :init
  (marginalia-mode))
 
-(use-package nerd-icons-completion
- :ensure t
- :after marginalia
- :config
- (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+;; (use-package nerd-icons-completion
+;;  :ensure t
+;;  :after marginalia
+;;  :config
+;;  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
 (use-package vertico-posframe
  :init

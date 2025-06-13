@@ -32,27 +32,28 @@
 ;;
 ;;
 
-(defadvice jka-compr-info-compress-args (around eval-args activate)
-  "Evaluate program arguments"
-  (setq ad-return-value (mapcar 'eval (aref info 3))))
+;; (defadvice jka-compr-info-compress-args (around eval-args activate)
+;;   "Evaluate program arguments"
+;;   (setq ad-return-value (mapcar 'eval (aref info 3))))
 
-(defadvice jka-compr-info-uncompress-args (around eval-args activate)
-  "Evaluate program arguments"
-  (setq ad-return-value (mapcar 'eval (aref info 6))))
+;; (defadvice jka-compr-info-uncompress-args (around eval-args activate)
+;;   "Evaluate program arguments"
+;;   (setq ad-return-value (mapcar 'eval (aref info 6))))
 
 
-(add-to-list 'jka-compr-compression-info-list ["\\.dz\\'" "7z" "7z" ("-")
-                           "dz uncompress" "7z" (filename) nil t ""])
+;; (add-to-list 'jka-compr-compression-info-list ["\\.dz\\'" "7z" "7z" ("-")
+;; 			   "dz uncompress" "7z" (filename) nil t ""])
 
-(add-to-list 'auto-mode-alist '("\\.dz\\'" nil jka-compr))
+;; (add-to-list 'auto-mode-alist '("\\.dz\\'" nil jka-compr))
 
-(add-to-list 'file-name-handler-alist '("\\.dz\\'" . jka-compr-handler))
+;; (add-to-list 'file-name-handler-alist '("\\.dz\\'" . jka-compr-handler))
+
 (use-package lsp-bridge
-  :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
-            :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
-            :build (:not compile))
-  :init
-  (global-lsp-bridge-mode))
+ :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
+			  :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
+			  :build (:not compile))
+ :config
+ (global-lsp-bridge-mode))
 
 (provide 'init-lsp-bridge)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

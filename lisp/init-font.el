@@ -31,8 +31,8 @@
 ;;; Code:
 ;;
 ;;
-(require 'unicode-fonts)
-(unicode-fonts-setup)
+;; (require 'unicode-fonts)
+;; (unicode-fonts-setup)
 
 (defvar sea-font-size 13
  "Current font size.")
