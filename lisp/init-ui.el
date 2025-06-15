@@ -119,8 +119,8 @@
 (use-package highlight-indent-guides
   :hook ((prog-mode text-mode conf-mode) . highlight-indent-guides-mode)
   :init
-  ;; (setq highlight-indent-guides-method 'column)
-  (setq highlight-indent-guides-method 'character)
+  (setq highlight-indent-guides-method 'column)
+  ;; (setq highlight-indent-guides-method 'character)
   :config
   (add-hook 'focus-in-hook #'highlight-indent-guides-auto-set-faces)
   ;; `highlight-indent-guides' breaks in these modes
@@ -156,6 +156,8 @@
 			  (registers . 5)))
   (setq show-week-agenda-p t)
   )
+
+(set-frame-parameter nil 'alpha 0.95)
 
 ;; (use-package nerd-icons-buffer-menu
 ;;   :straight (nerd-icons-buffer-menu :type git :host github :repo "jcs-elpa/nerd-icons-buffer-menu")

@@ -36,7 +36,7 @@
    ("#+END_QUOTE"    . ?»)
    ("#+begin_quote"  . ?«)
    ("#+end_quote"    . ?»)
-  ("#+RESULTS:"     . ?💻)
+   ("#+RESULTS:"     . ?💻)
    )
  "sea-prettify-org-symbols-alist")
 

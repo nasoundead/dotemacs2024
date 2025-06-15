@@ -74,6 +74,10 @@
 ;;         ad-do-it))))
 
 (use-package minuet
+:straight (minuet
+	   :type git
+	   :host github
+	   :repo "emacsmirror/minuet")
  :bind
  (("M-y" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
   ("M-i" . #'minuet-show-suggestion) ;; use overlay for completion

@@ -53,50 +53,6 @@
 	 ((js-mode js2-mode) . (lambda () (require 'dap-chrome)))
 	 (powershell-mode . (lambda () (require 'dap-pwsh)))))
 
-
-;; Enable LSP in org babel
-;; https://github.com/emacs-lsp/lsp-mode/issues/377
-;; (setq centaur-lsp 'lsp-mode)
-;; (cl-defmacro lsp-org-babel-enable (lang)
-;;     "Support LANG in org source code block."
-;;     (cl-check-type lang string)
-;;     (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
-;;            (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
-;;       `(progn
-;;          (defun ,intern-pre (info)
-;;            (setq buffer-file-name (or (->> info caddr (alist-get :file))
-;;                                       "org-src-babel.tmp"))
-;;            (pcase centaur-lsp
-;;              ('eglot
-;;               (when (fboundp 'eglot-ensure)
-;;                 (eglot-ensure)))
-;;              ('lsp-mode
-;;               (when (fboundp 'lsp-deferred)
-;;                 ;; Avoid headerline conflicts
-;;                 (setq-local lsp-headerline-breadcrumb-enable nil)
-;;                 (lsp-deferred)))
-;;              (_
-;;               (user-error "LSP:: invalid `centaur-lsp' type"))))
-;;          (put ',intern-pre 'function-documentation
-;;               (format "Enable `%s' in the buffer of org source block (%s)."
-;;                       centaur-lsp (upcase ,lang)))
-
-;;          (if (fboundp ',edit-pre)
-;;              (advice-add ',edit-pre :after ',intern-pre)
-;;            (progn
-;;              (defun ,edit-pre (info)
-;;                (,intern-pre info))
-;;              (put ',edit-pre 'function-documentation
-;;                   (format "Prepare local buffer environment for org source block (%s)."
-;;                           (upcase ,lang))))))))
-
-;; (defvar org-babel-lang-list
-;;   '("go" "python" "js" "css" "c" "rust" "cpp" "c++" "shell"))
-;; (dolist (lang org-babel-lang-list)
-;;   (eval `(lsp-org-babel-enable ,lang)))
-
-
-
 (use-package lsp-mode
   :diminish
   :defines (lsp-diagnostics-disabled-modes lsp-clients-python-library-directories)
@@ -324,6 +280,58 @@
 			 (lsp--send-execute-command (symbol-name command) arguments))))
 	(xref--show-xrefs xrefs nil)))
     (advice-add #'lsp-execute-command :override #'my-lsp-execute-command)))
+
+
+(defcustom naso-lsp 'lsp-mode
+  "Set language server.
+
+`lsp-mode': See https://github.com/emacs-lsp/lsp-mode.
+`eglot': See https://github.com/joaotavora/eglot.
+nil means disabled."
+  :group 'naso
+  :type '(choice (const :tag "LSP Mode" lsp-mode)
+                 (const :tag "Eglot" eglot)
+                 (const :tag "Disable" nil)))
+
+;; Enable LSP in org babel
+(cl-defmacro lsp-org-babel-enable (lang)
+  "Support LANG in org source code block."
+  (cl-check-type lang string)
+  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
+          (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
+    `(progn
+        (defun ,intern-pre (info)
+          (setq buffer-file-name (or (->> info caddr (alist-get :file))
+                                    "org-src-babel.tmp"))
+          (pcase naso-lsp
+            ('eglot
+            (when (fboundp 'eglot-ensure)
+              (eglot-ensure)))
+            ('lsp-mode
+            (when (fboundp 'lsp-deferred)
+              ;; Avoid headerline conflicts
+              (setq-local lsp-headerline-breadcrumb-enable nil)
+              (lsp-deferred)))
+            (_
+            (user-error "LSP:: invalid `naso-lsp' type"))))
+        (put ',intern-pre 'function-documentation
+            (format "Enable `%s' in the buffer of org source block (%s)."
+                    naso-lsp (upcase ,lang)))
+
+        (if (fboundp ',edit-pre)
+            (advice-add ',edit-pre :after ',intern-pre)
+          (progn
+            (defun ,edit-pre (info)
+              (,intern-pre info))
+            (put ',edit-pre 'function-documentation
+                (format "Prepare local buffer environment for org source block (%s)."
+                        (upcase ,lang))))))))
+
+(defconst org-babel-lang-list
+    '("go" "python" "ipython" "ruby" "js" "css" "sass" "c" "rust" "java" "cpp" "c++" "shell")
+    "The supported programming languages for interactive Babel.")
+(dolist (lang org-babel-lang-list)
+  (eval `(lsp-org-babel-enable ,lang)))
 
 
 (provide 'init-lsp)
