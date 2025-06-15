@@ -68,7 +68,7 @@
     ("m" (hot-expand "<s" "emacs-lisp") "emacs-lisp")
     ("y" (hot-expand "<s" "python :results output") "python")
     ("z" (hot-expand "<s" "python :results graphics file output :file Figure.svg") "python graphics")
-    ("Y" (hot-expand "<s" "jupyter-python") "jupyter-python")
+    ("Y" (hot-expand "<s" "jupyter-python :session py :async yes") "jupyter-python")
     ("S" (hot-expand "<s" "sh") "sh")
     ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)") "golang")
     ("r" (hot-expand "<s" "rust") "rust"))
@@ -118,9 +118,10 @@
 
  (use-package jupyter
   :init
-  (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
-							 (:session . "py"))
-	  org-babel-default-header-args:jupyter-R '((:async . "yes"))))
+  (setq 
+    org-babel-default-header-args:jupyter-python 
+    '((:session . "py"))
+	  ))
  ;; active Org-babel languages
  ;; ------------------------------------------------------------------------
  ;; Babel
@@ -142,6 +143,9 @@
 
  ;; ob-sh renamed to ob-shell since 26.1.
  (cl-pushnew '(shell . t) load-language-alist)
+
+ (use-package ob-ipython
+  :init (cl-pushnew '(ipython  . t) load-language-alist))
 
  (use-package ob-go
   :init (cl-pushnew '(go . t) load-language-alist))

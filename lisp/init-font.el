@@ -54,7 +54,8 @@
 		    (fixed-serif . "Iosevka Comfy Motion")
 		    (variable . "Iosevka Comfy Motion Duo")
 		    (wide . "Iosevka Comfy Wide")
-		    (tall . "Iosevka Comfy Motion"))
+		    (tall . "Iosevka Comfy Motion")
+            )
  ;; (tall . "Monospace"))
  "Fonts to use.")
 
@@ -89,12 +90,16 @@
           (symbol-font (sea--get-font-family 'symbol))
           (emoji-font (sea--get-font-family 'emoji)))
     (set-frame-font default-font)
+
+    ;; 设置 CJK 字符集
     (dolist (charset '(kana han hangul cjk-misc bopomofo))
         (set-fontset-font t charset cjk-font))
+
+    ;; 设置符号字符集
     (set-fontset-font t 'symbol symbol-font)
     
     ;; 设置 Emoji 字体，添加多个备选方案
-    (set-fontset-font t 'unicode 
+    (set-fontset-font t 'emoji  
                       (cond 
                        ((x-list-fonts emoji-font) emoji-font)  ; 首选 Emoji 字体
                        ((x-list-fonts "Segoe UI Emoji") "Segoe UI Emoji")  ; Windows 备选
