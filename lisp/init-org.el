@@ -66,9 +66,7 @@
    "Source"
    (("s" (hot-expand "<s") "src")
     ("m" (hot-expand "<s" "emacs-lisp") "emacs-lisp")
-    ("y" (hot-expand "<s" "python :results output") "python")
-    ("z" (hot-expand "<s" "python :results graphics file output :file Figure.svg") "python graphics")
-    ("Y" (hot-expand "<s" "jupyter-python :session py :async yes") "jupyter-python")
+    ("p" (hot-expand "<s" "python :session py") "python")
     ("S" (hot-expand "<s" "sh") "sh")
     ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)") "golang")
     ("r" (hot-expand "<s" "rust") "rust"))
@@ -116,12 +114,29 @@
    (when mod (insert mod) (forward-line))
    (when text (insert text))))
 
+
  (use-package jupyter
   :init
-  (setq 
-    org-babel-default-header-args:jupyter-python 
-    '((:session . "py"))
-	  ))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (append org-babel-load-languages '((jupyter . t))))
+  (org-babel-jupyter-override-src-block "python")
+  (setq org-babel-default-header-args:jupyter-python '((:async . "yes")
+                                                       (:session . "py")
+                                                       )))   
+  ; kill extraneous content in ipython returns between top-level JSON objects
+  (advice-add 'ob-ipython--collect-json :before
+            (lambda (&rest args)
+              (let ((start (point)))
+                (set-mark (point))
+                (while (re-search-forward "{" nil t)
+                  (backward-char)
+                  (kill-region (region-beginning) (region-end))
+                  (re-search-forward "}\n" nil t)
+                  (set-mark (point)))
+                (end-of-buffer)
+                (kill-region (region-beginning) (region-end))
+                (goto-char start))))
  ;; active Org-babel languages
  ;; ------------------------------------------------------------------------
  ;; Babel
@@ -137,7 +152,6 @@
    (C          . t)
    (java       . t)
    (plantuml   . t)
-   (jupyter    . t)
    )
   "Alist of org ob languages.")
 
@@ -679,6 +693,11 @@
 	  ("\\\\pagebreak" . ((lambda (tag) (svg-lib-icon "file-break" nil :collection "bootstrap"
 							  :stroke 0 :scale 1 :padding 0))))
 
-	  )))
+	  ))
+    
+)
+
+
+
 
 (provide 'init-org)

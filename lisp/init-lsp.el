@@ -109,7 +109,9 @@
   ;;                       (cape-capf-super
   ;;                        #'lsp-completion-at-point
   ;;                        #'tabnine-completion-at-point) nil t))))
-
+  ;; 添加特殊缓冲区模式
+  (add-to-list 'lsp-language-id-configuration
+              '(org-src-mode . "python"))
   (use-package consult-lsp
     :bind (:map lsp-mode-map
 	    ("C-M-." . consult-lsp-symbols))))
@@ -328,11 +330,17 @@ nil means disabled."
                         (upcase ,lang))))))))
 
 (defconst org-babel-lang-list
-    '("go" "python" "ipython" "ruby" "js" "css" "sass" "c" "rust" "java" "cpp" "c++" "shell")
+    '("go" "python" "ipython" "jupyter" "ruby" "js" "css" "sass" "c" "rust" "java" "cpp" "c++" "shell")
     "The supported programming languages for interactive Babel.")
 (dolist (lang org-babel-lang-list)
   (eval `(lsp-org-babel-enable ,lang)))
 
+;; (add-hook 'org-mode-hook
+;;           (lambda ()
+;;             (add-hook 'org-edit-src-code-hook
+;;                       (lambda ()
+;;                         (when (derived-mode-p 'python-mode)
+;;                           (lsp-deferred))))))
 
 (provide 'init-lsp)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
