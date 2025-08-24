@@ -157,7 +157,7 @@
   (setq show-week-agenda-p t)
   )
 
-(set-frame-parameter nil 'alpha 0.95)
+;; (set-frame-parameter nil 'alpha 0.95)
 
 ;; (use-package nerd-icons-buffer-menu
 ;;   :straight (nerd-icons-buffer-menu :type git :host github :repo "jcs-elpa/nerd-icons-buffer-menu")
@@ -174,10 +174,10 @@
 
 ;; (use-package nerd-icons
 ;;  :straight (nerd-icons
-;; 	   :type git
-;; 	   :host github
-;; 	   :repo "rainstormstudio/nerd-icons.el"
-;; 	   :files (:defaults "data" "nerd-icons-pkg.el"))
+;;	   :type git
+;;	   :host github
+;;	   :repo "rainstormstudio/nerd-icons.el"
+;;	   :files (:defaults "data" "nerd-icons-pkg.el"))
 ;;  :custom
 ;;  ;; The Nerd Font you want to use in GUI
 ;;  ;; "Symbols Nerd Font Mono" is the default and is recommended
