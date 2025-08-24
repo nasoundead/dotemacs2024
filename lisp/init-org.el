@@ -65,7 +65,7 @@
     "Source"
     (("s" (hot-expand "<s") "src")
      ("m" (hot-expand "<s" "emacs-lisp") "emacs-lisp")
-     ("p" (hot-expand "<s" "python :session py") "python")
+     ("p" (hot-expand "<s" "python :session py :kernel python3") "python")
      ("S" (hot-expand "<s" "sh") "sh")
      ("g" (hot-expand "<s" "go :imports '\(\"fmt\"\)") "golang")
      ("r" (hot-expand "<s" "rust") "rust"))
