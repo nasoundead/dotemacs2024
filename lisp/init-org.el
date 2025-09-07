@@ -479,6 +479,8 @@
     (org-roam-dailies-directory "daily/") ;; 默认日记目录, 上一目录的相对路径
     (org-roam-db-gc-threshold most-positive-fixnum) ;; 提高性能
     (org-roam-directory (concat org-directory "roam/")) ; 设置 org-roam 目录
+    (org-time-stamp-formats
+     '("<%Y-%m-%d %a %H:%M>" . "<%Y-%m-%d %a %H:%M>"))
     ;; 自定义默认模板
     (org-roam-capture-templates
      '(("d" "default" plain "%?"
@@ -554,12 +556,34 @@
     :hook
     (before-save . pv/org-set-last-modified) ; 保存文件时调用
     )
+  (use-package org-roam-ui
+    :straight
+    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :after org-roam
+    ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+    ;;         a hookable mode anymore, you're advised to pick something yourself
+    ;;         if you don't care about startup time, use
+    ;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+	  org-roam-ui-follow t
+	  org-roam-ui-update-on-save t
+	  org-roam-ui-open-on-start t))
 
-  ;;  (use-package org-roam-ui
-  ;;   :custom
-  ;;   (org-roam-ui-sync-theme t)
-  ;;   (org-roam-ui-follow t)
-  ;;   (org-roam-ui-update-on-save t))
+  ;; 批量刷新 Org-roam 笔记编码并重新保存
+  (defun org-roam-refresh-all-files-encoding ()
+    "强制所有 Org-roam 笔记以 UTF-8 编码重新保存，解决 DATE 字段编码问题"
+    (interactive)
+    (let ((files (org-roam-list-files)))  ; 获取所有 Org-roam 笔记文件
+      (dolist (file files)
+	(when (file-exists-p file)
+	  (with-current-buffer (find-file-noselect file)
+	    ;; 强制设置编码为 UTF-8
+	    (set-buffer-file-coding-system 'utf-8-unix)
+	    ;; 保存文件（不打开窗口）
+	    (save-buffer)
+	    (kill-buffer))))
+      (message "Org-roam 所有文件已按 UTF-8 重新编码并保存")))
 
   (use-package org-download
     :after org

@@ -130,9 +130,14 @@
 (set-keyboard-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
+;; 对 Org 模式单独强化配置
+(add-hook 'org-mode-hook
+	  (lambda ()
+	    (set-buffer-file-coding-system 'utf-8-unix)  ; 统一使用 Unix 换行符
+	    (setq buffer-file-coding-system 'utf-8-unix)))
 (when sys/winp
- (set-selection-coding-system 'utf-16-le)
- (set-clipboard-coding-system 'utf-16-le))
+  (set-selection-coding-system 'gbk)
+  (set-clipboard-coding-system 'gbk))
 ;; Environment
 (when (or (eq system-type 'darwin) (eq system-type 'gnu/linux))
  (use-package exec-path-from-shell
