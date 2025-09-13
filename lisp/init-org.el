@@ -124,18 +124,18 @@
 							 (:session . "py")
 							 )))
 					; kill extraneous content in ipython returns between top-level JSON objects
-  (advice-add 'ob-ipython--collect-json :before
-	      (lambda (&rest args)
-		(let ((start (point)))
-		  (set-mark (point))
-		  (while (re-search-forward "{" nil t)
-		    (backward-char)
-		    (kill-region (region-beginning) (region-end))
-		    (re-search-forward "}\n" nil t)
-		    (set-mark (point)))
-		  (end-of-buffer)
-		  (kill-region (region-beginning) (region-end))
-		  (goto-char start))))
+  ;; (advice-add 'ob-ipython--collect-json :before
+  ;;	      (lambda (&rest args)
+  ;;		(let ((start (point)))
+  ;;		  (set-mark (point))
+  ;;		  (while (re-search-forward "{" nil t)
+  ;;		    (backward-char)
+  ;;		    (kill-region (region-beginning) (region-end))
+  ;;		    (re-search-forward "}\n" nil t)
+  ;;		    (set-mark (point)))
+  ;;		  (end-of-buffer)
+  ;;		  (kill-region (region-beginning) (region-end))
+  ;;		  (goto-char start))))
   ;; active Org-babel languages
   ;; ------------------------------------------------------------------------
   ;; Babel
@@ -240,8 +240,7 @@
   (use-package org-bars
     :straight (:host github
 		     :repo "tonyaldon/org-bars")
-    :hook (org-mode . org-bars-mode)
-    )
+    :hook (org-mode . org-bars-mode))
 
   (use-package org-fancy-priorities
     :hook (org-mode . org-fancy-priorities-mode)

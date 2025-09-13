@@ -42,13 +42,22 @@
   (reapply-themes))
 
 (use-package modus-themes
- :straight (modus-themes
+  :straight (modus-themes
 	     :type git
 	     :host github
 	     :repo "protesilaos/modus-themes")
- ;; :config
- ;; (load-theme 'modus-vivendi-tinted :no-confirm-loading)
+  ;; :config
+  ;; (load-theme 'modus-vivendi-tinted :no-confirm-loading)
   )
+
+(use-package mindre-theme
+  :ensure t
+  :straight (:host github :repo "erikbackman/mindre-theme")
+  :custom
+  (mindre-use-more-bold nil)
+  (mindre-use-faded-lisp-parens t)
+  :config
+  (load-theme 'mindre t))
 
 (use-package doom-themes
   :ensure t
