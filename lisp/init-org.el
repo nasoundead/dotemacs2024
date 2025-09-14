@@ -101,17 +101,17 @@
     prepended to the element after the #+HEADER: tag."
     (let (text)
       (when (region-active-p)
-	(setq text (buffer-substring (region-beginning) (region-end)))
-	(delete-region (region-beginning) (region-end)))
-      (insert str)
-      (if (fboundp 'org-try-structure-completion)
-	  (org-try-structure-completion) ; < org 9
-	(progn
-	  ;; New template expansion since org 9
-	  (require 'org-tempo nil t)
-	  (org-tempo-complete-tag)))
-      (when mod (insert mod) (forward-line))
-      (when text (insert text))))
+        (setq text (buffer-substring (region-beginning) (region-end)))
+        (delete-region (region-beginning) (region-end)))
+            (insert str)
+            (if (fboundp 'org-try-structure-completion)
+          (org-try-structure-completion) ; < org 9
+        (progn
+          ;; New template expansion since org 9
+          (require 'org-tempo nil t)
+          (org-tempo-complete-tag)))
+            (when mod (insert mod) (forward-line))
+            (when text (insert text))))
 
 
   (use-package jupyter
@@ -237,10 +237,19 @@
 		org-tree-slide-skip-comments t
 		org-tree-slide-skip-outline-level 3))
 
-  (use-package org-bars
-    :straight (:host github
-		     :repo "tonyaldon/org-bars")
-    :hook (org-mode . org-bars-mode))
+  ;; (use-package org-bars
+  ;;   :straight (:host github
+  ;;	     :repo "tonyaldon/org-bars")
+  ;;   :hook (org-mode . org-bars-mode))
+
+  ;;;; org-superstar
+  (use-package org-superstar
+    :custom
+    ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "𐰧" "►" "▻")
+    ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
+    ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
+    org-superstar-prettify-item-bullets nil
+    :hook (org-mode . org-superstar-mode))
 
   (use-package org-fancy-priorities
     :hook (org-mode . org-fancy-priorities-mode)
@@ -316,7 +325,7 @@
    ;; code block 默认折叠展示
    org-hide-block-startup t
 
-   org-startup-numerated t
+   ;;  org-startup-numerated t
    )
 
   ;; Add new template
@@ -745,5 +754,27 @@
 
 	  ))
   )
+
+
+;; (use-package org-modern
+;;   :custom
+;;   ;; Org modern settings
+;;   ;; (org-modern-star nil)
+;;   ;; (org-modern-priority nil)
+;;   ;; (org-modern-list nil)
+;;   ;; (org-modern-checkbox nil)
+;;   ;; (org-modern-todo nil)
+;;   ;; (org-modern-keyword nil)
+
+;;   ;; Editor settings
+;;   ;; (org-auto-align-tags nil)
+;;   ;; (org-tags-column 0)
+;;   ;; (org-catch-invisible-edits 'show-and-error)
+;;   (org-special-ctrl-a/e t)
+;;   :config
+;;   ;; (global-org-modern-mode 1)
+;;   (add-hook 'org-mode-hook #'org-modern-mode)
+;;   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+;;   )
 
 (provide 'init-org)

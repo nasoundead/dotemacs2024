@@ -31,3 +31,6 @@ eshell/lastdir
 .#*
 eln-cache/*
 pyim/*
+org-roam.db
+.org-id-locations
+bookmarks

@@ -166,7 +166,7 @@
   (setq show-week-agenda-p t)
   )
 
-;; (set-frame-parameter nil 'alpha 0.95)
+(set-frame-parameter nil 'alpha 0.96)
 
 ;; (use-package nerd-icons-buffer-menu
 ;;   :straight (nerd-icons-buffer-menu :type git :host github :repo "jcs-elpa/nerd-icons-buffer-menu")
