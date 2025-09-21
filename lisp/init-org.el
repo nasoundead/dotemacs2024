@@ -4,7 +4,7 @@
  (expand-file-name "~/org/")
  "org dir")
 
-(defconst sea-prettify-symbols-alist
+ (defconst sea-prettify-symbols-alist
  '(("lambda" . ?λ)
    ("<-"     . ?←)
    ("->"     . ?→)
@@ -27,17 +27,38 @@
 
 (defconst sea-prettify-org-symbols-alist
   '(
+    ("[ ]" . "☐")
+    ("[-]" . "🝕")
+    ("[X]" . "🗹")
     ("#+BEGIN_SRC"    . ?⌜)
     ("#+END_SRC"      . ?⌞)
     ("#+begin_src"    . ?⌜)
     ("#+end_src"      . ?⌞)
+    ;; ("#+BEGIN_SRC" . "✎")
+    ;; ("#+END_SRC" . "□")
+    ;; ("#+begin_src" . "✎")
+    ;; ("#+end_src" . "□")
+
     ("#+BEGIN_QUOTE"  . ?«)
     ("#+END_QUOTE"    . ?»)
     ("#+begin_quote"  . ?«)
     ("#+end_quote"    . ?»)
+
+    ("#+begin_verse" . "ζ")
+    ("#+end_verse" . "□")
+    ("#+BEGIN_VERSE" . "ζ")
+    ("#+END_VERSE" . "□")
+
+    ("#+BEGIN_EXAMPLE" . "⟝")
+    ("#+END_EXAMPLE" . "□")
+    
+    ("#+BEGIN_EXPORT" . "🙵")
+    ("#+END_EXPORT" . "□")
     ("#+RESULTS:"     . ?💻)
-    )
-  "sea-prettify-org-symbols-alist")
+    ;; ("#+RESULTS:" . "⟾")
+    ("#+CAPTION:" . "✑")
+    ("#+ATTR_LATEX" . "🄛"))
+    "sea-prettify-org-symbols-alist")
 
 (use-package org
   ;; :mode (("\\.org$" . org-mode))
@@ -261,9 +282,9 @@
   (defun enhance-ui-for-orgmode ()
     "enhance ui for orgmode."
     (when sea-prettify-org-symbols-alist
-      (if prettify-symbols-alist
-	  (push sea-prettify-org-symbols-alist prettify-symbols-alist)
-	(setq prettify-symbols-alist sea-prettify-org-symbols-alist)))
+        (if prettify-symbols-alist
+      (push sea-prettify-org-symbols-alist prettify-symbols-alist)
+    (setq prettify-symbols-alist sea-prettify-org-symbols-alist)))
     (prettify-symbols-mode)
     (toggle-truncate-lines))
   (add-hook 'org-mode-hook #'enhance-ui-for-orgmode)
