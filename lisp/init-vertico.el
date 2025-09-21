@@ -21,8 +21,8 @@
   ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
   ;;       orderless-component-separator #'orderless-escapable-split-on-space)
   (setq completion-styles '(orderless basic)
-	completion-category-defaults nil
-	completion-category-overrides '((file (styles . (partial-completion)))))
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion)))))
   :config
   (defun my-orderless-regexp (orig-func component)
     (let ((result (funcall orig-func component)))
@@ -38,19 +38,19 @@
  :init
  (marginalia-mode))
 
-;; (use-package nerd-icons-completion
-;;  :ensure t
-;;  :after marginalia
-;;  :config
-;;  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+(use-package nerd-icons-completion
+ :ensure t
+ :after marginalia
+ :config
+ (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
-(use-package vertico-posframe
- :init
- (vertico-posframe-mode)
- (setq vertico-posframe-parameters
- '((left-fringe . 8)
-  (right-fringe . 8)))
- :hook (vertico-mode . vertico-posframe-mode))
+;; (use-package vertico-posframe
+;;  :init
+;;  (vertico-posframe-mode)
+;;  (setq vertico-posframe-parameters
+;;  '((left-fringe . 8)
+;;   (right-fringe . 8)))
+;;  :hook (vertico-mode . vertico-posframe-mode))
 
 (use-package consult
   :init
