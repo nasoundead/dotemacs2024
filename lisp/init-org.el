@@ -60,6 +60,16 @@
     ("#+ATTR_LATEX" . "🄛"))
     "sea-prettify-org-symbols-alist")
 
+;; 确保正文跟随标题缩进的核心配置
+(setq org-startup-indented t)  ; 启动时自动启用缩进模式
+
+;; 强制设置正文与标题的缩进关系（每级标题的正文额外缩进）
+(setq org-indent-indentation-per-level 2)  ; 每级缩进 2 空格
+(setq org-indent-text-line-function 'org-indent-text-line)  ; 正文缩进函数
+
+;; 禁用可能干扰缩进的设置
+(setq org-adapt-indentation nil)  ; 不自动调整缩进适应内容
+
 ;;;; org-superstar
 (use-package org-superstar
   :custom
