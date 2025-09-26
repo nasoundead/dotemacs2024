@@ -1,5 +1,9 @@
 ;;; init-org.el
 ;;; Code:
+
+(straight-use-package 'org)
+
+
 (defconst sea-org-directory
  (expand-file-name "~/org/")
  "org dir")
@@ -70,6 +74,101 @@
 ;; 禁用可能干扰缩进的设置
 (setq org-adapt-indentation nil)  ; 不自动调整缩进适应内容
 
+  ;; Babel
+(setq org-confirm-babel-evaluate nil
+      org-src-fontify-natively t
+      org-src-tab-acts-natively t)
+
+(defconst load-language-alist
+    '((emacs-lisp . t)
+      (python     . t)
+      (js         . t)
+      (css        . t)
+      (C          . t)
+      (java       . t)
+      (plantuml   . t)
+      )
+    "Alist of org ob languages.")
+;; ob-sh renamed to ob-shell since 26.1.
+(cl-pushnew '(shell . t) load-language-alist)
+(use-package ob-ipython
+  :init (cl-pushnew '(ipython  . t) load-language-alist))
+(use-package ob-go
+  :init (cl-pushnew '(go . t) load-language-alist))
+(use-package ob-rust
+  :init (cl-pushnew '(rust . t) load-language-alist))
+(use-package plantuml-mode
+  :init
+  ;; Enable plantuml-mode for PlantUML files
+  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+  ;; Integration with org-mode
+  (cl-pushnew '(plantuml . t) load-language-alist)
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+
+  :config
+  (setq org-plantuml-jar-path (expand-file-name "plantuml.jar" sea-etc-dir))
+  (defun sea/plantuml-install()
+      (let ((url "http://jaist.dl.sourceforge.net/project/plantuml/plantuml.jar"))
+        (unless (file-exists-p org-plantuml-jar-path)
+  (url-copy-file url org-plantuml-jar-path))))
+  (add-hook 'org-mode-hook #'(lambda () (eval-after-load 'ob-plantuml (sea/plantuml-install)))))
+(org-babel-do-load-languages 'org-babel-load-languages load-language-alist)
+
+;; Rich text clipboard
+(use-package org-rich-yank
+  :bind (:map org-mode-map
+    ("C-M-y" . org-rich-yank)))
+(use-package valign
+    :custom (valign-fancy-bar t)
+    :hook (org-mode . valign-mode))
+
+  ;; Table of contents
+  (use-package toc-org
+    :hook (org-mode . toc-org-mode))
+
+  ;; Auto-toggle Org LaTeX fragments
+  (use-package org-fragtog
+    :diminish
+    :hook (org-mode . org-fragtog-mode))
+
+  ;; Preview
+  (use-package org-preview-html
+    :diminish
+    :bind (:map org-mode-map
+	    ("C-c C-h" . org-preview-html-mode))
+    :init (when (featurep 'xwidget-internal)
+	    (setq org-preview-html-viewer 'xwidget)))
+
+  ;; Presentation
+  (use-package org-tree-slide
+    :diminish
+    :functions (org-display-inline-images
+		            org-remove-inline-images)
+    :bind (:map org-mode-map
+	    ("s-<f7>" . org-tree-slide-mode)
+	    :map org-tree-slide-mode-map
+	    ("<left>" . org-tree-slide-move-previous-tree)
+	    ("<right>" . org-tree-slide-move-next-tree)
+	    )
+    :hook 
+    ((org-tree-slide-play . (lambda ()
+				    (text-scale-increase 4)
+				    (org-display-inline-images)
+				    (read-only-mode 1)))
+	   (org-tree-slide-stop . (lambda ()
+				    (text-scale-increase 0)
+				    (org-remove-inline-images)
+				    (read-only-mode -1))))
+    :init 
+    (setq org-tree-slide-header nil
+          org-tree-slide-slide-in-effect t
+          org-tree-slide-heading-emphasis nil
+          org-tree-slide-cursor-init t
+          org-tree-slide-progress-bar t
+          org-tree-slide-modeline-display 'outside
+          org-tree-slide-skip-done nil
+          org-tree-slide-skip-comments t
+          org-tree-slide-skip-outline-level 3))
 ;;;; org-superstar
 (use-package org-superstar
   :custom
@@ -242,7 +341,7 @@
   ;; :bind
   ;; ("C-M-y" . org-download-screenshot)
   :bind (:map org-mode-map
-    ("C-M-y" . org-download-screenshot))
+    ("<f2>" . org-download-clipboard))
   :config
   (require 'org-download))
 
@@ -250,8 +349,9 @@
   :hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-autoemphasis t
-	org-appear-autosubmarkers t
-	org-appear-autolinks nil))
+        org-appear-autosubmarkers t
+        org-appear-autoentities t
+        org-appear-autolinks nil))
 
 (use-package ace-pinyin
  :config

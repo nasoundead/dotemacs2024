@@ -22,6 +22,10 @@
 
 ;; 关闭自动备份文件
 (setq make-backup-files nil)
+;; 设置备份文件目录
+(setq backup-directory-alist '(("." . "~/emacsbackups/")))
+;; 自动创建备份目录（如果不存在）
+(make-directory "~/emacsbackups/" t)
 (setq backup-inhibited t)
 (setq version-control 'never)
 ;; 关闭启动页
