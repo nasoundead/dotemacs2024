@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: jupyter
+# key: jup
+# --
+#+begin_src python :session py :kernel python3
+$0
+#+end_src

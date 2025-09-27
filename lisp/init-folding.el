@@ -61,4 +61,16 @@
 
 (setq hs-set-up-overlay 'display-code-line-counts)
 
+
+;; (use-package ts-fold
+;;   :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
+;;   :config
+;;   (setq ts-fold-line-count-show t)  ; Show line count in folded regions
+;;   (setq ts-fold-line-count-format " <%d lines> ")
+;;   )
+;; (use-package ts-fold-indicators
+;;   :straight (ts-fold-indicators :type git :host github :repo "emacs-tree-sitter/ts-fold")
+;;   :config
+;;   (add-hook 'tree-sitter-after-on-hook #'ts-fold-indicators-mode))
+
 (provide 'init-folding)
