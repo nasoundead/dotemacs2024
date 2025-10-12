@@ -31,17 +31,10 @@
 
 (defconst sea-prettify-org-symbols-alist
   '(
-    ("[ ]" . "☐")
-    ("[-]" . "🝕")
-    ("[X]" . "🗹")
     ("#+BEGIN_SRC"    . ?⌜)
     ("#+END_SRC"      . ?⌞)
     ("#+begin_src"    . ?⌜)
     ("#+end_src"      . ?⌞)
-    ;; ("#+BEGIN_SRC" . "✎")
-    ;; ("#+END_SRC" . "□")
-    ;; ("#+begin_src" . "✎")
-    ;; ("#+end_src" . "□")
 
     ("#+BEGIN_QUOTE"  . ?«)
     ("#+END_QUOTE"    . ?»)
@@ -53,42 +46,21 @@
     ("#+BEGIN_VERSE" . "ζ")
     ("#+END_VERSE" . "□")
 
-    ("#+BEGIN_EXAMPLE" . "⟝")
-    ("#+END_EXAMPLE" . "□")
-    
-    ("#+BEGIN_EXPORT" . "🙵")
-    ("#+END_EXPORT" . "□")
     ("#+RESULTS:"     . ?💻)
-    ;; ("#+RESULTS:" . "⟾")
     ("#+CAPTION:" . "✑")
     ("#+ATTR_LATEX" . "🄛"))
-    "sea-prettify-org-symbols-alist")
-
-;; 确保正文跟随标题缩进的核心配置
-(setq org-startup-indented t)  ; 启动时自动启用缩进模式
-
-;; 强制设置正文与标题的缩进关系（每级标题的正文额外缩进）
-(setq org-indent-indentation-per-level 2)  ; 每级缩进 2 空格
-(setq org-indent-text-line-function 'org-indent-text-line)  ; 正文缩进函数
-
-;; 禁用可能干扰缩进的设置
-(setq org-adapt-indentation nil)  ; 不自动调整缩进适应内容
-
-  ;; Babel
-(setq org-confirm-babel-evaluate nil
-      org-src-fontify-natively t
-      org-src-tab-acts-natively t)
+  "sea-prettify-org-symbols-alist")
 
 (defconst load-language-alist
-    '((emacs-lisp . t)
-      (python     . t)
-      (js         . t)
-      (css        . t)
-      (C          . t)
-      (java       . t)
-      (plantuml   . t)
-      )
-    "Alist of org ob languages.")
+  '((emacs-lisp . t)
+    (python     . t)
+    (js         . t)
+    (css        . t)
+    (C          . t)
+    (java       . t)
+    (plantuml   . t)
+    )
+  "Alist of org ob languages.")
 ;; ob-sh renamed to ob-shell since 26.1.
 (cl-pushnew '(shell . t) load-language-alist)
 (use-package ob-ipython
@@ -108,67 +80,89 @@
   :config
   (setq org-plantuml-jar-path (expand-file-name "plantuml.jar" sea-etc-dir))
   (defun sea/plantuml-install()
-      (let ((url "http://jaist.dl.sourceforge.net/project/plantuml/plantuml.jar"))
-        (unless (file-exists-p org-plantuml-jar-path)
-  (url-copy-file url org-plantuml-jar-path))))
+    (let ((url "http://jaist.dl.sourceforge.net/project/plantuml/plantuml.jar"))
+      (unless (file-exists-p org-plantuml-jar-path)
+	(url-copy-file url org-plantuml-jar-path))))
   (add-hook 'org-mode-hook #'(lambda () (eval-after-load 'ob-plantuml (sea/plantuml-install)))))
-(org-babel-do-load-languages 'org-babel-load-languages load-language-alist)
+
+(use-package org
+  :bind (("C-c a" . org-agenda)
+	 ("C-c b" . org-switchb)
+	 ("C-c x" . org-capture))
+  :hook ((org-babel-after-execute org-mode) . org-redisplay-inline-images)
+  :config
+  ;; 确保正文跟随标题缩进的核心配置
+  (setq org-startup-indented t)  ; 启动时自动启用缩进模式
+
+  ;; 强制设置正文与标题的缩进关系（每级标题的正文额外缩进）
+  (setq org-indent-indentation-per-level 2)  ; 每级缩进 2 空格
+  (setq org-indent-text-line-function 'org-indent-text-line)  ; 正文缩进函数
+
+  ;; 禁用可能干扰缩进的设置
+  (setq org-adapt-indentation nil)  ; 不自动调整缩进适应内容
+
+  ;; Babel
+  (setq org-confirm-babel-evaluate nil
+	org-src-fontify-natively t
+	org-src-tab-acts-natively t)
+  (org-babel-do-load-languages 'org-babel-load-languages load-language-alist)
+  )
 
 ;; Rich text clipboard
 (use-package org-rich-yank
   :bind (:map org-mode-map
-    ("C-M-y" . org-rich-yank)))
+	  ("C-M-y" . org-rich-yank)))
 (use-package valign
-    :custom (valign-fancy-bar t)
-    :hook (org-mode . valign-mode))
+  :custom (valign-fancy-bar t)
+  :hook (org-mode . valign-mode))
 
-  ;; Table of contents
-  (use-package toc-org
-    :hook (org-mode . toc-org-mode))
+;; Table of contents
+(use-package toc-org
+  :hook (org-mode . toc-org-mode))
 
-  ;; Auto-toggle Org LaTeX fragments
-  (use-package org-fragtog
-    :diminish
-    :hook (org-mode . org-fragtog-mode))
+;; Auto-toggle Org LaTeX fragments
+(use-package org-fragtog
+  :diminish
+  :hook (org-mode . org-fragtog-mode))
 
-  ;; Preview
-  (use-package org-preview-html
-    :diminish
-    :bind (:map org-mode-map
-	    ("C-c C-h" . org-preview-html-mode))
-    :init (when (featurep 'xwidget-internal)
-	    (setq org-preview-html-viewer 'xwidget)))
+;; Preview
+(use-package org-preview-html
+  :diminish
+  :bind (:map org-mode-map
+	  ("C-c C-h" . org-preview-html-mode))
+  :init (when (featurep 'xwidget-internal)
+	  (setq org-preview-html-viewer 'xwidget)))
 
-  ;; Presentation
-  (use-package org-tree-slide
-    :diminish
-    :functions (org-display-inline-images
-		            org-remove-inline-images)
-    :bind (:map org-mode-map
-	    ("s-<f7>" . org-tree-slide-mode)
-	    :map org-tree-slide-mode-map
-	    ("<left>" . org-tree-slide-move-previous-tree)
-	    ("<right>" . org-tree-slide-move-next-tree)
-	    )
-    :hook 
-    ((org-tree-slide-play . (lambda ()
-				    (text-scale-increase 4)
-				    (org-display-inline-images)
-				    (read-only-mode 1)))
-	   (org-tree-slide-stop . (lambda ()
-				    (text-scale-increase 0)
-				    (org-remove-inline-images)
-				    (read-only-mode -1))))
-    :init 
-    (setq org-tree-slide-header nil
-          org-tree-slide-slide-in-effect t
-          org-tree-slide-heading-emphasis nil
-          org-tree-slide-cursor-init t
-          org-tree-slide-progress-bar t
-          org-tree-slide-modeline-display 'outside
-          org-tree-slide-skip-done nil
-          org-tree-slide-skip-comments t
-          org-tree-slide-skip-outline-level 3))
+;; Presentation
+(use-package org-tree-slide
+  :diminish
+  :functions (org-display-inline-images
+	      org-remove-inline-images)
+  :bind (:map org-mode-map
+	  ("s-<f7>" . org-tree-slide-mode)
+	  :map org-tree-slide-mode-map
+	  ("<left>" . org-tree-slide-move-previous-tree)
+	  ("<right>" . org-tree-slide-move-next-tree)
+	  )
+  :hook
+  ((org-tree-slide-play . (lambda ()
+			    (text-scale-increase 4)
+			    (org-display-inline-images)
+			    (read-only-mode 1)))
+   (org-tree-slide-stop . (lambda ()
+			    (text-scale-increase 0)
+			    (org-remove-inline-images)
+			    (read-only-mode -1))))
+  :init
+  (setq org-tree-slide-header nil
+	org-tree-slide-slide-in-effect t
+	org-tree-slide-heading-emphasis nil
+	org-tree-slide-cursor-init t
+	org-tree-slide-progress-bar t
+	org-tree-slide-modeline-display 'outside
+	org-tree-slide-skip-done nil
+	org-tree-slide-skip-comments t
+	org-tree-slide-skip-outline-level 3))
 ;;;; org-superstar
 (use-package org-superstar
   :custom
@@ -194,8 +188,8 @@
     ;; Kill previously displayed buffer.
     (when (window-live-p xeft--preview-window)
       (with-selected-window xeft--preview-window
-        (when xeft--displayed-by-xeft-p
-          (kill-buffer))))
+	(when xeft--displayed-by-xeft-p
+	  (kill-buffer))))
     ;; Show preview of current selection.
     (xeft--preview-file path)))
 
@@ -225,7 +219,7 @@
      '(("d" "default" plain "%?"
       :if-new
       (file+head "${slug}-%<%Y%m%d%H%M%S>.org"
-          "#+title: ${title}\n#+date: %u\n#+last_modified: \n\n")
+	  "#+title: ${title}\n#+date: %u\n#+last_modified: \n\n")
       :immediate-finish t)))
     :bind
     (("C-c n f" . org-roam-node-find)
@@ -245,47 +239,47 @@
     (defun pv/org-find-time-file-property (property &optional anywhere)
       "Return the position of the time file PROPERTY if it exists.
 
-        When ANYWHERE is non-nil, search beyond the preamble."
-          (save-excursion
+	When ANYWHERE is non-nil, search beyond the preamble."
+	  (save-excursion
       (goto-char (point-min))
       (let ((first-heading
-            (save-excursion
-        (re-search-forward org-outline-regexp-bol nil t))))
-        (when (re-search-forward (format "^#\\+%s:" property)
-              (if anywhere nil first-heading)
-              t)
-          (point)))))
+	    (save-excursion
+	(re-search-forward org-outline-regexp-bol nil t))))
+	(when (re-search-forward (format "^#\\+%s:" property)
+	      (if anywhere nil first-heading)
+	      t)
+	  (point)))))
 
     (defun pv/org-has-time-file-property-p (property &optional anywhere)
       "Return the position of time file PROPERTY if it is defined.
 
-          As a special case, return -1 if the time file PROPERTY exists but
-          is not defined."
-          (when-let ((pos (pv/org-find-time-file-property property anywhere)))
+	  As a special case, return -1 if the time file PROPERTY exists but
+	  is not defined."
+	  (when-let ((pos (pv/org-find-time-file-property property anywhere)))
       (save-excursion
-        (goto-char pos)
-        (if (and (looking-at-p " ")
-          (progn (forward-char)
-            (org-at-timestamp-p 'lax)))
-            pos
-          -1))))
+	(goto-char pos)
+	(if (and (looking-at-p " ")
+	  (progn (forward-char)
+	    (org-at-timestamp-p 'lax)))
+	    pos
+	  -1))))
     (defun pv/org-set-time-file-property (property &optional anywhere pos)
       "Set the time file PROPERTY in the preamble.
 
-          When ANYWHERE is non-nil, search beyond the preamble.
+	  When ANYWHERE is non-nil, search beyond the preamble.
 
-          If the position of the file PROPERTY has already been computed,
-          it can be passed in POS."
-          (when-let ((pos (or pos
-            (pv/org-find-time-file-property property))))
+	  If the position of the file PROPERTY has already been computed,
+	  it can be passed in POS."
+	  (when-let ((pos (or pos
+	    (pv/org-find-time-file-property property))))
       (save-excursion
-        (goto-char pos)
-        (if (looking-at-p " ")
-            (forward-char)
-          (insert " "))
-        (delete-region (point) (line-end-position))
-        (let* ((now (format-time-string "[%Y-%m-%d %a %H:%M]")))
-          (insert now)))))
+	(goto-char pos)
+	(if (looking-at-p " ")
+	    (forward-char)
+	  (insert " "))
+	(delete-region (point) (line-end-position))
+	(let* ((now (format-time-string "[%Y-%m-%d %a %H:%M]")))
+	  (insert now)))))
 
     (defun pv/org-set-last-modified ()
       "Update the LAST_MODIFIED file property in the preamble."
@@ -320,9 +314,9 @@
     ;;  :hook (after-init . org-roam-ui-mode)
     :config
     (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
+	  org-roam-ui-follow t
+	  org-roam-ui-update-on-save t
+	  org-roam-ui-open-on-start t))
 
 
 
@@ -341,7 +335,7 @@
   ;; :bind
   ;; ("C-M-y" . org-download-screenshot)
   :bind (:map org-mode-map
-    ("<f2>" . org-download-clipboard))
+	  ("<f2>" . org-download-clipboard))
   :config
   (require 'org-download))
 
@@ -349,13 +343,13 @@
   :hook (org-mode . org-appear-mode)
   :config
   (setq org-appear-autoemphasis t
-        org-appear-autosubmarkers t
-        org-appear-autoentities t
-        org-appear-autolinks nil))
+	org-appear-autosubmarkers t
+	org-appear-autoentities t
+	org-appear-autolinks nil))
 
 (use-package ace-pinyin
- :config
- (ace-pinyin-global-mode +1))
+  :config
+  (ace-pinyin-global-mode +1))
 
 (use-package svg-tag-mode
   :hook (org-mode . svg-tag-mode)
