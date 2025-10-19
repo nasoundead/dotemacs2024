@@ -173,7 +173,7 @@
   (setq show-week-agenda-p t)
   )
 
-(set-frame-parameter nil 'alpha 0.96)
+(set-frame-parameter nil 'alpha 0.99)
 
 (use-package centaur-tabs
   :init

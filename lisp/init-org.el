@@ -93,13 +93,17 @@
   :config
   ;; 确保正文跟随标题缩进的核心配置
   (setq org-startup-indented t)  ; 启动时自动启用缩进模式
-
+  ;; 启动时自动显示内联图片
+  (setq org-startup-with-inline-images t)
   ;; 强制设置正文与标题的缩进关系（每级标题的正文额外缩进）
   (setq org-indent-indentation-per-level 2)  ; 每级缩进 2 空格
   (setq org-indent-text-line-function 'org-indent-text-line)  ; 正文缩进函数
 
   ;; 禁用可能干扰缩进的设置
   (setq org-adapt-indentation nil)  ; 不自动调整缩进适应内容
+
+  (setq org-todo-keywords '((sequence "TODO(t)" "DOING(i)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)"))
+	org-todo-keyword-faces '(("HANGUP" . warning)))
 
   ;; Babel
   (setq org-confirm-babel-evaluate nil
@@ -184,94 +188,94 @@
 
   (defun xeft--eager-preview()
     (when-let* ((button (button-at (point)))
-    (path (button-get button 'path)))
-    ;; Kill previously displayed buffer.
-    (when (window-live-p xeft--preview-window)
-      (with-selected-window xeft--preview-window
-	(when xeft--displayed-by-xeft-p
-	  (kill-buffer))))
-    ;; Show preview of current selection.
-    (xeft--preview-file path)))
+		(path (button-get button 'path)))
+      ;; Kill previously displayed buffer.
+      (when (window-live-p xeft--preview-window)
+	(with-selected-window xeft--preview-window
+	  (when xeft--displayed-by-xeft-p
+	    (kill-buffer))))
+      ;; Show preview of current selection.
+      (xeft--preview-file path)))
 
   (add-hook 'xeft-find-file-hook
-      (lambda () (setq xeft--displayed-by-xeft-p t)))
+	    (lambda () (setq xeft--displayed-by-xeft-p t)))
 
   (advice-add 'xeft-next :after #'xeft--eager-preview)
   (advice-add 'xeft-previous :after #'xeft--eager-preview))
 
 
 (use-package emacsql)
-  ;; (use-package emacsql-sqlite)
-  ;; (require 'emacsql-sqlite)
+;; (use-package emacsql-sqlite)
+;; (require 'emacsql-sqlite)
 (use-package org-roam
-    :after org
-    ;; :init
-    ;; (setq org-roam-v2-ack t) ;; Acknowledge V2 upgrade
-    :custom
-    ;; (org-roam-database-connector 'sqlite-builtin)
-    (org-roam-dailies-directory "daily/") ;; 默认日记目录, 上一目录的相对路径
-    (org-roam-db-gc-threshold most-positive-fixnum) ;; 提高性能
-    (org-roam-directory "~/org/roam/") ; 设置 org-roam 目录
-    (org-time-stamp-formats
-     '("<%Y-%m-%d %a %H:%M>" . "<%Y-%m-%d %a %H:%M>"))
-    ;; 自定义默认模板
-    (org-roam-capture-templates
-     '(("d" "default" plain "%?"
+  :after org
+  :init
+  (setq org-roam-v2-ack t) ;; Acknowledge V2 upgrade
+  :custom
+  ;; (org-roam-database-connector 'sqlite-builtin)
+  (org-roam-dailies-directory "daily/") ;; 默认日记目录, 上一目录的相对路径
+  (org-roam-db-gc-threshold most-positive-fixnum) ;; 提高性能
+  (org-roam-directory "~/org/roam/") ; 设置 org-roam 目录
+  (org-time-stamp-formats
+   '("<%Y-%m-%d %a %H:%M>" . "<%Y-%m-%d %a %H:%M>"))
+  ;; 自定义默认模板
+  (org-roam-capture-templates
+   '(("d" "default" plain "%?"
       :if-new
       (file+head "${slug}-%<%Y%m%d%H%M%S>.org"
-	  "#+title: ${title}\n#+date: %u\n#+last_modified: \n\n")
+		 "#+title: ${title}\n#+date: %u\n#+last_modified: \n\n")
       :immediate-finish t)))
-    :bind
-    (("C-c n f" . org-roam-node-find)
-     ("C-c n i" . org-roam-node-insert)
-     ("C-c n o" . org-id-get-create)
-     ("C-c n t" . org-roam-tag-add)
-     ("C-c n a" . org-roam-alias-add)
-     ("C-c n l" . org-roam-buffer-toggle)
-     ("C-c n c" . org-roam-capture)
-     ("C-c n d" . org-roam-dailies-map)
-     ("C-c n u" . org-roam-ui-mode))
-    :config
-    (org-roam-setup)
-    ;;--------------------------
-    ;; Handling file properties for ‘LAST_MODIFIED’
-    ;;--------------------------
-    (defun pv/org-find-time-file-property (property &optional anywhere)
-      "Return the position of the time file PROPERTY if it exists.
+  :bind
+  (("C-c n f" . org-roam-node-find)
+   ("C-c n i" . org-roam-node-insert)
+   ("C-c n o" . org-id-get-create)
+   ("C-c n t" . org-roam-tag-add)
+   ("C-c n a" . org-roam-alias-add)
+   ("C-c n l" . org-roam-buffer-toggle)
+   ("C-c n c" . org-roam-capture)
+   ("C-c n d" . org-roam-dailies-map)
+   ("C-c n u" . org-roam-ui-mode))
+  :config
+  (org-roam-setup)
+  ;;--------------------------
+  ;; Handling file properties for ‘LAST_MODIFIED’
+  ;;--------------------------
+  (defun pv/org-find-time-file-property (property &optional anywhere)
+    "Return the position of the time file PROPERTY if it exists.
 
 	When ANYWHERE is non-nil, search beyond the preamble."
-	  (save-excursion
+    (save-excursion
       (goto-char (point-min))
       (let ((first-heading
-	    (save-excursion
-	(re-search-forward org-outline-regexp-bol nil t))))
+	     (save-excursion
+	       (re-search-forward org-outline-regexp-bol nil t))))
 	(when (re-search-forward (format "^#\\+%s:" property)
-	      (if anywhere nil first-heading)
-	      t)
+				 (if anywhere nil first-heading)
+				 t)
 	  (point)))))
 
-    (defun pv/org-has-time-file-property-p (property &optional anywhere)
-      "Return the position of time file PROPERTY if it is defined.
+  (defun pv/org-has-time-file-property-p (property &optional anywhere)
+    "Return the position of time file PROPERTY if it is defined.
 
 	  As a special case, return -1 if the time file PROPERTY exists but
 	  is not defined."
-	  (when-let ((pos (pv/org-find-time-file-property property anywhere)))
+    (when-let ((pos (pv/org-find-time-file-property property anywhere)))
       (save-excursion
 	(goto-char pos)
 	(if (and (looking-at-p " ")
-	  (progn (forward-char)
-	    (org-at-timestamp-p 'lax)))
+		 (progn (forward-char)
+			(org-at-timestamp-p 'lax)))
 	    pos
 	  -1))))
-    (defun pv/org-set-time-file-property (property &optional anywhere pos)
-      "Set the time file PROPERTY in the preamble.
+  (defun pv/org-set-time-file-property (property &optional anywhere pos)
+    "Set the time file PROPERTY in the preamble.
 
 	  When ANYWHERE is non-nil, search beyond the preamble.
 
 	  If the position of the file PROPERTY has already been computed,
 	  it can be passed in POS."
-	  (when-let ((pos (or pos
-	    (pv/org-find-time-file-property property))))
+    (when-let ((pos (or pos
+			(pv/org-find-time-file-property property))))
       (save-excursion
 	(goto-char pos)
 	(if (looking-at-p " ")
@@ -281,13 +285,13 @@
 	(let* ((now (format-time-string "[%Y-%m-%d %a %H:%M]")))
 	  (insert now)))))
 
-    (defun pv/org-set-last-modified ()
-      "Update the LAST_MODIFIED file property in the preamble."
-      (when (derived-mode-p 'org-mode)
-	      (pv/org-set-time-file-property "last_modified")))
+  (defun pv/org-set-last-modified ()
+    "Update the LAST_MODIFIED file property in the preamble."
+    (when (derived-mode-p 'org-mode)
+      (pv/org-set-time-file-property "last_modified")))
 
-    :hook
-    (before-save . pv/org-set-last-modified))
+  :hook
+  (before-save . pv/org-set-last-modified))
 
 ;; 批量刷新 Org-roam 笔记编码并重新保存
 (defun org-roam-refresh-all-files-encoding ()
@@ -317,7 +321,6 @@
 	  org-roam-ui-follow t
 	  org-roam-ui-update-on-save t
 	  org-roam-ui-open-on-start t))
-
 
 
 (use-package org-download
@@ -483,24 +486,6 @@
 	  )))
 
 
-;; (use-package org-modern
-;;   ;; :custom
-;;   ;; Org modern settings
-;;   ;; (org-modern-star nil)
-;;   ;; (org-modern-priority nil)
-;;   ;; (org-modern-list nil)
-;;   ;; (org-modern-checkbox nil)
-;;   ;; (org-modern-todo nil)
-;;   ;; (org-modern-keyword nil)
 
-;;   ;; Editor settings
-;;   ;; (org-auto-align-tags nil)
-;;   ;; (org-tags-column 0)
-;;   ;; (org-catch-invisible-edits 'show-and-error)
-;;   ;; (org-special-ctrl-a/e t)
-;;   :config
-;;   ;; (global-org-modern-mode 1)
-;;   (add-hook 'org-mode-hook #'org-modern-mode)
-;;   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda))
 
 (provide 'init-org)
