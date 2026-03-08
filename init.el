@@ -4,6 +4,7 @@
   "Set logo. nil means official logo.")
 ;; (require 'init-package)
 (require 'init-straight)
+;; (require 'init-elpaca)
 
 (require 'init-core)
 (require 'init-utils)
@@ -22,7 +23,7 @@
 (require 'init-modeline)
 (require 'init-highlight)
 ;; (require 'init-ivy)
-;; (require 'init-pyim)
+(require 'init-pyim)
 (require 'init-vertico)
 (require 'init-corfu)
 
@@ -32,7 +33,7 @@
 (require 'init-flycheck)
 (require 'init-vcs)
 
-;; (require 'init-treemacs)
+(require 'init-treemacs)
 ;; (require 'init-treesitter)
 (require 'init-lsp)
 (require 'init-org)

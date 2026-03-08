@@ -3,19 +3,58 @@
 ;; Emacs HEAD (27+) introduces early-init.el, which is run before init.el,
 ;; before package and UI initialization happens.
 
-;; Package initialize occurs automatically, before `user-init-file' is
-;; loaded, but after `early-init-file'. Doom handles package
-;; initialization, so we must prevent Emacs from doing it early!
+;; 启动优化 (这一行必须在最顶上)
+(setq gc-cons-threshold most-positive-fixnum)
+
+;; UI 提前禁用 (防止闪烁)
+(setq inhibit-startup-screen t)
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+
+;; 针对 Linux/EndeavourOS 的渲染优化
+(setq frame-inhibit-implied-resize t) ; 禁止不必要的窗口重绘
+(setq inhibit-compacting-font-caches t) ; 禁止回收字体缓存，用空间换时间
+
+;; 砍掉启动欢迎语，直接进正题
+(setq inhibit-startup-screen t
+      inhibit-startup-message t
+      inhibit-startup-echo-area-message user-login-name)
+
+;; 包管理器提前禁能 (让 init.el 里的 use-package 手动接管，省时间)
 (setq package-enable-at-startup nil)
 
-;; Prevent the glimpse of un-styled Emacs by setting these early.
-(add-to-list 'default-frame-alist '(tool-bar-lines 0))
-(add-to-list 'default-frame-alist '(menu-bar-lines 0))
-(add-to-list 'default-frame-alist '(vertical-scroll-bars))
+;; 编码与性能基础
+(prefer-coding-system 'utf-8)
+(setq warning-minimum-level :error) ; 减少启动时的弹窗干扰
 
-;; 增加IO性能
-;; (setq read-process-output-max (* 1024 1024 10))
+;; 强制使用不带闪烁的渲染模式
+(advice-add #'display-startup-screen :override #'ignore)
+
+;; 最后一个小锦囊 (提升 0.05s) 如果你发现那 48 个包安装完后，启动时间略有回升，可以尝试在 early-init.el 里的最后一行加上这个（如果还没加 的话）
+;; 暂时禁用文件加载时的垃圾回收
 (setq gc-cons-threshold most-positive-fixnum)
+
+;; 并在 init.el 的末尾把它调回来
+(add-hook 'emacs-startup-hook
+          (lambda () (setq gc-cons-threshold (* 8 1024 1024))))
+
+;; 让渲染更连贯
+(setq-default redisplay-dont-pause t)
+
+;; 启动时把 GC 关了，启动后再开。
+(setq gc-cons-threshold most-positive-fixnum)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold (* 8 1024 1024)))) ;; 恢复到 8MB
+
+;; 禁用文件处理器查询
+    (let ((old-file-name-handler-alist file-name-handler-alist))
+      (setq file-name-handler-alist nil)
+      (add-hook 'emacs-startup-hook
+                (lambda ()
+                  (setq file-name-handler-alist old-file-name-handler-alist))))
+
 
 
 (defconst sys/winp
