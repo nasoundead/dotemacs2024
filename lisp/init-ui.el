@@ -57,15 +57,6 @@
   ;; (load-theme 'apropospriate-light t)
   )
 
-(use-package mindre-theme
-  :ensure t
-  :straight (:host github :repo "erikbackman/mindre-theme")
-  :custom
-  (mindre-use-more-bold nil)
-  (mindre-use-faded-lisp-parens t)
-  :config
-  (load-theme 'mindre t))
-
 (use-package doom-themes
   :ensure t
   :config
@@ -175,84 +166,84 @@
 
 (set-frame-parameter nil 'alpha 0.99)
 
-(use-package centaur-tabs
-  :init
-  (setq centaur-tabs-enable-key-bindings t)
-  :config
-  (setq centaur-tabs-style "bar"
-	centaur-tabs-height 25
-	centaur-tabs-set-icons t
-	centaur-tabs-show-new-tab-button t
-	centaur-tabs-set-modified-marker t
-	centaur-tabs-show-navigation-buttons t
-	centaur-tabs-set-bar 'under
-	centaur-tabs-show-count nil
-	;; centaur-tabs-label-fixed-length 15
-	;; centaur-tabs-gray-out-icons 'buffer
-	;; centaur-tabs-plain-icons t
-	x-underline-at-descent-line t
-	centaur-tabs-left-edge-margin nil)
-  (centaur-tabs-change-fonts (face-attribute 'default :font) 110)
-  (centaur-tabs-headline-match)
-  ;; (centaur-tabs-enable-buffer-alphabetical-reordering)
-  ;; (setq centaur-tabs-adjust-buffer-order t)
-  (centaur-tabs-mode t)
-  (setq uniquify-separator "/")
-  (setq uniquify-buffer-name-style 'forward)
-  (defun centaur-tabs-buffer-groups ()
-    "`centaur-tabs-buffer-groups' control buffers' group rules.
+;; (use-package centaur-tabs
+;;   :init
+;;   (setq centaur-tabs-enable-key-bindings t)
+;;   :config
+;;   (setq centaur-tabs-style "bar"
+;;	centaur-tabs-height 25
+;;	centaur-tabs-set-icons t
+;;	centaur-tabs-show-new-tab-button t
+;;	centaur-tabs-set-modified-marker t
+;;	centaur-tabs-show-navigation-buttons t
+;;	centaur-tabs-set-bar 'under
+;;	centaur-tabs-show-count nil
+;;	;; centaur-tabs-label-fixed-length 15
+;;	;; centaur-tabs-gray-out-icons 'buffer
+;;	;; centaur-tabs-plain-icons t
+;;	x-underline-at-descent-line t
+;;	centaur-tabs-left-edge-margin nil)
+;;   (centaur-tabs-change-fonts (face-attribute 'default :font) 110)
+;;   (centaur-tabs-headline-match)
+;;   ;; (centaur-tabs-enable-buffer-alphabetical-reordering)
+;;   ;; (setq centaur-tabs-adjust-buffer-order t)
+;;   (centaur-tabs-mode t)
+;;   (setq uniquify-separator "/")
+;;   (setq uniquify-buffer-name-style 'forward)
+;;   (defun centaur-tabs-buffer-groups ()
+;;     "`centaur-tabs-buffer-groups' control buffers' group rules.
 
-      Group centaur-tabs with mode if buffer is derived from `eshell-mode' `emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
-      All buffer name start with * will group to \"Emacs\".
-      Other buffer group by `centaur-tabs-get-group-name' with project name."
-    (list
-     (cond
-      ;; ((not (eq (file-remote-p (buffer-file-name)) nil))
-      ;; "Remote")
-      ((or (string-equal "*" (substring (buffer-name) 0 1))
-	   (memq major-mode '(magit-process-mode
-			      magit-status-mode
-			      magit-diff-mode
-			      magit-log-mode
-			      magit-file-mode
-			      magit-blob-mode
-			      magit-blame-mode
-			      )))
-       "Emacs")
-      ((derived-mode-p 'prog-mode)
-       "Editing")
-      ((derived-mode-p 'dired-mode)
-       "Dired")
-      ((memq major-mode '(helpful-mode
-			  help-mode))
-       "Help")
-      ((memq major-mode '(org-mode
-			  org-agenda-clockreport-mode
-			  org-src-mode
-			  org-agenda-mode
-			  org-beamer-mode
-			  org-indent-mode
-			  org-bullets-mode
-			  org-cdlatex-mode
-			  org-agenda-log-mode
-			  diary-mode))
-       "OrgMode")
-      (t
-       (centaur-tabs-get-group-name (current-buffer))))))
-  :bind
-  (:map evil-normal-state-map
-    ("g t" . centaur-tabs-forward)
-    ("g T" . centaur-tabs-backward))
-  ("C-<prior>" . centaur-tabs-backward)
-  ("C-<next>" . centaur-tabs-forward)
-  ("C-S-<prior>" . centaur-tabs-move-current-tab-to-left)
-  ("C-S-<next>" . centaur-tabs-move-current-tab-to-right)
-  :hook
-  (dired-mode . centaur-tabs-local-mode)
-  (dashboard-mode . centaur-tabs-local-mode)
-  (term-mode . centaur-tabs-local-mode)
-  (calendar-mode . centaur-tabs-local-mode)
-  (org-agenda-mode . centaur-tabs-local-mode))
+;;       Group centaur-tabs with mode if buffer is derived from `eshell-mode' `emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
+;;       All buffer name start with * will group to \"Emacs\".
+;;       Other buffer group by `centaur-tabs-get-group-name' with project name."
+;;     (list
+;;      (cond
+;;       ;; ((not (eq (file-remote-p (buffer-file-name)) nil))
+;;       ;; "Remote")
+;;       ((or (string-equal "*" (substring (buffer-name) 0 1))
+;;	   (memq major-mode '(magit-process-mode
+;;			      magit-status-mode
+;;			      magit-diff-mode
+;;			      magit-log-mode
+;;			      magit-file-mode
+;;			      magit-blob-mode
+;;			      magit-blame-mode
+;;			      )))
+;;        "Emacs")
+;;       ((derived-mode-p 'prog-mode)
+;;        "Editing")
+;;       ((derived-mode-p 'dired-mode)
+;;        "Dired")
+;;       ((memq major-mode '(helpful-mode
+;;			  help-mode))
+;;        "Help")
+;;       ((memq major-mode '(org-mode
+;;			  org-agenda-clockreport-mode
+;;			  org-src-mode
+;;			  org-agenda-mode
+;;			  org-beamer-mode
+;;			  org-indent-mode
+;;			  org-bullets-mode
+;;			  org-cdlatex-mode
+;;			  org-agenda-log-mode
+;;			  diary-mode))
+;;        "OrgMode")
+;;       (t
+;;        (centaur-tabs-get-group-name (current-buffer))))))
+;;   :bind
+;;   (:map evil-normal-state-map
+;;     ("g t" . centaur-tabs-forward)
+;;     ("g T" . centaur-tabs-backward))
+;;   ("C-<prior>" . centaur-tabs-backward)
+;;   ("C-<next>" . centaur-tabs-forward)
+;;   ("C-S-<prior>" . centaur-tabs-move-current-tab-to-left)
+;;   ("C-S-<next>" . centaur-tabs-move-current-tab-to-right)
+;;   :hook
+;;   (dired-mode . centaur-tabs-local-mode)
+;;   (dashboard-mode . centaur-tabs-local-mode)
+;;   (term-mode . centaur-tabs-local-mode)
+;;   (calendar-mode . centaur-tabs-local-mode)
+;;   (org-agenda-mode . centaur-tabs-local-mode))
 
 ;; (use-package nerd-icons-buffer-menu
 ;;   :straight (nerd-icons-buffer-menu :type git :host github :repo "jcs-elpa/nerd-icons-buffer-menu")
@@ -279,5 +270,17 @@
 ;;  ;; but you can use any other Nerd Font if you want
 ;;  (nerd-icons-font-family "Symbols Nerd Font Mono")
 ;;  )
+
+;; 补全系统图标 (Vertico + Marginalia)
+(use-package nerd-icons-completion
+  :straight (:host github :repo "rainstormstudio/nerd-icons-completion" :ref "d09ea98")
+  :after (marginalia nerd-icons) ;; 确保在 marginalia 加载后执行
+  :config
+  (nerd-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+
+;; 全局Emoji (Fallback)
+(when (display-graphic-p)
+  (set-fontset-font t 'unicode "Symbols Nerd Font Mono" nil 'prepend))
 
 (provide 'init-ui)
