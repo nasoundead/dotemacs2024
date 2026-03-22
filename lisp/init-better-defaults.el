@@ -134,6 +134,12 @@
 (set-keyboard-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
+
+;; 强制所有进程（包括 curl）纯 UTF-8，消除 dos/unix 差异
+(setq default-process-coding-system '(utf-8 . utf-8))
+;; 单独给 curl 加编码兜底（gptel 核心依赖 curl 调用接口）
+(push '("curl" . (utf-8 . utf-8)) process-coding-system-alist)
+
 ;; 对 Org 模式单独强化配置
 (add-hook 'org-mode-hook
 	  (lambda ()

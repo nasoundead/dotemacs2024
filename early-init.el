@@ -24,8 +24,7 @@
 ;; 包管理器提前禁能 (让 init.el 里的 use-package 手动接管，省时间)
 (setq package-enable-at-startup nil)
 
-;; 编码与性能基础
-(prefer-coding-system 'utf-8)
+;; 性能基础
 (setq warning-minimum-level :error) ; 减少启动时的弹窗干扰
 
 ;; 强制使用不带闪烁的渲染模式
@@ -37,7 +36,7 @@
 
 ;; 并在 init.el 的末尾把它调回来
 (add-hook 'emacs-startup-hook
-          (lambda () (setq gc-cons-threshold (* 8 1024 1024))))
+	  (lambda () (setq gc-cons-threshold (* 8 1024 1024))))
 
 ;; 让渲染更连贯
 (setq-default redisplay-dont-pause t)
@@ -45,15 +44,15 @@
 ;; 启动时把 GC 关了，启动后再开。
 (setq gc-cons-threshold most-positive-fixnum)
 (add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold (* 8 1024 1024)))) ;; 恢复到 8MB
+	  (lambda ()
+	    (setq gc-cons-threshold (* 8 1024 1024)))) ;; 恢复到 8MB
 
 ;; 禁用文件处理器查询
-    (let ((old-file-name-handler-alist file-name-handler-alist))
-      (setq file-name-handler-alist nil)
-      (add-hook 'emacs-startup-hook
-                (lambda ()
-                  (setq file-name-handler-alist old-file-name-handler-alist))))
+(let ((old-file-name-handler-alist file-name-handler-alist))
+  (setq file-name-handler-alist nil)
+  (add-hook 'emacs-startup-hook
+	    (lambda ()
+	      (setq file-name-handler-alist old-file-name-handler-alist))))
 
 
 

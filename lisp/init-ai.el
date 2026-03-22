@@ -32,18 +32,76 @@
 ;;
 ;;
 (use-package gptel
- :config
- (setq gptel-response-coding-system 'utf-8)
- ;; OPTIONAL configuration
- (setq gptel-model   'deepseek-chat
-  gptel-backend
-  (gptel-make-openai "DeepSeek"     ;Any name you want
-   :host "api.deepseek.com"
-   :endpoint "/chat/completions"
-   :stream t
-   :key "sk-ac5fd897d2b8440694b77a72fcef9bde"             ;can be a function that returns the key
-   :models '(deepseek-chat deepseek-coder))))
+  :config
+  ;; 强制 gptel 请求/响应全程 UTF-8
+  (setq gptel-coding-system 'utf-8)
+  (setq gptel-response-coding-system 'utf-8)
 
+  ;; 先检查原函数是否存在，避免覆盖出错
+  (when (fboundp 'gptel-curl--get-args)
+    ;; 移除可能存在的旧 advice，防止重复覆盖
+    (advice-remove 'gptel-curl--get-args #'gptel-curl--get-args)
+
+    ;; 重新定义修复函数（改名避免和原函数重名）
+    (defun my-gptel-curl--get-args (orig-func info token)
+      "Advice for gptel-curl--get-args to force UTF-8 on Windows (不干扰补全)."
+      (let* ((data (plist-get info :data))
+	     ;; 强制用纯 UTF-8 编码 JSON 数据，避免 dos 格式干扰
+	     (data-json (encode-coding-string (gptel--json-encode data) 'utf-8 t))
+	     (url (plist-get info :url))
+	     (headers (plist-get info :headers))
+	     (args (list "-s" "-S" "-X" "POST"
+			 "-H" "Content-Type: application/json; charset=utf-8"
+			 ;; 额外加 Accept 编码头，要求接口返回纯 UTF-8
+			 "-H" "Accept: application/json; charset=utf-8")))
+	(dolist (header headers)
+	  (setq args (append args (list "-H" header))))
+	(setq args (append args (list "-d" data-json url)))
+	args))
+
+    ;; 使用 :around 类型的 advice（更安全，不直接覆盖原函数）
+    (advice-add 'gptel-curl--get-args :around #'my-gptel-curl--get-args))
+
+  ;; 兜底：确保 gptel 缓冲区显示编码为 UTF-8
+  (add-hook 'gptel-after-response-hook
+	    (lambda ()
+	      (set-buffer-process-coding-system 'utf-8 'utf-8)
+	      (set-buffer-file-coding-system 'utf-8)))
+
+  (setq gptel-model   'deepseek-chat
+	gptel-backend
+	(gptel-make-openai "DeepSeek"     ;Any name you want
+	  :host "api.deepseek.com"
+	  :endpoint "/chat/completions"
+	  :stream t
+	  :key (lambda () (getenv "DEEPSEEK_API_KEY"))  ; 读取环境变量
+	  :models '(deepseek-chat deepseek-coder)))
+  (defun get-ollama-models ()
+    "Fetch the list of installed Ollama models."
+    (let* ((output (shell-command-to-string "ollama list"))
+	   (lines (split-string output "\n" t))
+	   models)
+      (dolist (line (cdr lines))  ; Skip the first line
+	(when (string-match "^\\([^[:space:]]+\\)" line)
+	  (push (match-string 1 line) models)))
+      (nreverse models)))
+
+  (gptel-make-ollama "Ollama"             ;Any name of your choosing
+    :host "localhost:11434"               ;Where it's running
+    :stream t                             ;Stream responses
+    :models (get-ollama-models))          ;List of models
+  )
+
+
+;; (use-package ollama-buddy
+;;   :ensure t
+;;   :straight (ollama-buddy
+;;	     :type git
+;;	     :host github
+;;	     :repo "captainflasmr/ollama-buddy")
+;;   :bind
+;;   ("C-c o" . ollama-buddy-role-transient-menu)
+;;   ("C-c O" . ollama-buddy-transient-menu))
 
 ;; (use-package tabnine
 ;;  :custom

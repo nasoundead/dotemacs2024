@@ -255,8 +255,6 @@
 ;; ;; Dired icons
 ;; (require 'nerd-svg-icons-dired)
 ;; (add-hook 'dired-mode-hook 'nerd-svg-icons-dired-mode)
-;; ;; Ibuffer icons
-;; (add-hook 'ibuffer-hook #'nerd-svg-icons-ibuffer-mode)
 
 ;; (use-package nerd-icons
 ;;  :straight (nerd-icons
