@@ -5,29 +5,29 @@
 
 
 (defconst sea-org-directory
- (expand-file-name "~/org/")
- "org dir")
+  (expand-file-name "~/org/")
+  "org dir")
 
- (defconst sea-prettify-symbols-alist
- '(("lambda" . ?λ)
-   ("<-"     . ?←)
-   ("->"     . ?→)
-   ("->>"    . ?↠)
-   ("=>"     . ?⇒)
-   ("map"    . ?↦)
-   ("/="     . ?≠)
-   ("!="     . ?≠)
-   ("=="     . ?≡)
-   ("<="     . ?≤)
-   (">="     . ?≥)
-   ("=<<"    . (?= (Br . Bl) ?≪))
-   (">>="    . (?≫ (Br . Bl) ?=))
-   ("<=<"    . ?↢)
-   (">=>"    . ?↣)
-   ("&&"     . ?∧)
-   ("||"     . ?∨)
-   ("not"    . ?¬))
- "sea-prettify-symbols-alist")
+(defconst sea-prettify-symbols-alist
+  '(("lambda" . ?λ)
+    ("<-"     . ?←)
+    ("->"     . ?→)
+    ("->>"    . ?↠)
+    ("=>"     . ?⇒)
+    ("map"    . ?↦)
+    ("/="     . ?≠)
+    ("!="     . ?≠)
+    ("=="     . ?≡)
+    ("<="     . ?≤)
+    (">="     . ?≥)
+    ("=<<"    . (?= (Br . Bl) ?≪))
+    (">>="    . (?≫ (Br . Bl) ?=))
+    ("<=<"    . ?↢)
+    (">=>"    . ?↣)
+    ("&&"     . ?∧)
+    ("||"     . ?∨)
+    ("not"    . ?¬))
+  "sea-prettify-symbols-alist")
 
 (defconst sea-prettify-org-symbols-alist
   '(
@@ -59,17 +59,12 @@
     (C          . t)
     (java       . t)
     (plantuml   . t)
+    (shell      . t)
+    (calc       . t)
     )
   "Alist of org ob languages.")
-;; ob-sh renamed to ob-shell since 26.1.
-(cl-pushnew '(shell . t) load-language-alist)
-(use-package ob-ipython
-  :init (cl-pushnew '(ipython  . t) load-language-alist))
-(use-package ob-go
-  :init (cl-pushnew '(go . t) load-language-alist))
-(use-package ob-rust
-  :init (cl-pushnew '(rust . t) load-language-alist))
 (use-package plantuml-mode
+  :after org
   :init
   ;; Enable plantuml-mode for PlantUML files
   (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
@@ -88,7 +83,9 @@
 (use-package org
   :bind (("C-c a" . org-agenda)
 	 ("C-c b" . org-switchb)
-	 ("C-c x" . org-capture))
+	 ("C-c x" . org-capture)
+	 :map org-mode-map
+	 ("C-c C-e" . org-emphasize))
   :hook ((org-babel-after-execute org-mode) . org-redisplay-inline-images)
   :config
   ;; 确保正文跟随标题缩进的核心配置
@@ -98,18 +95,25 @@
   ;; 强制设置正文与标题的缩进关系（每级标题的正文额外缩进）
   (setq org-indent-indentation-per-level 2)  ; 每级缩进 2 空格
   (setq org-indent-text-line-function 'org-indent-text-line)  ; 正文缩进函数
-
   ;; 禁用可能干扰缩进的设置
   (setq org-adapt-indentation nil)  ; 不自动调整缩进适应内容
-
   (setq org-todo-keywords '((sequence "TODO(t)" "DOING(i)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)"))
 	org-todo-keyword-faces '(("HANGUP" . warning)))
-
   ;; Babel
   (setq org-confirm-babel-evaluate nil
 	org-src-fontify-natively t
 	org-src-tab-acts-natively t)
   (org-babel-do-load-languages 'org-babel-load-languages load-language-alist)
+  ;; 隐藏 emphasis 标记符 (* / _ + = ~)，只显示样式
+  (setq org-hide-emphasis-markers t)
+  ;; 强调外观 (org-mode 用 bold/italic/underline 基础 face，非 org-bold)
+  (set-face-attribute 'bold nil :weight 'bold :foreground "#e06c75")
+  (set-face-attribute 'italic nil :slant 'italic :foreground "#56b6c2")
+  (set-face-attribute 'underline nil :underline t :foreground "#c678dd")
+  (set-face-attribute 'org-code nil :family "Consolas" :background "#2c323c" :foreground "#e5c07b")
+  (set-face-attribute 'org-verbatim nil :family "Consolas" :background "#2c323c" :foreground "#e5c07b")
+  ;; 删除线无独立 face，通过 org-emphasis-alist 设前景色
+  (setf (alist-get '+ org-emphasis-alist) '(:strike-through t :foreground "#5c6370"))
   )
 
 ;; Rich text clipboard
@@ -176,43 +180,13 @@
   org-superstar-prettify-item-bullets nil
   :hook (org-mode . org-superstar-mode))
 
-(use-package xeft
-  :config
-  (setq xeft-default-extension "org")
-  (setq xeft-directory "~/org/")
-  (setq xeft-ignore-extension '("png"))
-  (setq xeft-title-function #'file-name-nondirectory)
-  ;; Follow symlinks.
-  (setq xeft-recursive 'follow-symlinks)
-  (defvar-local xeft--displayed-by-xeft-p nil)
-
-  (defun xeft--eager-preview()
-    (when-let* ((button (button-at (point)))
-		(path (button-get button 'path)))
-      ;; Kill previously displayed buffer.
-      (when (window-live-p xeft--preview-window)
-	(with-selected-window xeft--preview-window
-	  (when xeft--displayed-by-xeft-p
-	    (kill-buffer))))
-      ;; Show preview of current selection.
-      (xeft--preview-file path)))
-
-  (add-hook 'xeft-find-file-hook
-	    (lambda () (setq xeft--displayed-by-xeft-p t)))
-
-  (advice-add 'xeft-next :after #'xeft--eager-preview)
-  (advice-add 'xeft-previous :after #'xeft--eager-preview))
-
-
-(use-package emacsql)
+;; (use-package emacsql)
 ;; (use-package emacsql-sqlite)
 ;; (require 'emacsql-sqlite)
 (use-package org-roam
   :after org
-  :init
-  (setq org-roam-v2-ack t) ;; Acknowledge V2 upgrade
   :custom
-  ;; (org-roam-database-connector 'sqlite-builtin)
+  (org-roam-database-connector 'sqlite-builtin)
   (org-roam-dailies-directory "daily/") ;; 默认日记目录, 上一目录的相对路径
   (org-roam-db-gc-threshold most-positive-fixnum) ;; 提高性能
   (org-roam-directory "~/org/roam/") ; 设置 org-roam 目录
@@ -242,8 +216,7 @@
   ;;--------------------------
   (defun pv/org-find-time-file-property (property &optional anywhere)
     "Return the position of the time file PROPERTY if it exists.
-
-	When ANYWHERE is non-nil, search beyond the preamble."
+      When ANYWHERE is non-nil, search beyond the preamble."
     (save-excursion
       (goto-char (point-min))
       (let ((first-heading
@@ -256,9 +229,8 @@
 
   (defun pv/org-has-time-file-property-p (property &optional anywhere)
     "Return the position of time file PROPERTY if it is defined.
-
-	  As a special case, return -1 if the time file PROPERTY exists but
-	  is not defined."
+	As a special case, return -1 if the time file PROPERTY exists but
+	is not defined."
     (when-let ((pos (pv/org-find-time-file-property property anywhere)))
       (save-excursion
 	(goto-char pos)
@@ -270,10 +242,10 @@
   (defun pv/org-set-time-file-property (property &optional anywhere pos)
     "Set the time file PROPERTY in the preamble.
 
-	  When ANYWHERE is non-nil, search beyond the preamble.
+	When ANYWHERE is non-nil, search beyond the preamble.
 
-	  If the position of the file PROPERTY has already been computed,
-	  it can be passed in POS."
+	If the position of the file PROPERTY has already been computed,
+	it can be passed in POS."
     (when-let ((pos (or pos
 			(pv/org-find-time-file-property property))))
       (save-excursion
@@ -291,10 +263,10 @@
       (pv/org-set-time-file-property "last_modified")))
 
   :hook
-  (before-save . pv/org-set-last-modified))
-
-;; 批量刷新 Org-roam 笔记编码并重新保存
-(defun org-roam-refresh-all-files-encoding ()
+  (before-save . pv/org-set-last-modified)
+  :config
+  ;; 批量刷新 Org-roam 笔记编码并重新保存
+  (defun org-roam-refresh-all-files-encoding ()
     "强制所有 Org-roam 笔记以 UTF-8 编码重新保存，解决 DATE 字段编码问题"
     (interactive)
     (let ((files (org-roam-list-files)))  ; 获取所有 Org-roam 笔记文件
@@ -308,24 +280,21 @@
 	    (kill-buffer))))
       (message "Org-roam 所有文件已按 UTF-8 重新编码并保存")))
 
+  )
+
 (use-package org-roam-ui
-    :straight
-    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-    :after org-roam
-    ;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
-    ;;         a hookable mode anymore, you're advised to pick something yourself
-    ;;         if you don't care about startup time, use
-    ;;  :hook (after-init . org-roam-ui-mode)
-    :config
-    (setq org-roam-ui-sync-theme t
-	  org-roam-ui-follow t
-	  org-roam-ui-update-on-save t
-	  org-roam-ui-open-on-start t))
+  :straight
+  (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+  :after org-roam
+  :config
+  (setq org-roam-ui-sync-theme t
+	org-roam-ui-follow t
+	org-roam-ui-update-on-save t
+	org-roam-ui-open-on-start t))
 
 
 (use-package org-download
   :after org
-  :defer nil
   :custom
   (org-download-method 'directory)
   (org-download-image-dir "images")
@@ -351,6 +320,7 @@
 	org-appear-autolinks nil))
 
 (use-package ace-pinyin
+  :defer t
   :config
   (ace-pinyin-global-mode +1))
 
@@ -484,8 +454,5 @@
 							  :stroke 0 :scale 1 :padding 0))))
 
 	  )))
-
-
-
 
 (provide 'init-org)

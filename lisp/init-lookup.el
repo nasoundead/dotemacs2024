@@ -165,14 +165,14 @@ Dictionary.app behind the scenes to get definitions.")
            origin))))
     result))
 (use-package better-jumper
+  :after evil
   :preface
   ;; REVIEW Suppress byte-compiler warning spawning a *Compile-Log* buffer at
   ;; startup. This can be removed once gilbertw1/better-jumper#2 is merged.
   (defvar better-jumper-local-mode nil)
-  :init
-  (global-set-key [remap evil-jump-forward]  #'better-jumper-jump-forward)
-  (global-set-key [remap evil-jump-backward] #'better-jumper-jump-backward)
-  (global-set-key [remap xref-pop-marker-stack] #'better-jumper-jump-backward)
+  :bind (([remap evil-jump-forward] . better-jumper-jump-forward)
+	 ([remap evil-jump-backward] . better-jumper-jump-backward)
+	 ([remap xref-pop-marker-stack] . better-jumper-jump-backward))
   :config
   (better-jumper-mode +1)
   (add-hook 'better-jumper-post-jump-hook #'recenter)

@@ -12,6 +12,7 @@
 
 
 (use-package evil-escape
+  :after evil
   :straight (:host github
              :repo "syl20bnr/evil-escape")
   :custom
@@ -177,6 +178,7 @@ the new algorithm is confusing, like in python or ruby."
 
 (use-package evil-args)
 (use-package evil-lion
+  :after evil
   :ensure t
   :config
   (evil-lion-mode))

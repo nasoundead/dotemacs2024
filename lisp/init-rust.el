@@ -31,8 +31,10 @@
 ;;; Code:
 ;;
 ;;
-(use-package toml-mode)
-(use-package rustic)
+(use-package toml-mode
+  :defer t)
+(use-package rustic
+  :defer t)
 (provide 'init-rust)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

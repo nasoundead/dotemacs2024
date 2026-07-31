@@ -7,7 +7,6 @@
 (setq gc-cons-threshold most-positive-fixnum)
 
 ;; UI 提前禁用 (防止闪烁)
-(setq inhibit-startup-screen t)
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
@@ -30,22 +29,13 @@
 ;; 强制使用不带闪烁的渲染模式
 (advice-add #'display-startup-screen :override #'ignore)
 
-;; 最后一个小锦囊 (提升 0.05s) 如果你发现那 48 个包安装完后，启动时间略有回升，可以尝试在 early-init.el 里的最后一行加上这个（如果还没加 的话）
-;; 暂时禁用文件加载时的垃圾回收
-(setq gc-cons-threshold most-positive-fixnum)
-
-;; 并在 init.el 的末尾把它调回来
-(add-hook 'emacs-startup-hook
-	  (lambda () (setq gc-cons-threshold (* 8 1024 1024))))
-
 ;; 让渲染更连贯
 (setq-default redisplay-dont-pause t)
 
-;; 启动时把 GC 关了，启动后再开。
-(setq gc-cons-threshold most-positive-fixnum)
+;; 启动完成后再恢复 GC，避免频繁卡顿
 (add-hook 'emacs-startup-hook
 	  (lambda ()
-	    (setq gc-cons-threshold (* 8 1024 1024)))) ;; 恢复到 8MB
+	    (setq gc-cons-threshold (* 32 1024 1024)))) ;; 恢复到 32MB
 
 ;; 禁用文件处理器查询
 (let ((old-file-name-handler-alist file-name-handler-alist))

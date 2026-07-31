@@ -9,8 +9,8 @@
 ;; (use-package nyan-mode)
 ;; (add-hook 'sea-init-ui-hook #'nyan-mode)
 
-(require 'simple-modeline)
-(simple-modeline-mode)
+(use-package simple-modeline
+  :hook (after-init . simple-modeline-mode))
 
 ;; (use-package doom-modeline
 ;;   :ensure t

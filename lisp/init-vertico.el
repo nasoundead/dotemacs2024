@@ -24,11 +24,11 @@
         completion-category-defaults nil
         completion-category-overrides '((file (styles . (partial-completion)))))
   :config
-  (defun my-orderless-regexp (orig-func component)
-    (let ((result (funcall orig-func component)))
-      (pyim-cregexp-build result)))
-  (advice-add 'orderless-regexp :around #'my-orderless-regexp)
-)
+  (with-eval-after-load 'pyim
+    (defun my-orderless-regexp (orig-func component)
+      (let ((result (funcall orig-func component)))
+        (pyim-cregexp-build result)))
+    (advice-add 'orderless-regexp :around #'my-orderless-regexp)))
 
 (use-package marginalia
  :after vertico
@@ -53,6 +53,8 @@
 ;;  :hook (vertico-mode . vertico-posframe-mode))
 
 (use-package consult
+  :defer t
+  :bind (("M-y" . consult-yank-pop))
   :init
   (if sys/winp
       (progn
@@ -61,7 +63,6 @@
 	(setq consult-locate-args (encode-coding-string "es.exe -i -p -r" 'gbk))))
   (advice-add #'multi-occur :override #'consult-multi-occur)
   :config
-  (global-set-key (kbd "M-y") 'consult-yank-pop)
   (setq
   ;; consult-project-root-function #'doom-project-root
    consult-narrow-key "<"

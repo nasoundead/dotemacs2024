@@ -26,7 +26,6 @@
 
 (use-package bing-dict
   :ensure t
-  :config
-  (global-set-key (kbd "C-c f") 'bing-dict-brief))
+  :bind ("C-c f" . bing-dict-brief))
 
 (provide 'init-utils)

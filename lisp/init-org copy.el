@@ -172,21 +172,10 @@
       (C          . t)
       (java       . t)
       (plantuml   . t)
+      (shell      . t)
+      (calc       . t)
       )
     "Alist of org ob languages.")
-
-  ;; ob-sh renamed to ob-shell since 26.1.
-  (cl-pushnew '(shell . t) load-language-alist)
-
-  (use-package ob-ipython
-    :init (cl-pushnew '(ipython  . t) load-language-alist))
-
-  (use-package ob-go
-    :init (cl-pushnew '(go . t) load-language-alist))
-
-  (use-package ob-rust
-    :init (cl-pushnew '(rust . t) load-language-alist))
-
 
   (use-package plantuml-mode
     :init
@@ -468,34 +457,35 @@
 	  org-file-apps))
 
 
-  (use-package deft)
-  (use-package xeft
-    :config
-    (setq xeft-default-extension "org")
-    (setq xeft-directory org-directory)
-    (setq xeft-ignore-extension '("png"))
-    (setq xeft-title-function #'file-name-nondirectory)
-    ;; Follow symlinks.
-    (setq xeft-recursive 'follow-symlinks)
-    (defvar-local xeft--displayed-by-xeft-p nil)
+  ;; (use-package deft)
+  ;; (use-package xeft
+  ;;   :config
+  ;;   (setq xeft-default-extension "org")
+  ;;   (setq xeft-directory org-directory)
+  ;;   (setq xeft-ignore-extension '("png"))
+  ;;   (setq xeft-title-function #'file-name-nondirectory)
+  ;;   ;; Follow symlinks.
+  ;;   (setq xeft-recursive 'follow-symlinks)
+  ;;   (defvar-local xeft--displayed-by-xeft-p nil)
 
-    (defun xeft--eager-preview()
-      (when-let* ((button (button-at (point)))
-		  (path (button-get button 'path)))
-	;; Kill previously displayed buffer.
-	(when (window-live-p xeft--preview-window)
-	  (with-selected-window xeft--preview-window
-	    (when xeft--displayed-by-xeft-p
-	      (kill-buffer))))
-	;; Show preview of current selection.
-	(xeft--preview-file path)))
+  ;;   (defun xeft--eager-preview()
+  ;;     (when-let* ((button (button-at (point)))
+	;; 	  (path (button-get button 'path)))
+	
+  ;; ;; Kill previously displayed buffer.
+	;; (when (window-live-p xeft--preview-window)
+	;;   (with-selected-window xeft--preview-window
+	;;     (when xeft--displayed-by-xeft-p
+	;;       (kill-buffer))))
+	;; ;; Show preview of current selection.
+	;; (xeft--preview-file path)))
 
-    (add-hook 'xeft-find-file-hook
-	      (lambda () (setq xeft--displayed-by-xeft-p t)))
+  ;;   (add-hook 'xeft-find-file-hook
+	;;       (lambda () (setq xeft--displayed-by-xeft-p t)))
 
-    (advice-add 'xeft-next :after #'xeft--eager-preview)
-    (advice-add 'xeft-previous :after #'xeft--eager-preview))
-  (use-package emacsql)
+  ;;   (advice-add 'xeft-next :after #'xeft--eager-preview)
+  ;;   (advice-add 'xeft-previous :after #'xeft--eager-preview))
+  ;; (use-package emacsql)
   ;; (use-package emacsql-sqlite)
   ;; (require 'emacsql-sqlite)
   (use-package org-roam
@@ -534,17 +524,16 @@
     ;;--------------------------
     (defun pv/org-find-time-file-property (property &optional anywhere)
       "Return the position of the time file PROPERTY if it exists.
-
-    When ANYWHERE is non-nil, search beyond the preamble."
-      (save-excursion
-	(goto-char (point-min))
-	(let ((first-heading
-	       (save-excursion
-		 (re-search-forward org-outline-regexp-bol nil t))))
-	  (when (re-search-forward (format "^#\\+%s:" property)
-				   (if anywhere nil first-heading)
-				   t)
-	    (point)))))
+        When ANYWHERE is non-nil, search beyond the preamble."
+          (save-excursion
+      (goto-char (point-min))
+      (let ((first-heading
+            (save-excursion
+        (re-search-forward org-outline-regexp-bol nil t))))
+        (when (re-search-forward (format "^#\\+%s:" property)
+              (if anywhere nil first-heading)
+              t)
+          (point)))))
 
     (defun pv/org-has-time-file-property-p (property &optional anywhere)
       "Return the position of time file PROPERTY if it is defined.

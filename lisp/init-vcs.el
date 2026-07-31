@@ -3,6 +3,7 @@
 
 ;; Git
 (use-package magit
+  :defer t
   :init
   ;; Must be set early to prevent ~/.emacs.d/transient from being created
   (setq transient-levels-file  (concat sea-etc-dir "transient/levels")
@@ -13,7 +14,8 @@
   ;; (setq magit-completing-read-function 'ivy-completing-read)
   )
 
-(use-package magit-popup)
+(use-package magit-popup
+  :defer t)
 
 ;; Gitflow externsion for Magit
 (use-package magit-gitflow
@@ -32,7 +34,8 @@
   (setq git-messenger:use-magit-popup t))
 
 ;; Walk through git revisions of a file
-(use-package git-timemachine)
+(use-package git-timemachine
+  :defer t)
 
 ;; Highlighting regions by last updated time
 (use-package smeargle

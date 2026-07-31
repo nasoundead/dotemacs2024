@@ -1,6 +1,6 @@
 (use-package pyim
- :demand t
- :diminish pyim-isearch-mode
+  :defer t
+  :diminish pyim-isearch-mode
  :init
  (setq default-input-method "pyim"
     pyim-title "ㄓ"
@@ -35,7 +35,8 @@
 ;;  (pyim-greatdict-enable))
 
 (use-package pyim-basedict
- :config
+  :after pyim
+  :config
  (pyim-basedict-enable))
 
 ;; (use-package rime
@@ -47,6 +48,7 @@
 ;;   :custom
 ;;   (default-input-method "rime"))
 
-(use-package posframe)
+(use-package posframe
+  :defer t)
 
 (provide 'init-pyim)

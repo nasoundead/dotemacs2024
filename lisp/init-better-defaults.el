@@ -223,7 +223,7 @@
   :commands (shrink-path-prompt shrink-path-file-mixed))
 
 (use-package anzu
-  :init (global-anzu-mode +1)
+  :init (add-hook 'after-init-hook #'global-anzu-mode)
   :bind (([remap query-replace] . anzu-query-replace)
 	 ([remap query-replace-regexp] . anzu-query-replace-regexp)
 	 :map isearch-mode-map
@@ -284,9 +284,7 @@
   (setq ediff-merge-split-window-function 'split-window-horizontally))
 
 (use-package aggressive-indent
-  :init
-  (dolist (hook '(emacs-lisp-mode-hook css-mode-hook))
-    (add-hook hook #'aggressive-indent-mode)))
+  :hook ((emacs-lisp-mode css-mode) . aggressive-indent-mode))
 
 ;; Increase selected region by semantic units
 (use-package expand-region
@@ -322,8 +320,10 @@
   (add-hook 'evil-insert-state-entry-hook 'emacs-ime-disable)
   )
 
-(use-package hungry-delete)
-(global-hungry-delete-mode)
+(use-package hungry-delete
+  :defer t
+  :config
+  (global-hungry-delete-mode))
 
 (defun smarter-move-beginning-of-line (arg)
   "Move point back to indentation of beginning of line.

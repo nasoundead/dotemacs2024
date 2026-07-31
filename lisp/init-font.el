@@ -44,7 +44,8 @@
 		    ;; (default . "FantasqueSansM Nerd Font")
 		    ;; (default . "FiraCode Nerd Font")
 		    ;; (default . "Iosevka NF")
-		    (default . "Iosevka Comfy")
+		    ;; (default . "Iosevka Comfy")
+		    (default . "Maple Mono NF CN")
 		    (cjk . "Microsoft Yahei")
 		    (symbol . "Symbola")
 			(emoji . "Segoe UI Emoji")  ; Windows

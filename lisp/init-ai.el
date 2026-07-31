@@ -32,6 +32,7 @@
 ;;
 ;;
 (use-package gptel
+  :defer t
   :config
   ;; 强制 gptel 请求/响应全程 UTF-8
   (setq gptel-coding-system 'utf-8)
