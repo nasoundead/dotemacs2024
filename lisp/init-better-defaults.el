@@ -65,6 +65,11 @@
 (add-hook 'after-init-hook #'savehist-mode)
 (add-hook 'after-init-hook #'save-place-mode)
 
+;; auto-save 文件统一放到缓存目录，不在工作目录产生 # 文件
+(setq auto-save-file-name-transforms
+      `((".*" ,(concat sea-cache-dir "auto-save/") t)))
+(setq auto-save-list-file-prefix (concat sea-cache-dir "auto-save-list/.saves-"))
+
 ;; Keep track of recently opened files
 (use-package recentf
  :init
@@ -140,11 +145,7 @@
 ;; 单独给 curl 加编码兜底（gptel 核心依赖 curl 调用接口）
 (push '("curl" . (utf-8 . utf-8)) process-coding-system-alist)
 
-;; 对 Org 模式单独强化配置
-(add-hook 'org-mode-hook
-	  (lambda ()
-	    (set-buffer-file-coding-system 'utf-8-unix)  ; 统一使用 Unix 换行符
-	    (setq buffer-file-coding-system 'utf-8-unix)))
+;; 全局 UTF-8 配置已涵盖 org-mode，无需额外 hook 强制编码
 (when sys/winp
   (set-selection-coding-system 'gbk)
   (set-clipboard-coding-system 'gbk))

@@ -106,14 +106,18 @@
   (org-babel-do-load-languages 'org-babel-load-languages load-language-alist)
   ;; 隐藏 emphasis 标记符 (* / _ + = ~)，只显示样式
   (setq org-hide-emphasis-markers t)
-  ;; 强调外观 (org-mode 用 bold/italic/underline 基础 face，非 org-bold)
-  (set-face-attribute 'bold nil :weight 'bold :foreground "#e06c75")
-  (set-face-attribute 'italic nil :slant 'italic :foreground "#56b6c2")
-  (set-face-attribute 'underline nil :underline t :foreground "#c678dd")
-  (set-face-attribute 'org-code nil :family "Consolas" :background "#2c323c" :foreground "#e5c07b")
-  (set-face-attribute 'org-verbatim nil :family "Consolas" :background "#2c323c" :foreground "#e5c07b")
-  ;; 删除线无独立 face，通过 org-emphasis-alist 设前景色
-  (setf (alist-get '+ org-emphasis-alist) '(:strike-through t :foreground "#5c6370"))
+  ;; Make verbatim with highlight text background.
+  (add-to-list 'org-emphasis-alist
+            '("=" (:background "#fef7ca")))
+  ;; Make deletion(obsolote) text foreground with dark gray.
+  (add-to-list 'org-emphasis-alist
+            '("+" (:foreground "dark gray"
+                    :strike-through t)))
+  ;; Make code style around with box.
+  (add-to-list 'org-emphasis-alist
+            '("~" (:box (:line-width 1
+                          :color "grey75"
+                          :style released-button))))
   )
 
 ;; Rich text clipboard
