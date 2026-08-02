@@ -41,37 +41,37 @@
 ;;     (defun my-gptel-curl--get-args (orig-func info token)
 ;;       "Advice for gptel-curl--get-args to force UTF-8 on Windows."
 ;;       (let* ((data (plist-get info :data))
-;; 	     (data-json (encode-coding-string (gptel--json-encode data) 'utf-8 t))
-;; 	     (url (plist-get info :url))
-;; 	     (headers (plist-get info :headers))
-;; 	     (args (list "-s" "-S" "-X" "POST"
-;; 			 "-H" "Content-Type: application/json; charset=utf-8"
-;; 			 "-H" "Accept: application/json; charset=utf-8")))
-;; 	(dolist (header headers)
-;; 	  (setq args (append args (list "-H" header))))
-;; 	(setq args (append args (list "-d" data-json url)))
-;; 	args))
+;;	     (data-json (encode-coding-string (gptel--json-encode data) 'utf-8 t))
+;;	     (url (plist-get info :url))
+;;	     (headers (plist-get info :headers))
+;;	     (args (list "-s" "-S" "-X" "POST"
+;;			 "-H" "Content-Type: application/json; charset=utf-8"
+;;			 "-H" "Accept: application/json; charset=utf-8")))
+;;	(dolist (header headers)
+;;	  (setq args (append args (list "-H" header))))
+;;	(setq args (append args (list "-d" data-json url)))
+;;	args))
 ;;     (advice-add 'gptel-curl--get-args :around #'my-gptel-curl--get-args))
 ;;   (add-hook 'gptel-after-response-hook
-;; 	    (lambda ()
-;; 	      (set-buffer-process-coding-system 'utf-8 'utf-8)
-;; 	      (set-buffer-file-coding-system 'utf-8)))
+;;	    (lambda ()
+;;	      (set-buffer-process-coding-system 'utf-8 'utf-8)
+;;	      (set-buffer-file-coding-system 'utf-8)))
 ;;   (setq gptel-model   'deepseek-chat
-;; 	gptel-backend
-;; 	(gptel-make-openai "DeepSeek"
-;; 	  :host "api.deepseek.com"
-;; 	  :endpoint "/chat/completions"
-;; 	  :stream t
-;; 	  :key (lambda () (getenv "DEEPSEEK_API_KEY"))
-;; 	  :models '(deepseek-chat deepseek-coder)))
+;;	gptel-backend
+;;	(gptel-make-openai "DeepSeek"
+;;	  :host "api.deepseek.com"
+;;	  :endpoint "/chat/completions"
+;;	  :stream t
+;;	  :key (lambda () (getenv "DEEPSEEK_API_KEY"))
+;;	  :models '(deepseek-chat deepseek-coder)))
 ;;   (defun get-ollama-models ()
 ;;     "Fetch the list of installed Ollama models."
 ;;     (let* ((output (shell-command-to-string "ollama list"))
-;; 	   (lines (split-string output "\n" t))
-;; 	   models)
+;;	   (lines (split-string output "\n" t))
+;;	   models)
 ;;       (dolist (line (cdr lines))
-;; 	(when (string-match "^\\([^[:space:]]+\\)" line)
-;; 	  (push (match-string 1 line) models)))
+;;	(when (string-match "^\\([^[:space:]]+\\)" line)
+;;	  (push (match-string 1 line) models)))
 ;;       (nreverse models)))
 ;;   (gptel-make-ollama "Ollama"
 ;;     :host "localhost:11434"

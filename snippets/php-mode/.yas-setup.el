@@ -11,6 +11,6 @@
 \"class-like\" contains class, trait and interface."
   (file-name-nondirectory
    (file-name-sans-extension (or (buffer-file-name)
-                                 (buffer-name (current-buffer))))))
+				 (buffer-name (current-buffer))))))
 
 ;;; .yas-setup.el ends here

@@ -34,8 +34,9 @@
 
 ;; 启动完成后再恢复 GC，避免频繁卡顿
 (add-hook 'emacs-startup-hook
-	  (lambda ()
-	    (setq gc-cons-threshold (* 32 1024 1024)))) ;; 恢复到 32MB
+  (lambda ()
+    (setq gc-cons-threshold (* 128 1024 1024))  ;; 恢复到 128MB
+    (setq garbage-collection-messages nil)))    ;; 抑制 GC 提示
 
 ;; 禁用文件处理器查询
 (let ((old-file-name-handler-alist file-name-handler-alist))

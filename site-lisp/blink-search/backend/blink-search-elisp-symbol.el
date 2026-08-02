@@ -102,8 +102,8 @@
 (defun blink-search-elisp-symbol-update ()
   "We need synchronize elisp symbols to Python side when idle."
   (let* ((symbols (append (blink-search-elisp-local-symbols)
-                          (blink-search-elisp-global-symbols)))
-         (symbols-size (length symbols)))
+			  (blink-search-elisp-global-symbols)))
+	 (symbols-size (length symbols)))
     ;; Only synchronize when new symbol created.
     (unless (equal blink-search-elisp-symbol-size symbols-size)
       (blink-search-call-async "search_elisp_symbol_update" symbols)
@@ -124,61 +124,61 @@
 (defun blink-search-elisp-symbol-do (candidate)
   (let* ((symbol (intern candidate)))
     (cond ((commandp symbol)
-           (call-interactively symbol))
-          ((or (functionp symbol)
-               (macrop symbol))
-           (describe-function symbol))
-          ((facep symbol)
-           (customize-face symbol))
-          ((custom-variable-p symbol)
-           (customize-option symbol))
-          (t
-           (describe-variable symbol)))))
+	   (call-interactively symbol))
+	  ((or (functionp symbol)
+	       (macrop symbol))
+	   (describe-function symbol))
+	  ((facep symbol)
+	   (customize-face symbol))
+	  ((custom-variable-p symbol)
+	   (customize-option symbol))
+	  (t
+	   (describe-variable symbol)))))
 
 (defun blink-search-elisp-global-symbols ()
   (all-completions ""
-                   obarray
-                   (lambda (symbol)
-                     (or (fboundp symbol)
-                         (boundp symbol)
-                         (featurep symbol)
-                         (facep symbol)))))
+		   obarray
+		   (lambda (symbol)
+		     (or (fboundp symbol)
+			 (boundp symbol)
+			 (featurep symbol)
+			 (facep symbol)))))
 
 (defun blink-search-elisp-local-symbols ()
   (when (or (derived-mode-p 'emacs-lisp-mode)
-            (derived-mode-p 'inferior-emacs-lisp-mode)
-            (derived-mode-p 'lisp-interaction-mode))
+	    (derived-mode-p 'inferior-emacs-lisp-mode)
+	    (derived-mode-p 'lisp-interaction-mode))
     (let ((regexp "[ \t\n]*\\(\\_<\\(?:\\sw\\|\\s_\\)*\\_>\\)")
-          (pos (point))
-          res)
+	  (pos (point))
+	  res)
       (condition-case nil
-          (save-excursion
-            (dotimes (_ blink-search-elisp-parse-depth)
-              (up-list -1)
-              (save-excursion
-                (when (eq (char-after) ?\()
-                  (forward-char 1)
-                  (when (ignore-errors
-                          (save-excursion (forward-list)
-                                          (<= (point) pos)))
-                    (skip-chars-forward " \t\n")
-                    (cond
-                     ((looking-at blink-search-elisp-var-binding-regexp)
-                      (down-list 1)
-                      (condition-case nil
-                          (dotimes (_ blink-search-elisp-parse-limit)
-                            (save-excursion
-                              (when (looking-at "[ \t\n]*(")
-                                (down-list 1))
-                              (when (looking-at regexp)
-                                (cl-pushnew (match-string-no-properties 1) res)))
-                            (forward-sexp))
-                        (scan-error nil)))
-                     ((looking-at blink-search-elisp-var-binding-regexp-1)
-                      (down-list 1)
-                      (when (looking-at regexp)
-                        (cl-pushnew (match-string-no-properties 1) res)))))))))
-        (scan-error nil))
+	  (save-excursion
+	    (dotimes (_ blink-search-elisp-parse-depth)
+	      (up-list -1)
+	      (save-excursion
+		(when (eq (char-after) ?\()
+		  (forward-char 1)
+		  (when (ignore-errors
+			  (save-excursion (forward-list)
+					  (<= (point) pos)))
+		    (skip-chars-forward " \t\n")
+		    (cond
+		     ((looking-at blink-search-elisp-var-binding-regexp)
+		      (down-list 1)
+		      (condition-case nil
+			  (dotimes (_ blink-search-elisp-parse-limit)
+			    (save-excursion
+			      (when (looking-at "[ \t\n]*(")
+				(down-list 1))
+			      (when (looking-at regexp)
+				(cl-pushnew (match-string-no-properties 1) res)))
+			    (forward-sexp))
+			(scan-error nil)))
+		     ((looking-at blink-search-elisp-var-binding-regexp-1)
+		      (down-list 1)
+		      (when (looking-at regexp)
+			(cl-pushnew (match-string-no-properties 1) res)))))))))
+	(scan-error nil))
 
       res)))
 

@@ -20,7 +20,7 @@
     ("R" origami-reset))
 
   :bind (:map origami-mode-map
-              ("C-`" . origami-hydra/body))
+	      ("C-`" . origami-hydra/body))
   :config
   (face-spec-reset-face 'origami-fold-header-face))
 
@@ -30,20 +30,20 @@
   (set-selective-display
    (or column
        (unless selective-display
-         (1+ (current-column))))))
+	 (1+ (current-column))))))
 
 (defun toggle-hiding (column)
   (interactive "P")
   (if hs-minor-mode
       (if (condition-case nil
-              (hs-toggle-hiding)
-            (error t))
-          (hs-show-all))
+	      (hs-toggle-hiding)
+	    (error t))
+	  (hs-show-all))
     (toggle-selective-display column)))
 
 
 (add-hook 'prog-mode (lambda()
-                       (load-library "hideshow")))
+		       (load-library "hideshow")))
 
 (global-set-key (kbd "C-{") 'toggle-hiding)
 ;; (global-set-key (kbd "C-\\") 'toggle-selective-display)
@@ -56,8 +56,8 @@
 (defun display-code-line-counts (ov)
   (when (eq 'code (overlay-get ov 'hs))
     (overlay-put ov 'help-echo
-                 (buffer-substring (overlay-start ov)
-                                   (overlay-end ov)))))
+		 (buffer-substring (overlay-start ov)
+				   (overlay-end ov)))))
 
 (setq hs-set-up-overlay 'display-code-line-counts)
 

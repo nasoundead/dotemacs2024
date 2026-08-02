@@ -278,6 +278,18 @@
 	:desc "Find dir in project"     :n  "F" #'projectile-find-dir
 	)
 
+      (:after org-roam
+	(:desc "notes" :prefix "n"
+	  :desc "Find node"            :n "f" #'org-roam-node-find
+	  :desc "Insert node"          :n "i" #'org-roam-node-insert
+	  :desc "Capture"              :n "c" #'org-roam-capture
+	  :desc "Toggle buffer"        :n "l" #'org-roam-buffer-toggle
+	  :desc "Dailies"              :n "d" #'org-roam-dailies-map
+	  :desc "Add tag"              :n "t" #'org-roam-tag-add
+	  :desc "Add alias"            :n "a" #'org-roam-alias-add
+	  :desc "Store link"           :n "o" #'org-id-get-create
+	  :desc "Roam UI"              :n "u" #'org-roam-ui-mode))
+
       (:desc "buffer" :prefix "b"
 	:desc "New empty buffer"        :n "n" #'evil-buffer-new
 	:desc "Switch buffer"           :n "b" #'switch-to-buffer

@@ -97,7 +97,7 @@
   :custom-face
   (treemacs-nerd-icons-root-face ((t (:inherit nerd-icons-green :height 1.3))))
   (treemacs-nerd-icons-file-face ((t (:inherit nerd-icons-dsilver))))
-  :config 
+  :config
   (treemacs-load-theme "nerd-icons"))
 
 ;; (use-package treemacs-all-the-icons)

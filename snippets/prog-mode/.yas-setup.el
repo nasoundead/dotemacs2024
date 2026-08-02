@@ -21,8 +21,8 @@
 (defun yas-string-reverse (str)
   "Reverse a string STR manually to be compatible with emacs versions < 25."
   (apply #'string
-         (reverse
-          (string-to-list str))))
+	 (reverse
+	  (string-to-list str))))
 
 (defun yas-trimmed-comment-start ()
   "This function returns `comment-start' trimmed by whitespaces."

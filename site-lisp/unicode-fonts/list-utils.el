@@ -196,8 +196,8 @@ SEPARATOR is the string with which to replace any whitespace."
     (cl-callf or separator " ")
     (let ((whitespace-regexp (concat "[" string-utils-whitespace "]")))
       (save-match-data
-        (replace-regexp-in-string (concat whitespace-regexp "+") separator
-                                  str-val)))))
+	(replace-regexp-in-string (concat whitespace-regexp "+") separator
+				  str-val)))))
 
 ;;; hash-table tests
 
@@ -208,18 +208,18 @@ Non-numeric arguments are permitted and will be compared by `equal'.
 
 A hash-table-test is defined with the same name."
   (if (and (numberp x)
-           (numberp y))
+	   (numberp y))
       (= x y)
     ;; else
     (equal x y)))
 
 (define-hash-table-test 'list-utils-htt-=
-                        'list-utils-htt-=
-                        #'(lambda (x)
-                            (sxhash (if (numberp x)
-                                        (float x)
-                                      ;; else
-                                      x))))
+			'list-utils-htt-=
+			#'(lambda (x)
+			    (sxhash (if (numberp x)
+					(float x)
+				      ;; else
+				      x))))
 
 (defun list-utils-htt-case-fold-equal (x y)
   "A string comparison function which ignores case.
@@ -229,13 +229,13 @@ stringification by `format'.
 
 A hash-table-test is defined with the same name."
   (eq t (compare-strings (if x (format "%s" x) "") nil nil
-                         (if y (format "%s" y) "") nil nil
-                         'ignore-case)))
+			 (if y (format "%s" y) "") nil nil
+			 'ignore-case)))
 
 (define-hash-table-test 'list-utils-htt-case-fold-equal
-                        'list-utils-htt-case-fold-equal
-                        #'(lambda (x)
-                            (sxhash (upcase (if x (format "%s" x) "")))))
+			'list-utils-htt-case-fold-equal
+			#'(lambda (x)
+			    (sxhash (upcase (if x (format "%s" x) "")))))
 
 (defun list-utils-htt-ignore-whitespace-equal (x y)
   "A string comparison function which ignores whitespace.
@@ -245,12 +245,12 @@ stringification by `format'.
 
 A hash-table-test is defined with the same name."
   (string-equal (string-utils-compress-whitespace (if x (format "%s" x) "") nil "")
-                (string-utils-compress-whitespace (if y (format "%s" y) "") nil "")))
+		(string-utils-compress-whitespace (if y (format "%s" y) "") nil "")))
 
 (define-hash-table-test 'list-utils-htt-ignore-whitespace-equal
-                        'list-utils-htt-ignore-whitespace-equal
-                        #'(lambda (x)
-                            (sxhash (string-utils-compress-whitespace (if x (format "%s" x) "") nil ""))))
+			'list-utils-htt-ignore-whitespace-equal
+			#'(lambda (x)
+			    (sxhash (string-utils-compress-whitespace (if x (format "%s" x) "") nil ""))))
 
 ;;; tconc - this section of code is in the public domain
 
@@ -267,7 +267,7 @@ TC is a data structure created by `make-tconc'."
   (cl-assert (tconc-p tc) nil "TC must be created by `make-tconc'.")
   (when list
     (if (null (tconc-tail tc))
-        (setf (tconc-head tc) list)
+	(setf (tconc-head tc) list)
       ;; else
       (setcdr (tconc-tail tc) list))
     (setf (tconc-tail tc) (last list)))
@@ -308,8 +308,8 @@ elements, eg
 Such improper lists are produced by `cl-list*'."
   (let ((len (safe-length cell)))
     (when (and (consp cell)
-               (> len 0)
-               (not (listp (nthcdr len cell))))
+	       (> len 0)
+	       (not (listp (nthcdr len cell))))
       (nthcdr len cell))))
 
 ;;;###autoload
@@ -328,16 +328,16 @@ element, and are produced by `cl-list*'."
     ((not tree)
      (let ((tail (list-utils-cons-cell-p list)))
        (cond
-         (tail
-          (append
-           (cl-subseq list 0 (safe-length list))
-           (list tail)))
-         (t
-          (copy-sequence list)))))
+	 (tail
+	  (append
+	   (cl-subseq list 0 (safe-length list))
+	   (list tail)))
+	 (t
+	  (copy-sequence list)))))
     ((consp list)
      (mapcar #'(lambda (elt)
-                 (list-utils-make-proper-copy elt 'tree 'recur))
-             (list-utils-make-proper-copy list nil 'recur)))
+		 (list-utils-make-proper-copy elt 'tree 'recur))
+	     (list-utils-make-proper-copy list nil 'recur)))
     (t
      list)))
 
@@ -362,7 +362,7 @@ Modifies LIST and returns the modified value."
      list)
     ((consp list)
      (cl-loop for elt in (list-utils-make-proper-inplace list nil 'recur)
-              do (list-utils-make-proper-inplace elt 'tree 'recur))
+	      do (list-utils-make-proper-inplace elt 'tree 'recur))
      list)
     (t
      list)))
@@ -385,16 +385,16 @@ Optional RECUR-INTERNAL is for internal use only."
     ((not tree)
      (let ((tail (list-utils-cons-cell-p list)))
        (cond
-         (tail
-          (cl-copy-list list))
-         (t
-          (apply 'cl-list* list)))))
+	 (tail
+	  (cl-copy-list list))
+	 (t
+	  (apply 'cl-list* list)))))
     ((and (consp list)
-          (> (safe-length list) 1))
+	  (> (safe-length list) 1))
      (apply 'cl-list*
-            (mapcar #'(lambda (elt)
-                        (list-utils-make-improper-copy elt 'tree 'recur))
-                    (list-utils-make-proper-copy list nil 'recur))))
+	    (mapcar #'(lambda (elt)
+			(list-utils-make-improper-copy elt 'tree 'recur))
+		    (list-utils-make-proper-copy list nil 'recur))))
     (t
      list)))
 
@@ -419,9 +419,9 @@ Modifies LIST and returns the modified value."
        (setcdr (last list 2) (car (last list))))
      list)
     ((and (consp list)
-          (> (safe-length list) 1))
+	  (> (safe-length list) 1))
      (cl-loop for elt in (list-utils-make-improper-inplace list nil 'recur)
-              do (list-utils-make-improper-inplace elt 'tree 'recur))
+	      do (list-utils-make-improper-inplace elt 'tree 'recur))
      list)
     (t
      list)))
@@ -442,15 +442,15 @@ calculated from LIST."
       list
     ;; else
     (let ((behind list)
-          (ahead (nthcdr cycle-length list))
-          (linear-subseq nil))
+	  (ahead (nthcdr cycle-length list))
+	  (linear-subseq nil))
       (catch 'cycle
-        (while behind
-          (when (eq ahead behind)
-            (throw 'cycle t))
-          (push (car behind) linear-subseq)
-          (setq ahead (cdr ahead))
-          (setq behind (cdr behind))))
+	(while behind
+	  (when (eq ahead behind)
+	    (throw 'cycle t))
+	  (push (car behind) linear-subseq)
+	  (setq ahead (cdr ahead))
+	  (setq behind (cdr behind))))
       (nreverse linear-subseq))))
 
 ;;;###autoload
@@ -470,13 +470,13 @@ If there is no cycle in LIST, return nil."
      (nthcdr (length (list-utils-linear-subseq list)) list))
     (t
      (let ((fast list)
-           (slow list))
+	   (slow list))
        (catch 'cycle
-         (while (cdr fast)
-           (setq fast (cdr (cdr fast)))
-           (setq slow (cdr slow))
-           (when (eq slow fast)
-             (throw 'cycle slow))))))))
+	 (while (cdr fast)
+	   (setq fast (cdr (cdr fast)))
+	   (setq slow (cdr slow))
+	   (when (eq slow fast)
+	     (throw 'cycle slow))))))))
 
 ;;;###autoload
 (defun list-utils-cyclic-length (list)
@@ -490,19 +490,19 @@ If LIST is completely linear, return 0."
       0
     ;;else
     (let ((fast list)
-          (slow list)
-          (counter 0))
+	  (slow list)
+	  (counter 0))
       (catch 'cycle
-        (while slow
-          (cl-incf counter)
-          (setq slow (cdr slow))
-          (setq fast (cdr (cdr fast)))
-          (when (eq slow list)
-            (throw 'cycle t))
-          (when (eq slow fast)
-            (setq list slow)
-            (setq counter 0)
-            (setq fast nil))))
+	(while slow
+	  (cl-incf counter)
+	  (setq slow (cdr slow))
+	  (setq fast (cdr (cdr fast)))
+	  (when (eq slow list)
+	    (throw 'cycle t))
+	  (when (eq slow fast)
+	    (setq list slow)
+	    (setq counter 0)
+	    (setq fast nil))))
       counter)))
 
 ;;;###autoload
@@ -514,8 +514,8 @@ perfect non-branching cycle in which the last element points
 to the first."
   (let ((cycle (list-utils-cyclic-subseq list)))
     (when (or (not perfect)
-              (not (list-utils-linear-subseq list (list-utils-cyclic-length cycle))))
-        cycle)))
+	      (not (list-utils-linear-subseq list (list-utils-cyclic-length cycle))))
+	cycle)))
 
 ;;;###autoload
 (defun list-utils-linear-p (list)
@@ -540,7 +540,7 @@ elements, like `safe-length'."
     ;; else
     (let ((cycle-length (list-utils-cyclic-length list)))
       (+ cycle-length
-         (safe-length (list-utils-linear-subseq list cycle-length))))))
+	 (safe-length (list-utils-linear-subseq list cycle-length))))))
 
 ;;;###autoload
 (defun list-utils-flat-length (list)
@@ -552,11 +552,11 @@ and is considered to be a \"simple\" element.
 If the car of LIST is a cons, return 0."
   (let ((counter 0))
     (ignore-errors
-        (catch 'saw-depth
-          (dolist (elt list)
-            (when (consp elt)
-              (throw 'saw-depth t))
-            (cl-incf counter))))
+	(catch 'saw-depth
+	  (dolist (elt list)
+	    (when (consp elt)
+	      (throw 'saw-depth t))
+	    (cl-incf counter))))
   counter))
 
 ;;;###autoload
@@ -570,8 +570,8 @@ linearized copies of any cyclic lists contained within."
      (cl-subseq list 0 (list-utils-safe-length list)))
     ((consp list)
      (mapcar #'(lambda (elt)
-                 (list-utils-make-linear-copy elt 'tree))
-             (list-utils-make-linear-copy list)))
+		 (list-utils-make-linear-copy elt 'tree))
+	     (list-utils-make-linear-copy list)))
     (t
      list)))
 
@@ -589,8 +589,8 @@ cyclic lists contained within."
      list)
     ((consp list)
      (mapcar #'(lambda (elt)
-                 (list-utils-make-linear-inplace elt 'tree))
-             (list-utils-make-linear-inplace list)))
+		 (list-utils-make-linear-inplace elt 'tree))
+	     (list-utils-make-linear-inplace list)))
     (t
      list)))
 
@@ -612,39 +612,39 @@ compared according to TEST."
   (cl-callf or test 'equal)
   (cond
     ((and (not (listp list-1))
-          (not (listp list-2)))
+	  (not (listp list-2)))
      (funcall test list-1 list-2))
     ((or (not (listp list-1))
-         (not (listp list-2)))
+	 (not (listp list-2)))
      nil)
     (t
      (catch 'match
        (let* ((cyclic-1 (list-utils-make-linear-copy (list-utils-cyclic-subseq list-1 'from-start)))
-              (cyclic-2 (list-utils-make-linear-copy (list-utils-cyclic-subseq list-2 'from-start)))
-              (clen-1 (list-utils-safe-length cyclic-1))
-              (clen-2 (list-utils-safe-length cyclic-2))
-              (linear-1 nil)
-              (linear-2 nil)
-              (last-cdr-1 nil)
-              (last-cdr-2 nil))
-         (unless (= clen-1 clen-2)
-           (throw 'match nil))
-         (cl-loop for a in cyclic-1
-                  for b in cyclic-2
-                  unless (list-utils-safe-equal a b) do (throw 'match nil))
-         (setq linear-1 (list-utils-linear-subseq list-1 clen-1))
-         (setq linear-2 (list-utils-linear-subseq list-2 clen-2))
-         (unless (= (list-utils-safe-length linear-1) (list-utils-safe-length linear-2))
-           (throw 'match nil))
-         (cl-loop for a in linear-1
-                  for b in linear-2
-                  unless (list-utils-safe-equal a b) do (throw 'match nil))
-         (setq last-cdr-1 (list-utils-improper-p linear-1))
-         (setq last-cdr-2 (list-utils-improper-p linear-2))
-         (when (or (if last-cdr-1 (not last-cdr-2) last-cdr-2)
-                   (and last-cdr-1
-                        (not (funcall test last-cdr-1 last-cdr-2))))
-           (throw 'match nil)))
+	      (cyclic-2 (list-utils-make-linear-copy (list-utils-cyclic-subseq list-2 'from-start)))
+	      (clen-1 (list-utils-safe-length cyclic-1))
+	      (clen-2 (list-utils-safe-length cyclic-2))
+	      (linear-1 nil)
+	      (linear-2 nil)
+	      (last-cdr-1 nil)
+	      (last-cdr-2 nil))
+	 (unless (= clen-1 clen-2)
+	   (throw 'match nil))
+	 (cl-loop for a in cyclic-1
+		  for b in cyclic-2
+		  unless (list-utils-safe-equal a b) do (throw 'match nil))
+	 (setq linear-1 (list-utils-linear-subseq list-1 clen-1))
+	 (setq linear-2 (list-utils-linear-subseq list-2 clen-2))
+	 (unless (= (list-utils-safe-length linear-1) (list-utils-safe-length linear-2))
+	   (throw 'match nil))
+	 (cl-loop for a in linear-1
+		  for b in linear-2
+		  unless (list-utils-safe-equal a b) do (throw 'match nil))
+	 (setq last-cdr-1 (list-utils-improper-p linear-1))
+	 (setq last-cdr-2 (list-utils-improper-p linear-2))
+	 (when (or (if last-cdr-1 (not last-cdr-2) last-cdr-2)
+		   (and last-cdr-1
+			(not (funcall test last-cdr-1 last-cdr-2))))
+	   (throw 'match nil)))
        t))))
 
 ;;;###autoload
@@ -658,10 +658,10 @@ If LIST is a cons cell or a list which does not contain other
 lists, returns a depth of 1."
   (cond
     ((or (not (listp list))
-         (null list))
+	 (null list))
      0)
     ((and (listp list)
-          (list-utils-cyclic-p list))
+	  (list-utils-cyclic-p list))
      (list-utils-depth (list-utils-make-linear-copy list)))
     ((list-utils-cons-cell-p list)
      (+ 1 (apply 'max (mapcar 'list-utils-depth (list-utils-make-proper-copy list)))))
@@ -681,18 +681,18 @@ flattens circular list structures."
      nil)
 
     ((and (listp list)
-          (list-utils-cyclic-p list))
+	  (list-utils-cyclic-p list))
      (list-utils-flatten (list-utils-make-linear-copy list)))
 
     ((and (listp list)
-          (consp (car list)))
+	  (consp (car list)))
      (append (list-utils-flatten (car list))
-             (list-utils-flatten (cdr list))))
+	     (list-utils-flatten (cdr list))))
 
     ((listp list)
      (let ((extent (list-utils-flat-length list)))
        (append (cl-subseq list 0 extent)
-               (list-utils-flatten (nthcdr extent list)))))
+	       (list-utils-flatten (nthcdr extent list)))))
 
     (t
      (list list))))
@@ -707,7 +707,7 @@ defaults to `equal'.
 LIST is modified and the new value is returned."
   (cl-callf or test 'equal)
   (let ((improper (list-utils-improper-p list))
-        (pos nil))
+	(pos nil))
     (when improper
       (cl-callf list-utils-make-proper-inplace list))
     (setq pos (cl-position element list :test test))
@@ -727,7 +727,7 @@ defaults to `equal'.
 LIST is modified and the new value is returned."
   (cl-callf or test 'equal)
   (let ((improper (list-utils-improper-p list))
-        (pos nil))
+	(pos nil))
     (when improper
       (cl-callf list-utils-make-proper-inplace list))
     (setq pos (cl-position element list :test test))
@@ -748,10 +748,10 @@ LIST is modified and the new value is returned."
     (when improper
       (cl-callf list-utils-make-proper-inplace list))
     (cl-assert (and (integerp pos)
-                 (>= pos 0)
-                 (< pos (length list))) nil "No such position %s" pos)
+		 (>= pos 0)
+		 (< pos (length list))) nil "No such position %s" pos)
     (push new-element
-          (nthcdr pos list))
+	  (nthcdr pos list))
     (when improper
       (cl-callf list-utils-make-improper-inplace list)))
   list)
@@ -765,10 +765,10 @@ LIST is modified and the new value is returned."
     (when improper
       (cl-callf list-utils-make-proper-inplace list))
     (cl-assert (and (integerp pos)
-                    (>= pos 0)
-                    (< pos (length list))) nil "No such position %s" pos)
+		    (>= pos 0)
+		    (< pos (length list))) nil "No such position %s" pos)
     (push new-element
-          (cdr (nthcdr pos list)))
+	  (cdr (nthcdr pos list)))
     (when improper
       (cl-callf list-utils-make-improper-inplace list)))
   list)
@@ -820,15 +820,15 @@ make frequent use of this function."
      list1)
     (t
      (let ((saw (make-hash-table
-                 :test (or test 'equal)
-                 :size (or hint (safe-length (if flip list1 list2))))))
+		 :test (or test 'equal)
+		 :size (or hint (safe-length (if flip list1 list2))))))
        (mapc #'(lambda (elt)
-                 (puthash elt t saw))
-             list2)
+		 (puthash elt t saw))
+	     list2)
        (delq nil (mapcar #'(lambda (elt)
-                             (when (gethash elt saw)
-                               elt))
-                         list1))))))
+			     (when (gethash elt saw)
+			       elt))
+			 list1))))))
 
 ;;;###autoload
 (defun list-utils-not (list1 list2 &optional test hint flip)
@@ -876,15 +876,15 @@ Performance: see notes under `list-utils-and'."
     ;;                    list1)))
     (t
      (let ((saw (make-hash-table
-                 :test (or test 'equal)
-                 :size (or hint (safe-length list2)))))
+		 :test (or test 'equal)
+		 :size (or hint (safe-length list2)))))
        (mapc #'(lambda (elt)
-                 (puthash elt t saw))
-             list2)
+		 (puthash elt t saw))
+	     list2)
        (delq nil (mapcar #'(lambda (elt)
-                             (unless (gethash elt saw)
-                               elt))
-                         list1))))))
+			     (unless (gethash elt saw)
+			       elt))
+			 list1))))))
 
 ;;;###autoload
 (defun list-utils-xor (list1 list2 &optional test hint flip)
@@ -911,7 +911,7 @@ LIST1.
 
 Performance: see notes under `list-utils-and'."
   (append (list-utils-not list1 list2 test hint flip)
-          (list-utils-not list2 list1 test nil  flip)))
+	  (list-utils-not list2 list1 test nil  flip)))
 
 ;;;###autoload
 (defun list-utils-uniq (list &optional test hint)
@@ -933,14 +933,14 @@ LIST.
 
 Performance: see notes under `list-utils-and'."
   (let ((saw (make-hash-table
-              :test (or test 'equal)
-              :size (or hint (safe-length list)))))
+	      :test (or test 'equal)
+	      :size (or hint (safe-length list)))))
     (delq nil (mapcar #'(lambda (elt)
-                          (unless (gethash elt saw)
-                            (progn
-                              (puthash elt t saw)
-                              elt)))
-                      list))))
+			  (unless (gethash elt saw)
+			    (progn
+			      (puthash elt t saw)
+			      elt)))
+		      list))))
 
 ;;;###autoload
 (defun list-utils-dupes (list &optional test hint)
@@ -960,15 +960,15 @@ LIST.
 
 Performance: see notes under `list-utils-and'."
   (let ((saw (make-hash-table
-              :test (or test 'equal)
-              :size (or hint (safe-length list)))))
+	      :test (or test 'equal)
+	      :size (or hint (safe-length list)))))
     (mapc #'(lambda (elt)
-              (puthash elt (if (gethash elt saw) 2 1) saw))
-          list)
+	      (puthash elt (if (gethash elt saw) 2 1) saw))
+	  list)
     (delq nil (mapcar #'(lambda (elt)
-                          (when (> (gethash elt saw) 1)
-                            elt))
-                      list))))
+			  (when (> (gethash elt saw) 1)
+			    elt))
+		      list))))
 
 ;;;###autoload
 (defun list-utils-singlets (list &optional test hint)
@@ -987,15 +987,15 @@ LIST.
 
 Performance: see notes under `list-utils-and'."
   (let ((saw (make-hash-table
-              :test (or test 'equal)
-              :size (or hint (safe-length list)))))
+	      :test (or test 'equal)
+	      :size (or hint (safe-length list)))))
     (mapc #'(lambda (elt)
-              (puthash elt (if (gethash elt saw) 2 1) saw))
-          list)
+	      (puthash elt (if (gethash elt saw) 2 1) saw))
+	  list)
     (delq nil (mapcar #'(lambda (elt)
-                          (when (= (gethash elt saw) 1)
-                            elt))
-                      list))))
+			  (when (= (gethash elt saw) 1)
+			    elt))
+		      list))))
 
 ;;;###autoload
 (defun list-utils-partition-dupes (list &optional test hint)
@@ -1018,21 +1018,21 @@ LIST.
 
 Performance: see notes under `list-utils-and'."
   (let ((saw (make-hash-table
-              :test (or test 'equal)
-              :size (or hint (safe-length list)))))
+	      :test (or test 'equal)
+	      :size (or hint (safe-length list)))))
     (mapc #'(lambda (elt)
-              (puthash elt (if (gethash elt saw) 2 1) saw))
-          list)
+	      (puthash elt (if (gethash elt saw) 2 1) saw))
+	  list)
     (list (cons 'dupes
-                (delq nil (mapcar #'(lambda (elt)
-                                      (when (> (gethash elt saw) 1)
-                                        elt))
-                                  list)))
-          (cons 'singlets
-                (delq nil (mapcar #'(lambda (elt)
-                                      (when (= (gethash elt saw) 1)
-                                        elt))
-                                  list))))))
+		(delq nil (mapcar #'(lambda (elt)
+				      (when (> (gethash elt saw) 1)
+					elt))
+				  list)))
+	  (cons 'singlets
+		(delq nil (mapcar #'(lambda (elt)
+				      (when (= (gethash elt saw) 1)
+					elt))
+				  list))))))
 
 ;;; alists
 
@@ -1045,12 +1045,12 @@ Stop counting when a proper list of non-zero length is reached.
 If the car of LIST is a list, return 0."
   (let ((counter 0))
     (ignore-errors
-        (catch 'saw-depth
-          (dolist (elt list)
-            (when (and (consp elt)
-                       (not (list-utils-cons-cell-p elt)))
-              (throw 'saw-depth t))
-            (cl-incf counter))))
+	(catch 'saw-depth
+	  (dolist (elt list)
+	    (when (and (consp elt)
+		       (not (list-utils-cons-cell-p elt)))
+	      (throw 'saw-depth t))
+	    (cl-incf counter))))
   counter))
 
 ;;;###autoload
@@ -1070,22 +1070,22 @@ pair."
      nil)
 
     ((and (listp list)
-          (list-utils-cyclic-p list))
+	  (list-utils-cyclic-p list))
      (list-utils-alist-flatten (list-utils-make-linear-copy list)))
 
     ((list-utils-cons-cell-p list)
      list)
 
     ((and (listp list)
-          (consp (car list))
-          (not (list-utils-cons-cell-p (car list))))
+	  (consp (car list))
+	  (not (list-utils-cons-cell-p (car list))))
      (append (list-utils-alist-flatten (car list))
-             (list-utils-alist-flatten (cdr list))))
+	     (list-utils-alist-flatten (cdr list))))
 
     ((listp list)
      (let ((extent (list-utils-alist-or-flat-length list)))
        (append (cl-subseq list 0 extent)
-               (list-utils-alist-flatten (nthcdr extent list)))))
+	       (list-utils-alist-flatten (nthcdr extent list)))))
 
     (t
      (list list))))
@@ -1097,8 +1097,8 @@ pair."
   "Return reversed copy of property-list PLIST, maintaining pair associations."
   (cl-assert (= 0 (% (length plist) 2)) nil "Not a PLIST")
   (cl-loop for (a b) on (reverse plist) by 'cddr
-           collect b
-           collect a))
+	   collect b
+	   collect a))
 
 ;;;###autoload
 (defun list-utils-plist-del (plist prop)
@@ -1112,7 +1112,7 @@ to be sure to use the new value.
 This functionality overlaps with the undocumented `cl-do-remf'."
   (let ((prop-pos (cl-position prop plist)))
     (when (and prop-pos
-               (= 0 (% prop-pos 2)))
+	       (= 0 (% prop-pos 2)))
       (cl-callf cddr (nthcdr prop-pos plist))))
   plist)
 

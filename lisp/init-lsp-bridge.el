@@ -42,7 +42,7 @@
 
 
 ;; (add-to-list 'jka-compr-compression-info-list ["\\.dz\\'" "7z" "7z" ("-")
-;; 			   "dz uncompress" "7z" (filename) nil t ""])
+;;			   "dz uncompress" "7z" (filename) nil t ""])
 
 ;; (add-to-list 'auto-mode-alist '("\\.dz\\'" nil jka-compr))
 

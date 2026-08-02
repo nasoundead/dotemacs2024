@@ -31,11 +31,11 @@
 (cl-defmacro blink-search-deferred-chain (&rest elements)
   "Anaphoric function chain macro for deferred chains."
   (declare (debug (&rest form))
-           (indent 0))
+	   (indent 0))
   `(let (it)
      ,@(cl-loop for i in elements
-                collect
-                `(setq it ,i))
+		collect
+		`(setq it ,i))
      it))
 
 ;; Debug
@@ -50,8 +50,8 @@
   (when blink-search-deferred-debug
     (with-current-buffer (get-buffer-create "*blink-search-deferred-log*")
       (save-excursion
-        (goto-char (point-max))
-        (insert (format "%5i %s\n\n\n" blink-search-deferred-debug-count (apply #'format args)))))
+	(goto-char (point-max))
+	(insert (format "%5i %s\n\n\n" blink-search-deferred-debug-count (apply #'format args)))))
     (cl-incf blink-search-deferred-debug-count)))
 
 (defvar blink-search-deferred-debug-on-signal nil
@@ -64,11 +64,11 @@ in the asynchronous tasks.")
   "[internal] Custom condition-case. See the comment for
 `blink-search-deferred-debug-on-signal'."
   (declare (debug condition-case)
-           (indent 1))
+	   (indent 1))
   `(let ((debug-on-signal
-          (or debug-on-signal blink-search-deferred-debug-on-signal)))
+	  (or debug-on-signal blink-search-deferred-debug-on-signal)))
      (condition-case ,var
-         ,protected-form
+	 ,protected-form
        ,@handlers)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -100,15 +100,15 @@ an argument value for execution of the deferred task."
 Mainly this function is called by timer asynchronously."
   (when blink-search-deferred-queue
     (let* ((pack (car (last blink-search-deferred-queue)))
-           (d (car pack))
-           (which (cadr pack))
-           (arg (cddr pack)) value)
+	   (d (car pack))
+	   (which (cadr pack))
+	   (arg (cddr pack)) value)
       (setq blink-search-deferred-queue (nbutlast blink-search-deferred-queue))
       (condition-case err
-          (setq value (blink-search-deferred-exec-task d which arg))
-        (error
-         (blink-search-deferred-log "ERROR : %s" err)
-         (message "deferred error : %s" err)))
+	  (setq value (blink-search-deferred-exec-task d which arg))
+	(error
+	 (blink-search-deferred-log "ERROR : %s" err)
+	 (message "deferred error : %s" err)))
       value)))
 
 ;; Struct: blink-search-deferred-object
@@ -135,13 +135,13 @@ is a string, it is signaled as a generic error using `error'.
 Otherwise, ERR is formatted into a string as if by `print' before
 raising with `error'."
   (cond ((and (listp err)
-              (symbolp (car err))
-              (get (car err) 'error-conditions))
-         (signal (car err) (cdr err)))
-        ((stringp err)
-         (error "%s" err))
-        (t
-         (error "%S" err))))
+	      (symbolp (car err))
+	      (get (car err) 'error-conditions))
+	 (signal (car err) (cdr err)))
+	((stringp err)
+	 (error "%s" err))
+	(t
+	 (error "%S" err))))
 
 (defun blink-search-deferred-default-cancel (d)
   "[internal] Default canceling function."
@@ -160,42 +160,42 @@ an argument value for execution of the deferred task."
   (blink-search-deferred-log "EXEC : %s / %s / %s" d which arg)
   (when (null d) (error "blink-search-deferred-exec-task was given a nil."))
   (let ((callback (if (eq which 'ok)
-                      (blink-search-deferred-object-callback d)
-                    (blink-search-deferred-object-errorback d)))
-        (next-deferred (blink-search-deferred-object-next d)))
+		      (blink-search-deferred-object-callback d)
+		    (blink-search-deferred-object-errorback d)))
+	(next-deferred (blink-search-deferred-object-next d)))
     (cond
      (callback
       (blink-search-deferred-condition-case err
-                                            (let ((value (funcall callback arg)))
-                                              (cond
-                                               ((blink-search-deferred-object-p value)
-                                                (blink-search-deferred-log "WAIT NEST : %s" value)
-                                                (if next-deferred
-                                                    (blink-search-deferred-set-next value next-deferred)
-                                                  value))
-                                               (t
-                                                (if next-deferred
-                                                    (blink-search-deferred-post-task next-deferred 'ok value)
-                                                  (setf (blink-search-deferred-object-status d) 'ok)
-                                                  (setf (blink-search-deferred-object-value d) value)
-                                                  value))))
-                                            (error
-                                             (cond
-                                              (next-deferred
-                                               (blink-search-deferred-post-task next-deferred 'ng err))
-                                              (t
-                                               (blink-search-deferred-log "ERROR : %S" err)
-                                               (message "deferred error : %S" err)
-                                               (setf (blink-search-deferred-object-status d) 'ng)
-                                               (setf (blink-search-deferred-object-value d) err)
-                                               err)))))
+					    (let ((value (funcall callback arg)))
+					      (cond
+					       ((blink-search-deferred-object-p value)
+						(blink-search-deferred-log "WAIT NEST : %s" value)
+						(if next-deferred
+						    (blink-search-deferred-set-next value next-deferred)
+						  value))
+					       (t
+						(if next-deferred
+						    (blink-search-deferred-post-task next-deferred 'ok value)
+						  (setf (blink-search-deferred-object-status d) 'ok)
+						  (setf (blink-search-deferred-object-value d) value)
+						  value))))
+					    (error
+					     (cond
+					      (next-deferred
+					       (blink-search-deferred-post-task next-deferred 'ng err))
+					      (t
+					       (blink-search-deferred-log "ERROR : %S" err)
+					       (message "deferred error : %S" err)
+					       (setf (blink-search-deferred-object-status d) 'ng)
+					       (setf (blink-search-deferred-object-value d) err)
+					       err)))))
      (t                                 ; <= (null callback)
       (cond
        (next-deferred
-        (blink-search-deferred-exec-task next-deferred which arg))
+	(blink-search-deferred-exec-task next-deferred which arg))
        ((eq which 'ok) arg)
        (t                               ; (eq which 'ng)
-        (blink-search-deferred-resignal arg)))))))
+	(blink-search-deferred-resignal arg)))))))
 
 (defun blink-search-deferred-set-next (prev next)
   "[internal] Connect deferred objects."
@@ -204,14 +204,14 @@ an argument value for execution of the deferred task."
    ((eq 'ok (blink-search-deferred-object-status prev))
     (setf (blink-search-deferred-object-status prev) nil)
     (let ((ret (blink-search-deferred-exec-task
-                next 'ok (blink-search-deferred-object-value prev))))
+		next 'ok (blink-search-deferred-object-value prev))))
       (if (blink-search-deferred-object-p ret) ret
-        next)))
+	next)))
    ((eq 'ng (blink-search-deferred-object-status prev))
     (setf (blink-search-deferred-object-status prev) nil)
     (let ((ret (blink-search-deferred-exec-task next 'ng (blink-search-deferred-object-value prev))))
       (if (blink-search-deferred-object-p ret) ret
-        next)))
+	next)))
    (t
     next)))
 
@@ -240,8 +240,8 @@ an argument value for execution of the deferred task."
 is a short cut of following code:
  (blink-search-deferred-callback-post (blink-search-deferred-new callback))."
   (let ((d (if callback
-               (make-blink-search-deferred-object :callback callback)
-             (make-blink-search-deferred-object))))
+	       (make-blink-search-deferred-object :callback callback)
+	     (make-blink-search-deferred-object))))
     (blink-search-deferred-callback-post d arg)
     d))
 
@@ -299,44 +299,44 @@ channel : Event channels for incoming messages."
 return blink-search-epc-connection object."
   (blink-search-epc-log ">> Connection start: %s:%s" host port)
   (let* ((connection-id (blink-search-epc-uid))
-         (connection-name (format "blink-search-epc con %s" connection-id))
-         (connection-buf (blink-search-epc-make-procbuf (format "*%s*" connection-name)))
-         (connection-process
-          (open-network-stream connection-name connection-buf host port))
-         (channel (list connection-name nil))
-         (connection (make-blink-search-epc-connection
-                      :name connection-name
-                      :process connection-process
-                      :buffer connection-buf
-                      :channel channel)))
+	 (connection-name (format "blink-search-epc con %s" connection-id))
+	 (connection-buf (blink-search-epc-make-procbuf (format "*%s*" connection-name)))
+	 (connection-process
+	  (open-network-stream connection-name connection-buf host port))
+	 (channel (list connection-name nil))
+	 (connection (make-blink-search-epc-connection
+		      :name connection-name
+		      :process connection-process
+		      :buffer connection-buf
+		      :channel channel)))
     (blink-search-epc-log ">> Connection establish")
     (set-process-coding-system  connection-process 'binary 'binary)
     (set-process-filter connection-process
-                        (lambda (p m)
-                          (blink-search-epc-process-filter connection p m)))
+			(lambda (p m)
+			  (blink-search-epc-process-filter connection p m)))
     (set-process-sentinel connection-process
-                          (lambda (p e)
-                            (blink-search-epc-process-sentinel connection p e)))
+			  (lambda (p e)
+			    (blink-search-epc-process-sentinel connection p e)))
     (set-process-query-on-exit-flag connection-process nil)
     connection))
 
 (defun blink-search-epc-process-sentinel (connection process msg)
   (blink-search-epc-log "!! Process Sentinel [%s] : %S : %S"
-                        (blink-search-epc-connection-name connection) process msg)
+			(blink-search-epc-connection-name connection) process msg)
   (blink-search-epc-disconnect connection))
 
 (defun blink-search-epc-net-send (connection sexp)
   (let* ((msg (encode-coding-string
-               (concat (blink-search-epc-prin1-to-string sexp) "\n") 'utf-8-unix))
-         (string (concat (format "%06x" (length msg)) msg))
-         (proc (blink-search-epc-connection-process connection)))
+	       (concat (blink-search-epc-prin1-to-string sexp) "\n") 'utf-8-unix))
+	 (string (concat (format "%06x" (length msg)) msg))
+	 (proc (blink-search-epc-connection-process connection)))
     (blink-search-epc-log ">> SEND : [%S]" string)
     (process-send-string proc string)))
 
 (defun blink-search-epc-disconnect (connection)
   (let ((process (blink-search-epc-connection-process connection))
-        (buf (blink-search-epc-connection-buffer connection))
-        (name (blink-search-epc-connection-name connection)))
+	(buf (blink-search-epc-connection-buffer connection))
+	(name (blink-search-epc-connection-name connection)))
     (blink-search-epc-log "!! Disconnect [%s]" name)
     (when process
       (set-process-sentinel process nil)
@@ -358,10 +358,10 @@ If CALLBACK function is given, the deferred object executes the
 CALLBACK function asynchronously. One can connect subsequent
 tasks to the returned deferred object."
   (let ((d (if callback
-               (blink-search-deferred-new callback)
-             (blink-search-deferred-new))))
+	       (blink-search-deferred-new callback)
+	     (blink-search-deferred-new))))
     (push (cons event-sym d)
-          (cddr channel))
+	  (cddr channel))
     d))
 
 (defun blink-search-epc-signal-send (channel event-sym &rest args)
@@ -374,29 +374,29 @@ observers can get the values by following code:
      event ... ))
 "
   (let ((observers (cddr channel))
-        (event (list event-sym args)))
+	(event (list event-sym args)))
     (cl-loop for i in observers
-             for name = (car i)
-             for d = (cdr i)
-             if (or (eq event-sym name) (eq t name))
-             do (blink-search-deferred-callback-post d event))))
+	     for name = (car i)
+	     for d = (cdr i)
+	     if (or (eq event-sym name) (eq t name))
+	     do (blink-search-deferred-callback-post d event))))
 
 (defun blink-search-epc-process-available-input (connection process)
   "Process all complete messages that have arrived from Lisp."
   (with-current-buffer (process-buffer process)
     (while (blink-search-epc-net-have-input-p)
       (let ((event (blink-search-epc-net-read-or-lose process))
-            (ok nil))
-        (blink-search-epc-log "<< RECV [%S]" event)
-        (unwind-protect
-            (condition-case err
-                (progn
-                  (apply 'blink-search-epc-signal-send
-                         (cons (blink-search-epc-connection-channel connection) event))
-                  (setq ok t))
-              ('error (blink-search-epc-log "MsgError: %S / <= %S" err event)))
-          (unless ok
-            (blink-search-epc-process-available-input connection process)))))))
+	    (ok nil))
+	(blink-search-epc-log "<< RECV [%S]" event)
+	(unwind-protect
+	    (condition-case err
+		(progn
+		  (apply 'blink-search-epc-signal-send
+			 (cons (blink-search-epc-connection-channel connection) event))
+		  (setq ok t))
+	      ('error (blink-search-epc-log "MsgError: %S / <= %S" err event)))
+	  (unless ok
+	    (blink-search-epc-process-available-input connection process)))))))
 
 (defun blink-search-epc-net-have-input-p ()
   "Return true if a complete message is available."
@@ -415,14 +415,14 @@ observers can get the values by following code:
   "Read a message from the network buffer."
   (goto-char (point-min))
   (let* ((length (blink-search-epc-net-decode-length))
-         (start (+ 6 (point)))
-         (end (+ start length))
-         _content)
+	 (start (+ 6 (point)))
+	 (end (+ start length))
+	 _content)
     (cl-assert (cl-plusp length))
     (prog1 (save-restriction
-             (narrow-to-region start end)
-             (read (decode-coding-string
-                    (buffer-string) 'utf-8-unix)))
+	     (narrow-to-region start end)
+	     (read (decode-coding-string
+		    (buffer-string) 'utf-8-unix)))
       (delete-region (point-min) end))))
 
 (defun blink-search-epc-net-decode-length ()
@@ -434,9 +434,9 @@ observers can get the values by following code:
 This is more compatible with the CL reader."
   (with-temp-buffer
     (let (print-escape-nonascii
-          print-escape-newlines
-          print-length
-          print-level)
+	  print-escape-newlines
+	  print-length
+	  print-level)
       (prin1 sexp (current-buffer))
       (buffer-string))))
 
@@ -479,7 +479,7 @@ This variable is for debug purpose.")
 (defun blink-search-epc-stop-epc (mngr)
   "Disconnect the connection for the server."
   (let* ((proc (blink-search-epc-manager-server-process mngr))
-         (buf (and proc (process-buffer proc))))
+	 (buf (and proc (process-buffer proc))))
     (blink-search-epc-disconnect (blink-search-epc-manager-connection mngr))
     (when proc
       (accept-process-output proc 0 blink-search-epc-accept-process-timeout t))
@@ -498,32 +498,32 @@ This variable is for debug purpose.")
 (defun blink-search-epc-init-epc-layer (mngr)
   "[internal] Connect to the server program and return an blink-search-epc-connection instance."
   (let* ((mngr mngr)
-         (conn (blink-search-epc-manager-connection mngr))
-         (channel (blink-search-epc-connection-channel conn)))
+	 (conn (blink-search-epc-manager-connection mngr))
+	 (channel (blink-search-epc-connection-channel conn)))
     ;; dispatch incoming messages with the lexical scope
     (cl-loop for (method . body) in
-             `((call
-                . (lambda (args)
-                    (blink-search-epc-log "SIG CALL: %S" args)
-                    (apply 'blink-search-epc-handler-called-method ,mngr (blink-search-epc-args args))))
-               (return
-                . (lambda (args)
-                    (blink-search-epc-log "SIG RET: %S" args)
-                    (apply 'blink-search-epc-handler-return ,mngr (blink-search-epc-args args))))
-               (return-error
-                . (lambda (args)
-                    (blink-search-epc-log "SIG RET-ERROR: %S" args)
-                    (apply 'blink-search-epc-handler-return-error ,mngr (blink-search-epc-args args))))
-               (epc-error
-                . (lambda (args)
-                    (blink-search-epc-log "SIG EPC-ERROR: %S" args)
-                    (apply 'blink-search-epc-handler-epc-error ,mngr (blink-search-epc-args args))))
-               (methods
-                . (lambda (args)
-                    (blink-search-epc-log "SIG METHODS: %S" args)
-                    (blink-search-epc-handler-methods ,mngr (caadr args))))
-               ) do
-             (blink-search-epc-signal-connect channel method body))
+	     `((call
+		. (lambda (args)
+		    (blink-search-epc-log "SIG CALL: %S" args)
+		    (apply 'blink-search-epc-handler-called-method ,mngr (blink-search-epc-args args))))
+	       (return
+		. (lambda (args)
+		    (blink-search-epc-log "SIG RET: %S" args)
+		    (apply 'blink-search-epc-handler-return ,mngr (blink-search-epc-args args))))
+	       (return-error
+		. (lambda (args)
+		    (blink-search-epc-log "SIG RET-ERROR: %S" args)
+		    (apply 'blink-search-epc-handler-return-error ,mngr (blink-search-epc-args args))))
+	       (epc-error
+		. (lambda (args)
+		    (blink-search-epc-log "SIG EPC-ERROR: %S" args)
+		    (apply 'blink-search-epc-handler-epc-error ,mngr (blink-search-epc-args args))))
+	       (methods
+		. (lambda (args)
+		    (blink-search-epc-log "SIG METHODS: %S" args)
+		    (blink-search-epc-handler-methods ,mngr (caadr args))))
+	       ) do
+	     (blink-search-epc-signal-connect channel method body))
     (push mngr blink-search-epc-live-connections)
     mngr))
 
@@ -535,50 +535,50 @@ This variable is for debug purpose.")
 (defun blink-search-epc-manager-get-method (mngr method-name)
   "[internal] Return a method object. If not found, return nil."
   (cl-loop for i in (blink-search-epc-manager-methods mngr)
-           if (eq method-name (blink-search-epc-method-name i))
-           do (cl-return i)))
+	   if (eq method-name (blink-search-epc-method-name i))
+	   do (cl-return i)))
 
 (defun blink-search-epc-handler-methods (mngr uid)
   "[internal] Return a list of information for registered methods."
   (let ((info
-         (cl-loop for i in (blink-search-epc-manager-methods mngr)
-                  collect
-                  (list
-                   (blink-search-epc-method-name i)
-                   (or (blink-search-epc-method-arg-specs i) "")
-                   (or (blink-search-epc-method-docstring i) "")))))
+	 (cl-loop for i in (blink-search-epc-manager-methods mngr)
+		  collect
+		  (list
+		   (blink-search-epc-method-name i)
+		   (or (blink-search-epc-method-arg-specs i) "")
+		   (or (blink-search-epc-method-docstring i) "")))))
     (blink-search-epc-manager-send mngr 'return uid info)))
 
 (defun blink-search-epc-handler-called-method (mngr uid name args)
   "[internal] low-level message handler for peer's calling."
   (let ((mngr mngr) (uid uid))
     (let* ((_methods (blink-search-epc-manager-methods mngr))
-           (method (blink-search-epc-manager-get-method mngr name)))
+	   (method (blink-search-epc-manager-get-method mngr name)))
       (cond
        ((null method)
-        (blink-search-epc-log "ERR: No such method : %s" name)
-        (blink-search-epc-manager-send mngr 'epc-error uid (format "EPC-ERROR: No such method : %s" name)))
+	(blink-search-epc-log "ERR: No such method : %s" name)
+	(blink-search-epc-manager-send mngr 'epc-error uid (format "EPC-ERROR: No such method : %s" name)))
        (t
-        (condition-case err
-            (let* ((f (blink-search-epc-method-task method))
-                   (ret (apply f args)))
-              (cond
-               ((blink-search-deferred-object-p ret)
-                (blink-search-deferred-nextc ret
-                                             (lambda (xx) (blink-search-epc-manager-send mngr 'return uid xx))))
-               (t (blink-search-epc-manager-send mngr 'return uid ret))))
-          (error
-           (blink-search-epc-log "ERROR : %S" err)
-           (blink-search-epc-manager-send mngr 'return-error uid err))))))))
+	(condition-case err
+	    (let* ((f (blink-search-epc-method-task method))
+		   (ret (apply f args)))
+	      (cond
+	       ((blink-search-deferred-object-p ret)
+		(blink-search-deferred-nextc ret
+					     (lambda (xx) (blink-search-epc-manager-send mngr 'return uid xx))))
+	       (t (blink-search-epc-manager-send mngr 'return uid ret))))
+	  (error
+	   (blink-search-epc-log "ERROR : %S" err)
+	   (blink-search-epc-manager-send mngr 'return-error uid err))))))))
 
 (defun blink-search-epc-manager-remove-session (mngr uid)
   "[internal] Remove a session from the epc manager object."
   (cl-loop with ret = nil
-           for pair in (blink-search-epc-manager-sessions mngr)
-           unless (eq uid (car pair))
-           do (push pair ret)
-           finally
-           do (setf (blink-search-epc-manager-sessions mngr) ret)))
+	   for pair in (blink-search-epc-manager-sessions mngr)
+	   unless (eq uid (car pair))
+	   do (push pair ret)
+	   finally
+	   do (setf (blink-search-epc-manager-sessions mngr) ret)))
 
 (defun blink-search-epc-handler-return (mngr uid args)
   "[internal] low-level message handler for normal returns."
@@ -617,8 +617,8 @@ This variable is for debug purpose.")
   "Call peer's method with args asynchronously. Return a deferred
 object which is called with the result."
   (let ((uid (blink-search-epc-uid))
-        (sessions (blink-search-epc-manager-sessions mngr))
-        (d (blink-search-deferred-new)))
+	(sessions (blink-search-epc-manager-sessions mngr))
+	(d (blink-search-deferred-new)))
     (push (cons uid d) sessions)
     (setf (blink-search-epc-manager-sessions mngr) sessions)
     (blink-search-epc-manager-send mngr 'call uid method-name args)
@@ -627,9 +627,9 @@ object which is called with the result."
 (defun blink-search-epc-define-method (mngr method-name task &optional arg-specs docstring)
   "Define a method and return a deferred object which is called by the peer."
   (let* ((method (make-blink-search-epc-method
-                  :name method-name :task task
-                  :arg-specs arg-specs :docstring docstring))
-         (methods (cons method (blink-search-epc-manager-methods mngr))))
+		  :name method-name :task task
+		  :arg-specs arg-specs :docstring docstring))
+	 (methods (cons method (blink-search-epc-manager-methods mngr))))
     (setf (blink-search-epc-manager-methods mngr) methods)
     method))
 
@@ -640,16 +640,16 @@ If an exception is occurred, this function throws the error."
     (blink-search-deferred-chain
      d
      (blink-search-deferred-nextc it
-                                  (lambda (x) (setq result x)))
+				  (lambda (x) (setq result x)))
      (blink-search-deferred-error it
-                                  (lambda (er) (setq result (cons 'error er)))))
+				  (lambda (er) (setq result (cons 'error er)))))
     (while (eq result 'blink-search-epc-nothing)
       (save-current-buffer
-        (accept-process-output
-         (blink-search-epc-connection-process (blink-search-epc-manager-connection mngr))
-         0 blink-search-epc-accept-process-timeout t)))
+	(accept-process-output
+	 (blink-search-epc-connection-process (blink-search-epc-manager-connection mngr))
+	 0 blink-search-epc-accept-process-timeout t)))
     (if (and (consp result) (eq 'error (car result)))
-        (error (cdr result)) result)))
+	(error (cdr result)) result)))
 
 (defun blink-search-epc-call-sync (mngr method-name args)
   "Call peer's method with args synchronously and return the result.
@@ -660,10 +660,10 @@ If an exception is occurred, this function throws the error."
   "Return non-nil when MNGR is an EPC manager object with a live
 connection."
   (let ((proc (ignore-errors
-                (blink-search-epc-connection-process (blink-search-epc-manager-connection mngr)))))
+		(blink-search-epc-connection-process (blink-search-epc-manager-connection mngr)))))
     (and (processp proc)
-         ;; Same as `process-live-p' in Emacs >= 24:
-         (memq (process-status proc) '(run open listen connect stop)))))
+	 ;; Same as `process-live-p' in Emacs >= 24:
+	 (memq (process-status proc) '(run open listen connect stop)))))
 
 ;; epcs
 (defvar blink-search-epc-server-client-processes nil
@@ -687,32 +687,32 @@ This variable is used for the management purpose.")
 (defun blink-search-epc-server-get-manager-by-process (proc)
   "[internal] Return the blink-search-epc-manager instance for the PROC."
   (cl-loop for (pp . mngr) in blink-search-epc-server-client-processes
-           if (eql pp proc)
-           do (cl-return mngr)
-           finally return nil))
+	   if (eql pp proc)
+	   do (cl-return mngr)
+	   finally return nil))
 
 (defun blink-search-epc-server-accept (process)
   "[internal] Initialize the process and return blink-search-epc-manager object."
   (blink-search-epc-log "LSPBRIDGE-EPC-SERVER- >> Connection accept: %S" process)
   (let* ((connection-id (blink-search-epc-uid))
-         (connection-name (format "blink-search-epc con %s" connection-id))
-         (channel (list connection-name nil))
-         (connection (make-blink-search-epc-connection
-                      :name connection-name
-                      :process process
-                      :buffer (process-buffer process)
-                      :channel channel)))
+	 (connection-name (format "blink-search-epc con %s" connection-id))
+	 (channel (list connection-name nil))
+	 (connection (make-blink-search-epc-connection
+		      :name connection-name
+		      :process process
+		      :buffer (process-buffer process)
+		      :channel channel)))
     (blink-search-epc-log "LSPBRIDGE-EPC-SERVER- >> Connection establish")
     (set-process-coding-system process 'binary 'binary)
     (set-process-filter process
-                        (lambda (p m)
-                          (blink-search-epc-process-filter connection p m)))
+			(lambda (p m)
+			  (blink-search-epc-process-filter connection p m)))
     (set-process-query-on-exit-flag process nil)
     (set-process-sentinel process
-                          (lambda (p e)
-                            (blink-search-epc-process-sentinel connection p e)))
+			  (lambda (p e)
+			    (blink-search-epc-process-sentinel connection p e)))
     (make-blink-search-epc-manager :server-process process :port t
-                                   :connection connection)))
+				   :connection connection)))
 
 (defun blink-search-epc-server-sentinel (process message connect-function)
   "[internal] Process sentinel handler for the server process."
@@ -722,26 +722,26 @@ This variable is used for the management purpose.")
      ;; new connection
      ((and (string-match "open" message) (null mngr))
       (condition-case err
-          (let ((mngr (blink-search-epc-server-accept process)))
-            (push (cons process mngr) blink-search-epc-server-client-processes)
-            (blink-search-epc-init-epc-layer mngr)
-            (when connect-function (funcall connect-function mngr))
-            mngr)
-        ('error
-         (blink-search-epc-log "LSPBRIDGE-EPC-SERVER- Protocol error: %S" err)
-         (blink-search-epc-log "LSPBRIDGE-EPC-SERVER- ABORT %S" process)
-         (delete-process process))))
+	  (let ((mngr (blink-search-epc-server-accept process)))
+	    (push (cons process mngr) blink-search-epc-server-client-processes)
+	    (blink-search-epc-init-epc-layer mngr)
+	    (when connect-function (funcall connect-function mngr))
+	    mngr)
+	('error
+	 (blink-search-epc-log "LSPBRIDGE-EPC-SERVER- Protocol error: %S" err)
+	 (blink-search-epc-log "LSPBRIDGE-EPC-SERVER- ABORT %S" process)
+	 (delete-process process))))
      ;; ignore
      ((null mngr) nil )
      ;; disconnect
      (t
       (let ((pair (assq process blink-search-epc-server-client-processes)) _d)
-        (when pair
-          (blink-search-epc-log "LSPBRIDGE-EPC-SERVER- DISCONNECT %S" process)
-          (blink-search-epc-stop-epc (cdr pair))
-          (setq blink-search-epc-server-client-processes
-                (assq-delete-all process blink-search-epc-server-client-processes))
-          ))
+	(when pair
+	  (blink-search-epc-log "LSPBRIDGE-EPC-SERVER- DISCONNECT %S" process)
+	  (blink-search-epc-stop-epc (cdr pair))
+	  (setq blink-search-epc-server-client-processes
+		(assq-delete-all process blink-search-epc-server-client-processes))
+	  ))
       nil))))
 
 (defun blink-search-epc-server-start (connect-function &optional port)
@@ -751,23 +751,23 @@ This variable is used for the management purpose.")
        (name (format "BLINK-SEARCH EPC Server %s" (blink-search-epc-uid)))
        (buf (blink-search-epc-make-procbuf (format " *%s*" name)))
        (main-process
-        (make-network-process
-         :name name
-         :buffer buf
-         :family 'ipv4
-         :server t
-         :host "127.0.0.1"
-         :service (or port t)
-         :noquery t
-         :sentinel
-         (lambda (process message)
-           (blink-search-epc-server-sentinel process message connect-function)))))
+	(make-network-process
+	 :name name
+	 :buffer buf
+	 :family 'ipv4
+	 :server t
+	 :host "127.0.0.1"
+	 :service (or port t)
+	 :noquery t
+	 :sentinel
+	 (lambda (process message)
+	   (blink-search-epc-server-sentinel process message connect-function)))))
     (push (cons main-process
-                (make-blink-search-epc-server
-                 :name name :process main-process
-                 :port (process-contact main-process :service)
-                 :connect-function connect-function))
-          blink-search-epc-server-processes)
+		(make-blink-search-epc-server
+		 :name name :process main-process
+		 :port (process-contact main-process :service)
+		 :connect-function connect-function))
+	  blink-search-epc-server-processes)
     main-process))
 
 (provide 'blink-search-epc)

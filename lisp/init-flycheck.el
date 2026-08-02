@@ -50,7 +50,7 @@ CHECKER.  BUFFER is the buffer which was checked.
 
 Return the errors parsed with the error patterns of CHECKER."
   (let ((sanitized-output (replace-regexp-in-string "\r" "" output))
-        )
+	)
     (funcall (flycheck-checker-get checker 'error-parser) sanitized-output checker buffer)))
 
 (provide 'init-flycheck)

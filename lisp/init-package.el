@@ -5,8 +5,8 @@
 ;;; Code:
 ;; Set ELPA packages
 (setq package-archives '(("gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-                         ("nongnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
-                         ("melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+			 ("nongnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
+			 ("melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 (package-initialize) ;; You might already have this line
 
 
@@ -30,7 +30,7 @@
   (use-package auto-package-update
     :init
     (setq auto-package-update-delete-old-versions t
-          auto-package-update-hide-results t)
+	  auto-package-update-hide-results t)
     (defalias 'package-upgrade-all #'auto-package-update-now)))
 
 

@@ -27,14 +27,14 @@ If any hook returns non-nil, all hooks after it are ignored.")
   "Run the `sea-escape-hook'."
   (interactive)
   (cond ((minibuffer-window-active-p (minibuffer-window))
-         ;; quit the minibuffer if open.
-         (abort-recursive-edit))
-        ;; Run all escape hooks. If any returns non-nil, then stop there.
-        ((cl-find-if #'funcall sea-escape-hook))
-        ;; don't abort macros
-        ((or defining-kbd-macro executing-kbd-macro) nil)
-        ;; Back to the default
-        ((keyboard-quit))))
+	 ;; quit the minibuffer if open.
+	 (abort-recursive-edit))
+	;; Run all escape hooks. If any returns non-nil, then stop there.
+	((cl-find-if #'funcall sea-escape-hook))
+	;; don't abort macros
+	((or defining-kbd-macro executing-kbd-macro) nil)
+	;; Back to the default
+	((keyboard-quit))))
 
 (global-set-key [remap keyboard-quit] #'sea/escape)
 
@@ -106,8 +106,8 @@ If any hook returns non-nil, all hooks after it are ignored.")
 For example, :nvi will map to (list 'normal 'visual 'insert). See
 `sea-evil-state-alist' to customize this."
   (cl-loop for l across (substring (symbol-name keyword) 1)
-           if (cdr (assq l sea-evil-state-alist)) collect it
-           else do (error "not a valid state: %s" l)))
+	   if (cdr (assq l sea-evil-state-alist)) collect it
+	   else do (error "not a valid state: %s" l)))
 
 ;; Register keywords for proper indentation (see `map!')
 (put :after        'lisp-indent-function 'defun)
@@ -133,77 +133,77 @@ For example, :nvi will map to (list 'normal 'visual 'insert). See
 
 (defun sea--map-process (rest)
   (let ((sea--map-fn sea--map-fn)
-        sea--map-state
-        sea--map-forms
-        desc)
+	sea--map-state
+	sea--map-forms
+	desc)
     (while rest
       (let ((key (pop rest)))
-        (cond ((listp key)
-               (sea--map-nested nil key))
+	(cond ((listp key)
+	       (sea--map-nested nil key))
 
-              ((keywordp key)
-               (pcase key
-                 (:leader
-                  (sea--map-commit)
-                  (setq sea--map-fn 'define-leader-key!))
-                 (:localleader
-                  (sea--map-commit)
-                  (setq sea--map-fn 'define-localleader-key!))
-                 (:after
-                  (sea--map-nested (list 'after! (pop rest)) rest)
-                  (setq rest nil))
-                 (:desc
-                  (setq desc (pop rest)))
-                 ((or :map :map* :keymap)
-                  (sea--map-set :keymaps `(quote ,(sea-enlist (pop rest)))))
-                 (:mode
-                  (push (cl-loop for m in (sea-enlist (pop rest))
-                                 collect (intern (concat (symbol-name m) "-map")))
-                        rest)
-                  (push :map rest))
-                 ((or :if :when :unless)
-                  (sea--map-nested (list (intern (sea-keyword-name key)) (pop rest)) rest)
-                  (setq rest nil))
-                 (:prefix
-                  (cl-destructuring-bind (prefix . desc) (sea-enlist (pop rest))
-                    (sea--map-set (if sea--map-fn :infix :prefix)
-                                   prefix)
-                    (when (stringp desc)
-                      (setq rest (append (list :desc desc "" nil) rest)))))
-                 (:textobj
-                  (let* ((key (pop rest))
-                         (inner (pop rest))
-                         (outer (pop rest)))
-                    (push `(map! (:map evil-inner-text-objects-map ,key ,inner)
-                                 (:map evil-outer-text-objects-map ,key ,outer))
-                          sea--map-forms)))
-                 (_
-                  (condition-case e
-                      (sea--map-def (pop rest) (pop rest) (sea--keyword-to-states key) desc)
-                    (error
-                     (error "Not a valid `map!' property: %s" key)))
-                  (setq desc nil))))
+	      ((keywordp key)
+	       (pcase key
+		 (:leader
+		  (sea--map-commit)
+		  (setq sea--map-fn 'define-leader-key!))
+		 (:localleader
+		  (sea--map-commit)
+		  (setq sea--map-fn 'define-localleader-key!))
+		 (:after
+		  (sea--map-nested (list 'after! (pop rest)) rest)
+		  (setq rest nil))
+		 (:desc
+		  (setq desc (pop rest)))
+		 ((or :map :map* :keymap)
+		  (sea--map-set :keymaps `(quote ,(sea-enlist (pop rest)))))
+		 (:mode
+		  (push (cl-loop for m in (sea-enlist (pop rest))
+				 collect (intern (concat (symbol-name m) "-map")))
+			rest)
+		  (push :map rest))
+		 ((or :if :when :unless)
+		  (sea--map-nested (list (intern (sea-keyword-name key)) (pop rest)) rest)
+		  (setq rest nil))
+		 (:prefix
+		  (cl-destructuring-bind (prefix . desc) (sea-enlist (pop rest))
+		    (sea--map-set (if sea--map-fn :infix :prefix)
+				   prefix)
+		    (when (stringp desc)
+		      (setq rest (append (list :desc desc "" nil) rest)))))
+		 (:textobj
+		  (let* ((key (pop rest))
+			 (inner (pop rest))
+			 (outer (pop rest)))
+		    (push `(map! (:map evil-inner-text-objects-map ,key ,inner)
+				 (:map evil-outer-text-objects-map ,key ,outer))
+			  sea--map-forms)))
+		 (_
+		  (condition-case e
+		      (sea--map-def (pop rest) (pop rest) (sea--keyword-to-states key) desc)
+		    (error
+		     (error "Not a valid `map!' property: %s" key)))
+		  (setq desc nil))))
 
-              ((sea--map-def key (pop rest) nil desc)
-               (setq desc nil)))))
+	      ((sea--map-def key (pop rest) nil desc)
+	       (setq desc nil)))))
 
     (sea--map-commit)
     (macroexp-progn (nreverse (delq nil sea--map-forms)))))
 
 (defun sea--map-append-keys (prop)
   (let ((a (plist-get sea--map-parent-state prop))
-        (b (plist-get sea--map-state prop)))
+	(b (plist-get sea--map-state prop)))
     (if (and a b)
-        `(general--concat nil ,a ,b)
+	`(general--concat nil ,a ,b)
       (or a b))))
 
 (defun sea--map-nested (wrapper rest)
   (sea--map-commit)
   (let ((sea--map-parent-state (sea--map-state)))
     (push (if wrapper
-              (append wrapper (list (sea--map-process rest)))
-            (sea--map-process rest))
-          sea--map-forms)))
+	      (append wrapper (list (sea--map-process rest)))
+	    (sea--map-process rest))
+	  sea--map-forms)))
 
 (defun sea--map-set (prop &optional value)
   (unless (equal (plist-get sea--map-state prop) value)
@@ -212,52 +212,52 @@ For example, :nvi will map to (list 'normal 'visual 'insert). See
 
 (defun sea--map-def (key def &optional states desc)
   (when (or (memq 'global states)
-            (null states))
+	    (null states))
     (setq states (cons 'nil (delq 'global states))))
   (when desc
     (let (unquoted)
       (cond ((and (listp def)
-                  (keywordp (car-safe (setq unquoted (sea-unquote def)))))
-             (setq def (list 'quote (plist-put unquoted :which-key desc))))
-            ((setq def (cons 'list
-                             (if (and (equal key "")
-                                      (null def))
-                                 `(nil :which-key ,desc)
-                               (plist-put (general--normalize-extended-def def)
-                                          :which-key desc))))))))
+		  (keywordp (car-safe (setq unquoted (sea-unquote def)))))
+	     (setq def (list 'quote (plist-put unquoted :which-key desc))))
+	    ((setq def (cons 'list
+			     (if (and (equal key "")
+				      (null def))
+				 `(nil :which-key ,desc)
+			       (plist-put (general--normalize-extended-def def)
+					  :which-key desc))))))))
   (dolist (state states)
     (push (list key def)
-          (alist-get state sea--map-batch-forms)))
+	  (alist-get state sea--map-batch-forms)))
   t)
 
 (defun sea--map-commit ()
   (when sea--map-batch-forms
     (cl-loop with attrs = (sea--map-state)
-             for (state . defs) in sea--map-batch-forms
-             if (or sea--map-evil-p (not state))
-             collect `(,(or sea--map-fn 'general-define-key)
-                       ,@(if state `(:states ',state)) ,@attrs
-                       ,@(mapcan #'identity (nreverse defs)))
-             into forms
-             finally do (push (macroexp-progn forms) sea--map-forms))
+	     for (state . defs) in sea--map-batch-forms
+	     if (or sea--map-evil-p (not state))
+	     collect `(,(or sea--map-fn 'general-define-key)
+		       ,@(if state `(:states ',state)) ,@attrs
+		       ,@(mapcan #'identity (nreverse defs)))
+	     into forms
+	     finally do (push (macroexp-progn forms) sea--map-forms))
     (setq sea--map-batch-forms nil)))
 
 (defun sea--map-state ()
   (let ((plist
-         (append (list :prefix (sea--map-append-keys :prefix)
-                       :infix  (sea--map-append-keys :infix)
-                       :keymaps
-                       (append (plist-get sea--map-parent-state :keymaps)
-                               (plist-get sea--map-state :keymaps)))
-                 sea--map-state
-                 nil))
-        newplist)
+	 (append (list :prefix (sea--map-append-keys :prefix)
+		       :infix  (sea--map-append-keys :infix)
+		       :keymaps
+		       (append (plist-get sea--map-parent-state :keymaps)
+			       (plist-get sea--map-state :keymaps)))
+		 sea--map-state
+		 nil))
+	newplist)
     (while plist
       (let ((key (pop plist))
-            (val (pop plist)))
-        (when (and val (not (plist-member newplist key)))
-          (push val newplist)
-          (push key newplist))))
+	    (val (pop plist)))
+	(when (and val (not (plist-member newplist key)))
+	  (push val newplist)
+	  (push key newplist))))
     newplist))
 
 ;;
@@ -299,14 +299,14 @@ Properties
 
 Example
   (map! :map magit-mode-map
-        :m  \"C-r\" 'do-something           ; C-r in motion state
-        :nv \"q\" 'magit-mode-quit-window   ; q in normal+visual states
-        \"C-x C-r\" 'a-global-keybind
-        :g \"C-x C-r\" 'another-global-keybind  ; same as above
+	:m  \"C-r\" 'do-something           ; C-r in motion state
+	:nv \"q\" 'magit-mode-quit-window   ; q in normal+visual states
+	\"C-x C-r\" 'a-global-keybind
+	:g \"C-x C-r\" 'another-global-keybind  ; same as above
 
-        (:when IS-MAC
-         :n \"M-s\" 'some-fn
-         :i \"M-o\" (lambda (interactive) (message \"Hi\"))))"
+	(:when IS-MAC
+	 :n \"M-s\" 'some-fn
+	 :i \"M-o\" (lambda (interactive) (message \"Hi\"))))"
   (sea--map-process rest))
 
 (load! "+bindings")

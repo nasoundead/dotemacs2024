@@ -7,9 +7,9 @@
   :init
   ;; Must be set early to prevent ~/.emacs.d/transient from being created
   (setq transient-levels-file  (concat sea-etc-dir "transient/levels")
-        transient-values-file  (concat sea-etc-dir "transient/values")
-        transient-history-file (concat sea-etc-dir "transient/values")
-        transient-history-file (concat sea-etc-dir "transient/history"))
+	transient-values-file  (concat sea-etc-dir "transient/values")
+	transient-history-file (concat sea-etc-dir "transient/values")
+	transient-history-file (concat sea-etc-dir "transient/history"))
   :config
   ;; (setq magit-completing-read-function 'ivy-completing-read)
   )
@@ -27,8 +27,8 @@
 (use-package git-messenger
   :commands git-messenger:copy-message
   :bind (("C-x v p" . git-messenger:popup-message)
-         :map git-messenger-map
-         ("m" . git-messenger:copy-message))
+	 :map git-messenger-map
+	 ("m" . git-messenger:copy-message))
   :init
   ;; Use magit-show-commit for showing status/diff commands
   (setq git-messenger:use-magit-popup t))
@@ -40,8 +40,8 @@
 ;; Highlighting regions by last updated time
 (use-package smeargle
   :bind (("C-x v S" . smeargle)
-         ("C-x v C" . smeargle-commits)
-         ("C-x v R" . smeargle-clear)))
+	 ("C-x v C" . smeargle-commits)
+	 ("C-x v R" . smeargle-clear)))
 
 
 

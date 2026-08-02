@@ -16,24 +16,24 @@ immediately runs it on the current candidate (ending the ivy session)."
   :defer 1
   :config
   (setq ivy-height 15
-        ivy-wrap t
-        ivy-fixed-height-minibuffer t
-        projectile-completion-system 'ivy
-        smex-completion-method 'ivy
-        ;; Don't use ^ as initial input
-        ivy-initial-inputs-alist nil
-        ;; highlight til EOL
-        ivy-format-function #'ivy-format-function-line
-        ;; disable magic slash on non-match
-        ivy-magic-slash-non-match-action nil
-        ;; don't show recent files in switch-buffer
-        ivy-use-virtual-buffers nil
-        ;; ...but if that ever changes, show their full path
-        ivy-virtual-abbreviate 'full
-        ;; don't quit minibuffer on delete-error
-        ivy-on-del-error-function nil
-        ;; enable ability to select prompt (alternative to `ivy-immediate-done')
-        ivy-use-selectable-prompt t)
+	ivy-wrap t
+	ivy-fixed-height-minibuffer t
+	projectile-completion-system 'ivy
+	smex-completion-method 'ivy
+	;; Don't use ^ as initial input
+	ivy-initial-inputs-alist nil
+	;; highlight til EOL
+	ivy-format-function #'ivy-format-function-line
+	;; disable magic slash on non-match
+	ivy-magic-slash-non-match-action nil
+	;; don't show recent files in switch-buffer
+	ivy-use-virtual-buffers nil
+	;; ...but if that ever changes, show their full path
+	ivy-virtual-abbreviate 'full
+	;; don't quit minibuffer on delete-error
+	ivy-on-del-error-function nil
+	;; enable ability to select prompt (alternative to `ivy-immediate-done')
+	ivy-use-selectable-prompt t)
 
   (after! yasnippet
     (add-to-list 'yas-prompt-functions #'+ivy-yas-prompt nil #'eq))
@@ -48,7 +48,7 @@ immediately runs it on the current candidate (ending the ivy session)."
   ;; Show more buffer information in switch-buffer commands
   (after! ivy-rich
     (dolist (cmd '(ivy-switch-buffer +ivy/switch-workspace-buffer
-                                     counsel-projectile-switch-to-buffer))
+				     counsel-projectile-switch-to-buffer))
       (ivy-set-display-transformer cmd '+ivy-buffer-transformer)))
 
   (use-package ivy-hydra
@@ -80,11 +80,11 @@ immediately runs it on the current candidate (ending the ivy session)."
   :config
 
   (setq counsel-find-file-ignore-regexp "\\(?:^[#.]\\)\\|\\(?:[#~]$\\)\\|\\(?:^Icon?\\)"
-        ;; Add smart-casing and compressed archive searching (-zS) to default
-        ;; command arguments:
-        counsel-rg-base-command "rg -zS --no-heading --line-number --color never %s ."
-        counsel-ag-base-command "ag -zS --nocolor --nogroup %s"
-        counsel-pt-base-command "pt -zS --nocolor --nogroup -e %s")
+	;; Add smart-casing and compressed archive searching (-zS) to default
+	;; command arguments:
+	counsel-rg-base-command "rg -zS --no-heading --line-number --color never %s ."
+	counsel-ag-base-command "ag -zS --nocolor --nogroup %s"
+	counsel-pt-base-command "pt -zS --nocolor --nogroup -e %s")
 
   (add-to-list 'swiper-font-lock-exclude #'+doom-dashboard-mode nil #'eq)
 
@@ -98,8 +98,8 @@ immediately runs it on the current candidate (ending the ivy session)."
   (defun +ivy-action-given-file (cmd prompt)
     (lambda (source)
       (let* ((enable-recursive-minibuffers t)
-             (target (read-file-name (format "%s %s to:" prompt source))))
-        (funcall cmd source target 1))))
+	     (target (read-file-name (format "%s %s to:" prompt source))))
+	(funcall cmd source target 1))))
 
   ;; Configure `counsel-find-file'
   (ivy-add-actions
@@ -116,9 +116,9 @@ immediately runs it on the current candidate (ending the ivy session)."
      ("p" (lambda (path) (with-ivy-window (insert (file-relative-name path default-directory)))) "insert relative path")
      ("P" (lambda (path) (with-ivy-window (insert path))) "insert absolute path")
      ("l" (lambda (path) "Insert org-link with relative path"
-            (with-ivy-window (insert (format "[[./%s]]" (file-relative-name path default-directory))))) "insert org-link (rel. path)")
+	    (with-ivy-window (insert (format "[[./%s]]" (file-relative-name path default-directory))))) "insert org-link (rel. path)")
      ("L" (lambda (path) "Insert org-link with absolute path"
-            (with-ivy-window (insert (format "[[%s]]" path)))) "insert org-link (abs. path)")))
+	    (with-ivy-window (insert (format "[[%s]]" path)))) "insert org-link (abs. path)")))
 
   (ivy-add-actions
    'counsel-ag ; also applies to `counsel-rg' & `counsel-pt'
@@ -128,7 +128,7 @@ immediately runs it on the current candidate (ending the ivy session)."
 (use-package counsel-projectile
   :disabled t
   :commands (counsel-projectile-find-file counsel-projectile-find-dir counsel-projectile-switch-to-buffer
-                                          counsel-projectile-grep counsel-projectile-ag counsel-projectile-switch-project)
+					  counsel-projectile-grep counsel-projectile-ag counsel-projectile-switch-project)
   :init
   (define-key! 'global
     [remap projectile-find-file]        #'counsel-projectile-find-file
@@ -151,11 +151,11 @@ immediately runs it on the current candidate (ending the ivy session)."
   :defer t  ; is loaded by ivy
   :init
   (setq ivy-re-builders-alist
-        '((counsel-ag . ivy--regex-plus)
-          (counsel-grep . ivy--regex-plus)
-          (swiper . ivy--regex-plus)
-          (t . ivy--regex-fuzzy))
-        ivy-initial-inputs-alist nil))
+	'((counsel-ag . ivy--regex-plus)
+	  (counsel-grep . ivy--regex-plus)
+	  (swiper . ivy--regex-plus)
+	  (t . ivy--regex-fuzzy))
+	ivy-initial-inputs-alist nil))
 
 
 ;; Used by `counsel-M-x'

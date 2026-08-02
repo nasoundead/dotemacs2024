@@ -51,7 +51,7 @@
 
     ("#+BEGIN_EXAMPLE" . "⟝")
     ("#+END_EXAMPLE" . "□")
-    
+
     ("#+BEGIN_EXPORT" . "🙵")
     ("#+END_EXPORT" . "□")
     ("#+RESULTS:"     . ?💻)
@@ -122,17 +122,17 @@
     prepended to the element after the #+HEADER: tag."
     (let (text)
       (when (region-active-p)
-        (setq text (buffer-substring (region-beginning) (region-end)))
-        (delete-region (region-beginning) (region-end)))
-            (insert str)
-            (if (fboundp 'org-try-structure-completion)
-          (org-try-structure-completion) ; < org 9
-        (progn
-          ;; New template expansion since org 9
-          (require 'org-tempo nil t)
-          (org-tempo-complete-tag)))
-            (when mod (insert mod) (forward-line))
-            (when text (insert text))))
+	(setq text (buffer-substring (region-beginning) (region-end)))
+	(delete-region (region-beginning) (region-end)))
+	    (insert str)
+	    (if (fboundp 'org-try-structure-completion)
+	  (org-try-structure-completion) ; < org 9
+	(progn
+	  ;; New template expansion since org 9
+	  (require 'org-tempo nil t)
+	  (org-tempo-complete-tag)))
+	    (when mod (insert mod) (forward-line))
+	    (when text (insert text))))
 
 
   (use-package jupyter
@@ -271,7 +271,7 @@
   (defun enhance-ui-for-orgmode ()
     "enhance ui for orgmode."
     (when sea-prettify-org-symbols-alist
-        (if prettify-symbols-alist
+	(if prettify-symbols-alist
       (push sea-prettify-org-symbols-alist prettify-symbols-alist)
     (setq prettify-symbols-alist sea-prettify-org-symbols-alist)))
     (prettify-symbols-mode)
@@ -470,8 +470,8 @@
 
   ;;   (defun xeft--eager-preview()
   ;;     (when-let* ((button (button-at (point)))
-	;; 	  (path (button-get button 'path)))
-	
+	;;	  (path (button-get button 'path)))
+
   ;; ;; Kill previously displayed buffer.
 	;; (when (window-live-p xeft--preview-window)
 	;;   (with-selected-window xeft--preview-window
@@ -524,16 +524,16 @@
     ;;--------------------------
     (defun pv/org-find-time-file-property (property &optional anywhere)
       "Return the position of the time file PROPERTY if it exists.
-        When ANYWHERE is non-nil, search beyond the preamble."
-          (save-excursion
+	When ANYWHERE is non-nil, search beyond the preamble."
+	  (save-excursion
       (goto-char (point-min))
       (let ((first-heading
-            (save-excursion
-        (re-search-forward org-outline-regexp-bol nil t))))
-        (when (re-search-forward (format "^#\\+%s:" property)
-              (if anywhere nil first-heading)
-              t)
-          (point)))))
+	    (save-excursion
+	(re-search-forward org-outline-regexp-bol nil t))))
+	(when (re-search-forward (format "^#\\+%s:" property)
+	      (if anywhere nil first-heading)
+	      t)
+	  (point)))))
 
     (defun pv/org-has-time-file-property-p (property &optional anywhere)
       "Return the position of time file PROPERTY if it is defined.

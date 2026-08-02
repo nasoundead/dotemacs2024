@@ -8,18 +8,18 @@
       ;; Show flymake diagnostics first.
       ;; https://github.com/joaotavora/eglot/discussions/898#discussioncomment-2609402
       (setq eldoc-documentation-functions
-            (cons #'flymake-eldoc-function
-                  (remove #'flymake-eldoc-function eldoc-documentation-functions))))
+	    (cons #'flymake-eldoc-function
+		  (remove #'flymake-eldoc-function eldoc-documentation-functions))))
 
     (setq eldoc-echo-area-use-multiline-p 3
-          eldoc-echo-area-display-truncation-message nil)
+	  eldoc-echo-area-display-truncation-message nil)
     (set-face-attribute 'eglot-highlight-symbol-face nil
-                        :background "#b3d7ff")
+			:background "#b3d7ff")
 
     ;; https://github.com/joaotavora/eglot/pull/901
     ;; 2022-05-28 后支持
     (add-to-list 'eglot-server-programs `(rust-mode . ("rust-analyzer"
-                                                       :initializationOptions (:cargo (:features "all")))))
+						       :initializationOptions (:cargo (:features "all")))))
     (defun my/rust-expand-macro ()
       "Expand macro at point, same as `lsp-rust-analyzer-expand-macro'.
 https://rust-analyzer.github.io/manual.html#expand-macro-recursively"

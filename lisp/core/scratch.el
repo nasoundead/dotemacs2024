@@ -30,17 +30,17 @@ following:
 If FILE is a valid path, open it as if it were a persistent scratchpad."
   (if file (setq file (file-truename file)))
   (let ((buffer
-         (if file
-             (with-current-buffer (find-file-noselect file)
-               (rename-buffer (format "*sea:scratch (%s)*" (file-name-nondirectory file)))
-               (current-buffer))
-           (get-buffer-create "*sea:scratch*"))))
+	 (if file
+	     (with-current-buffer (find-file-noselect file)
+	       (rename-buffer (format "*sea:scratch (%s)*" (file-name-nondirectory file)))
+	       (current-buffer))
+	   (get-buffer-create "*sea:scratch*"))))
     (with-current-buffer buffer
       (when (and (functionp mode)
-                 (not (eq major-mode mode)))
-        (funcall mode))
+		 (not (eq major-mode mode)))
+	(funcall mode))
       (when text
-        (insert text))
+	(insert text))
       (run-hooks 'sea-scratch-buffer-hook)
       (current-buffer))))
 
@@ -59,20 +59,20 @@ If a region is active, copy its contents to the scratch pad."
      sea-scratch-buffer-display-fn
      (sea-scratch-buffer
       (when arg
-        (if-let* ((file (read-file-name "Open scratch file > " sea-scratch-files-dir "scratch")))
-            file
-          (user-error "Aborting")))
+	(if-let* ((file (read-file-name "Open scratch file > " sea-scratch-files-dir "scratch")))
+	    file
+	  (user-error "Aborting")))
       (cond ((eq sea-scratch-buffer-major-mode t)
-             (unless (or buffer-read-only
-                         (derived-mode-p 'special-mode)
-                         (string-match-p "^ ?\\*" (buffer-name)))
-               major-mode))
-            ((null sea-scratch-buffer-major-mode) nil)
-            ((symbolp sea-scratch-buffer-major-mode)
-             sea-scratch-buffer-major-mode))
+	     (unless (or buffer-read-only
+			 (derived-mode-p 'special-mode)
+			 (string-match-p "^ ?\\*" (buffer-name)))
+	       major-mode))
+	    ((null sea-scratch-buffer-major-mode) nil)
+	    ((symbolp sea-scratch-buffer-major-mode)
+	     sea-scratch-buffer-major-mode))
       (and (region-active-p)
-           (buffer-substring-no-properties
-            (region-beginning) (region-end)))))))
+	   (buffer-substring-no-properties
+	    (region-beginning) (region-end)))))))
 
 ;;;###autoload
 (defun sea/switch-to-scratch-buffer (&optional arg)

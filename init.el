@@ -22,7 +22,6 @@
   (require 'init-font))
 (require 'init-modeline)
 (require 'init-highlight)
-;; (require 'init-ivy)
 (require 'init-pyim)
 (require 'init-vertico)
 (require 'init-corfu)

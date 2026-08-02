@@ -116,12 +116,12 @@
   (interactive)
   (dolist (icon blink-search-icon-alist)
     (let* ((collection (nth 0 (cdr icon)))
-           (name (nth 1 (cdr icon)))
-           (url (format (cdr (assoc collection blink-search-icon-collections)) name))
-           (filename (blink-search-icon-filepath collection name)))
+	   (name (nth 1 (cdr icon)))
+	   (url (format (cdr (assoc collection blink-search-icon-collections)) name))
+	   (filename (blink-search-icon-filepath collection name)))
       (with-temp-buffer
-        (url-insert-file-contents url)
-        (write-region (point-min) (point-max) filename)))))
+	(url-insert-file-contents url)
+	(write-region (point-min) (point-max) filename)))))
 
 (defun blink-search-icon-parse (collection name)
   (with-temp-buffer
@@ -133,65 +133,65 @@
 If COLOR-NAME is unknown to Emacs, then return COLOR-NAME as-is."
   (let ((rgb-color (color-name-to-rgb color-name)))
     (if rgb-color
-        (apply #'color-rgb-to-hex (append rgb-color '(2)))
+	(apply #'color-rgb-to-hex (append rgb-color '(2)))
       color-name)))
 
 (defun blink-search-icon (collection name &optional fg-color bg-color zoom)
   (let* ((root (blink-search-icon-parse collection name))
 
-         ;; Read original viewbox
-         (viewbox (cdr (assq 'viewBox (xml-node-attributes (car root)))))
-         (viewbox (mapcar 'string-to-number (split-string viewbox)))
-         (view-x (nth 0 viewbox))
-         (view-y (nth 1 viewbox))
-         (view-width (nth 2 viewbox))
-         (view-height (nth 3 viewbox))
+	 ;; Read original viewbox
+	 (viewbox (cdr (assq 'viewBox (xml-node-attributes (car root)))))
+	 (viewbox (mapcar 'string-to-number (split-string viewbox)))
+	 (view-x (nth 0 viewbox))
+	 (view-y (nth 1 viewbox))
+	 (view-width (nth 2 viewbox))
+	 (view-height (nth 3 viewbox))
 
-         ;; Set icon size (in pixels) to 4x1 characters
-         (svg-width  (* (frame-char-width)  blink-search-icon-width))
-         (svg-height (* (frame-char-height) 1))
+	 ;; Set icon size (in pixels) to 4x1 characters
+	 (svg-width  (* (frame-char-width)  blink-search-icon-width))
+	 (svg-height (* (frame-char-height) 1))
 
-         ;; Zoom the icon by using integer factor only
-         (zoom (max 1 (truncate (or zoom 1))))
-         (svg-width  (* svg-width zoom))
-         (svg-height (* svg-height zoom))
+	 ;; Zoom the icon by using integer factor only
+	 (zoom (max 1 (truncate (or zoom 1))))
+	 (svg-width  (* svg-width zoom))
+	 (svg-height (* svg-height zoom))
 
-         (svg-viewbox (format "%f %f %f %f" view-x view-y view-width view-height))
-         (fg-color (blink-search-icon-convert-to-svg-color
-                    (or (when (facep fg-color)
-                          (face-foreground fg-color nil t))
-                        fg-color (face-attribute 'default :foreground))))
-         (bg-color (blink-search-icon-convert-to-svg-color
-                    (or (when (facep bg-color)
-                          (face-background bg-color nil t))
-                        bg-color "transparent")))
-         (svg (svg-create svg-width svg-height
-                          :viewBox svg-viewbox
-                          :stroke-width 0
-                          :fill fg-color)))
+	 (svg-viewbox (format "%f %f %f %f" view-x view-y view-width view-height))
+	 (fg-color (blink-search-icon-convert-to-svg-color
+		    (or (when (facep fg-color)
+			  (face-foreground fg-color nil t))
+			fg-color (face-attribute 'default :foreground))))
+	 (bg-color (blink-search-icon-convert-to-svg-color
+		    (or (when (facep bg-color)
+			  (face-background bg-color nil t))
+			bg-color "transparent")))
+	 (svg (svg-create svg-width svg-height
+			  :viewBox svg-viewbox
+			  :stroke-width 0
+			  :fill fg-color)))
     (svg-rectangle svg
-                   view-x view-y view-width view-height
-                   :fill bg-color)
+		   view-x view-y view-width view-height
+		   :fill bg-color)
 
     (dolist (item (xml-get-children (car root) 'path))
       (let* ((attrs (xml-node-attributes item))
-             (path (cdr (assoc 'd attrs)))
-             (fill (or (cdr (assoc 'fill attrs)) fg-color)))
-        (svg-node svg 'path :d path :fill fill)))
+	     (path (cdr (assoc 'd attrs)))
+	     (fill (or (cdr (assoc 'fill attrs)) fg-color)))
+	(svg-node svg 'path :d path :fill fill)))
     (svg-image svg :ascent 'center :scale 1)))
 
 (defun blink-search-icon-build (collection name fg-color)
   (if (and (display-graphic-p)
-           blink-search-enable-icon
-           (image-type-available-p 'svg))
+	   blink-search-enable-icon
+	   (image-type-available-p 'svg))
       (let* ((icon-key (format "%s_%s" collection name))
-             (icon-text (gethash icon-key blink-search-icon-cache)))
-        (unless icon-text
-          (setq icon-text (propertize
-                           (apply #'concat (make-list blink-search-icon-width "-"))
-                           'display (blink-search-icon collection name fg-color)))
-          (puthash icon-key icon-text blink-search-icon-cache))
-        icon-text)
+	     (icon-text (gethash icon-key blink-search-icon-cache)))
+	(unless icon-text
+	  (setq icon-text (propertize
+			   (apply #'concat (make-list blink-search-icon-width "-"))
+			   'display (blink-search-icon collection name fg-color)))
+	  (puthash icon-key icon-text blink-search-icon-cache))
+	icon-text)
     ""))
 
 (provide 'blink-search-icon)

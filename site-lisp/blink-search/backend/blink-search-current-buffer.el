@@ -87,10 +87,10 @@
 (defun blink-search-init-current-buffer ()
   (when (blink-search-epc-live-p blink-search-epc-process)
     (blink-search-call-async "search_init_current_buffer"
-                             (buffer-name blink-search-start-buffer)
-                             (blink-search-encode-string
-                              (with-current-buffer blink-search-start-buffer
-                                (buffer-string))))))
+			     (buffer-name blink-search-start-buffer)
+			     (blink-search-encode-string
+			      (with-current-buffer blink-search-start-buffer
+				(buffer-string))))))
 
 (defun blink-search-encode-string (str)
   "Encode string STR with UTF-8 coding using Base64."

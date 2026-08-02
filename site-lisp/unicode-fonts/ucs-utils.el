@@ -211,8 +211,8 @@ This speeds some operations between sessions.
 Internally, this value is a string which is used for the filename
 of the persistent data store."
   :type '(choice
-          (const :tag "Yes"  "ucs-utils")
-          (const :tag "No"   nil))
+	  (const :tag "Yes"  "ucs-utils")
+	  (const :tag "No"   nil))
   :group 'ucs-utils)
 
 (defcustom ucs-utils-hide-numbered-cjk-ideographs t
@@ -5832,8 +5832,8 @@ This is needed for performance reasons in most cases."
 ;; (8.0 delta - new block)
 (nconc ucs-utils-names-corrections
        (mapcar #'(lambda (x)
-                   (cons (format "CJK IDEOGRAPH-%X" x) x))
-               (number-sequence #x2B820 #x2CEA1)))
+		   (cons (format "CJK IDEOGRAPH-%X" x) x))
+	       (number-sequence #x2B820 #x2CEA1)))
 
 ;; attempt to load Unicode 6.0 characters for Emacs 23.x
 (when (< emacs-major-version 24)
@@ -5856,9 +5856,9 @@ This is portable to versions of Emacs without dynamic `flet`."
     `(let ((,o (ignore-errors (symbol-function ,func))))
        (fset ,func #'(lambda (&rest _ignored) ,ret-val))
        (unwind-protect
-           (progn ,@body)
-         (when ,o
-           (fset ,func ,o))))))
+	   (progn ,@body)
+	 (when ,o
+	   (fset ,func ,o))))))
 
 ;;; compatibility functions
 
@@ -5889,69 +5889,69 @@ This is portable to versions of Emacs without dynamic `flet`."
 Like function `ucs-names' but with more characters."
   (or ucs-utils-names
       (let ((unicode-ranges              ; non-private Unicode 8.0 blocks, merged
-             '((#x00000 . #x0085F)
-               (#x008A0 . #x01C7F)
-               (#x01CC0 . #x02FDF)
-               (#x02FF0 . #x0DB7F)
-               (#x0DC00 . #x0DFFF)
-               (#x0F900 . #x101FF)
-               (#x10280 . #x103DF)
-               (#x10400 . #x104AF)
-               (#x10500 . #x1056F)
-               (#x10600 . #x1077F)
-               (#x10800 . #x108AF)
-               (#x108E0 . #x1093F)
-               (#x10980 . #x10A9F)
-               (#x10AC0 . #x10BAF)
-               (#x10C00 . #x10C4F)
-               (#x10C80 . #x10CFF)
-               (#x10E60 . #x10E7F)
-               (#x11000 . #x1124F)
-               (#x11280 . #x1137F)
-               (#x11480 . #x114DF)
-               (#x11580 . #x1165F)
-               (#x11680 . #x116CF)
-               (#x11700 . #x1173F)
-               (#x118A0 . #x118FF)
-               (#x11AC0 . #x11AFF)
-               (#x12000 . #x1254F)
-               (#x13000 . #x1342F)
-               (#x14400 . #x1467F)
-               (#x16800 . #x16A6F)
-               (#x16AD0 . #x16B8F)
-               (#x16F00 . #x16F9F)
-               (#x1B000 . #x1B0FF)
-               (#x1BC00 . #x1BCAF)
-               (#x1D000 . #x1D24F)
-               (#x1D300 . #x1D37F)
-               (#x1D400 . #x1DAAF)
-               (#x1E800 . #x1E8DF)
-               (#x1EE00 . #x1EEFF)
-               (#x1F000 . #x1F9FF)
-               (#x20000 . #x2A6DF)
-               (#x2A700 . #x2CEAF)
-               (#x2F800 . #x2FA1F)
-               (#xE0000 . #xE007F)
-               (#xE0100 . #xE01EF)))
-            (names (make-tconc))
-            (gc-cons-threshold 80000000)
-            (gc-cons-percentage .5)
-            (name nil))
-        (tconc-list names (copy-tree ucs-utils-names-corrections))
-        (dolist (range unicode-ranges)
-          (when (< (car range) #x010000)
-            (tconc-list names (delq nil (mapcar #'(lambda (char)
-                                                    (if (setq name (get-char-code-property char 'old-name))
-                                                        (cons name char)))
-                                                (number-sequence (car range) (cdr range))))))
-          (tconc-list names (delq nil (mapcar #'(lambda (char)
-                                                  (if (setq name (get-char-code-property char 'name))
-                                                      (cons name char)))
-                                              (number-sequence (car range) (cdr range))))))
-        (setq ucs-utils-names (list-utils-uniq (tconc names)))
-        (dolist (cell ucs-utils-names-deletions)
-          (setq ucs-utils-names (delete cell ucs-utils-names)))
-        ucs-utils-names)))
+	     '((#x00000 . #x0085F)
+	       (#x008A0 . #x01C7F)
+	       (#x01CC0 . #x02FDF)
+	       (#x02FF0 . #x0DB7F)
+	       (#x0DC00 . #x0DFFF)
+	       (#x0F900 . #x101FF)
+	       (#x10280 . #x103DF)
+	       (#x10400 . #x104AF)
+	       (#x10500 . #x1056F)
+	       (#x10600 . #x1077F)
+	       (#x10800 . #x108AF)
+	       (#x108E0 . #x1093F)
+	       (#x10980 . #x10A9F)
+	       (#x10AC0 . #x10BAF)
+	       (#x10C00 . #x10C4F)
+	       (#x10C80 . #x10CFF)
+	       (#x10E60 . #x10E7F)
+	       (#x11000 . #x1124F)
+	       (#x11280 . #x1137F)
+	       (#x11480 . #x114DF)
+	       (#x11580 . #x1165F)
+	       (#x11680 . #x116CF)
+	       (#x11700 . #x1173F)
+	       (#x118A0 . #x118FF)
+	       (#x11AC0 . #x11AFF)
+	       (#x12000 . #x1254F)
+	       (#x13000 . #x1342F)
+	       (#x14400 . #x1467F)
+	       (#x16800 . #x16A6F)
+	       (#x16AD0 . #x16B8F)
+	       (#x16F00 . #x16F9F)
+	       (#x1B000 . #x1B0FF)
+	       (#x1BC00 . #x1BCAF)
+	       (#x1D000 . #x1D24F)
+	       (#x1D300 . #x1D37F)
+	       (#x1D400 . #x1DAAF)
+	       (#x1E800 . #x1E8DF)
+	       (#x1EE00 . #x1EEFF)
+	       (#x1F000 . #x1F9FF)
+	       (#x20000 . #x2A6DF)
+	       (#x2A700 . #x2CEAF)
+	       (#x2F800 . #x2FA1F)
+	       (#xE0000 . #xE007F)
+	       (#xE0100 . #xE01EF)))
+	    (names (make-tconc))
+	    (gc-cons-threshold 80000000)
+	    (gc-cons-percentage .5)
+	    (name nil))
+	(tconc-list names (copy-tree ucs-utils-names-corrections))
+	(dolist (range unicode-ranges)
+	  (when (< (car range) #x010000)
+	    (tconc-list names (delq nil (mapcar #'(lambda (char)
+						    (if (setq name (get-char-code-property char 'old-name))
+							(cons name char)))
+						(number-sequence (car range) (cdr range))))))
+	  (tconc-list names (delq nil (mapcar #'(lambda (char)
+						  (if (setq name (get-char-code-property char 'name))
+						      (cons name char)))
+					      (number-sequence (car range) (cdr range))))))
+	(setq ucs-utils-names (list-utils-uniq (tconc names)))
+	(dolist (cell ucs-utils-names-deletions)
+	  (setq ucs-utils-names (delete cell ucs-utils-names)))
+	ucs-utils-names)))
 
 (defun ucs-utils-names-hash ()
   "All UCS names, cached in hash `ucs-utils-names-hash'.
@@ -5963,35 +5963,35 @@ Returns nil unless `ucs-utils-trade-memory-for-speed' is set."
     (or
      ucs-utils-names-hash
      (let* ((cache-id (format "e:%s-l:%s"
-                              emacs-version
-                              (get 'ucs-utils 'custom-version)))
-            (store-key (intern (format "names-hash-%s" cache-id)))
-            (store-place ucs-utils-use-persistent-storage))
+			      emacs-version
+			      (get 'ucs-utils 'custom-version)))
+	    (store-key (intern (format "names-hash-%s" cache-id)))
+	    (store-place ucs-utils-use-persistent-storage))
        (unless (and (persistent-softest-exists-p store-key store-place)
-                    (hash-table-p (setq ucs-utils-names-hash
-                                        (persistent-softest-fetch store-key store-place))))
-         (let ((dupes nil)
-               (key nil)
-               (gc-cons-threshold 80000000)
-               (gc-cons-percentage .5))
-           (setq ucs-utils-names-hash (make-hash-table :size (length (ucs-utils-names))
-                                                       :test 'equal))
-           (dolist (cell (ucs-utils-names))
-             (setq key (car cell))
-             (when (and (gethash key ucs-utils-names-hash)
-                        (not (eq (gethash key ucs-utils-names-hash) (cdr cell))))
-               (push key dupes))
-             (puthash key (cdr cell) ucs-utils-names-hash))
-           (delete-dups dupes)
-           (dolist (key dupes)
-             (remhash key ucs-utils-names-hash))
-           (dolist (cell ucs-utils-names-corrections)
-             (puthash (car cell) (cdr cell) ucs-utils-names-hash))
-           (let ((persistent-soft-inhibit-sanity-checks t))
-             (persistent-softest-store store-key
-                                       ucs-utils-names-hash
-                                       store-place))
-           (persistent-softest-flush store-place)))
+		    (hash-table-p (setq ucs-utils-names-hash
+					(persistent-softest-fetch store-key store-place))))
+	 (let ((dupes nil)
+	       (key nil)
+	       (gc-cons-threshold 80000000)
+	       (gc-cons-percentage .5))
+	   (setq ucs-utils-names-hash (make-hash-table :size (length (ucs-utils-names))
+						       :test 'equal))
+	   (dolist (cell (ucs-utils-names))
+	     (setq key (car cell))
+	     (when (and (gethash key ucs-utils-names-hash)
+			(not (eq (gethash key ucs-utils-names-hash) (cdr cell))))
+	       (push key dupes))
+	     (puthash key (cdr cell) ucs-utils-names-hash))
+	   (delete-dups dupes)
+	   (dolist (key dupes)
+	     (remhash key ucs-utils-names-hash))
+	   (dolist (cell ucs-utils-names-corrections)
+	     (puthash (car cell) (cdr cell) ucs-utils-names-hash))
+	   (let ((persistent-soft-inhibit-sanity-checks t))
+	     (persistent-softest-store store-key
+				       ucs-utils-names-hash
+				       store-place))
+	   (persistent-softest-flush store-place)))
      ucs-utils-names-hash))))
 
 ;; Unfortunately we can't be dash-insensitive b/c UCS names are
@@ -6016,11 +6016,11 @@ Returns nil if NAME does not exist."
   (save-match-data
     (cl-callf upcase name)
     (setq name (replace-regexp-in-string "\\<\\(BRAILLE DOTS\\|SELECTOR\\) \\([0-9]+\\)\\'" "\\1-\\2"
-                 (replace-regexp-in-string "\\<\\(IDEOGRAPH\\) \\([0-9A-F]+\\)\\'" "\\1-\\2"
-                   (replace-regexp-in-string "\\`[ \"]+" ""
-                     (replace-regexp-in-string "[ \"]+\\'" ""
-                       (replace-regexp-in-string " \\{2,\\}" " "
-                         (replace-regexp-in-string "[_\t]" " "  name)))))))
+		 (replace-regexp-in-string "\\<\\(IDEOGRAPH\\) \\([0-9A-F]+\\)\\'" "\\1-\\2"
+		   (replace-regexp-in-string "\\`[ \"]+" ""
+		     (replace-regexp-in-string "[ \"]+\\'" ""
+		       (replace-regexp-in-string " \\{2,\\}" " "
+			 (replace-regexp-in-string "[_\t]" " "  name)))))))
     (cond
       ((hash-table-p (ucs-utils-names-hash))
        (gethash name (ucs-utils-names-hash)))
@@ -6035,11 +6035,11 @@ Returns nil if NAME does not exist."
     ((null vec)
      (vector nil))
     ((and (vectorp vec)
-          (= 0 (length vec)))
+	  (= 0 (length vec)))
      nil)
     ((vectorp vec)
      (vconcat (ucs-utils-vector-flatten (aref vec 0))
-              (ucs-utils-vector-flatten (vconcat (cdr (append vec nil))))))
+	      (ucs-utils-vector-flatten (vconcat (cdr (append vec nil))))))
     (t
      (vector vec))))
 
@@ -6051,38 +6051,38 @@ Returns nil if NAME does not exist."
       (setq name (replace-match (upcase (match-string-no-properties 0 name)) 'fixed-case 'literal name)))
     (let ((case-fold-search nil))
       (while (string-match " \\(?:And\\|Or\\|Of\\|On\\|The\\|For\\|In\\|With\\|Over\\|Under\\|At\\) " name)
-        (setq name (replace-match (downcase (match-string-no-properties 0 name)) 'fixed-case 'literal name)))
+	(setq name (replace-match (downcase (match-string-no-properties 0 name)) 'fixed-case 'literal name)))
       (while (and (string-match "\\`Cuneiform Sign " name)
-                  (string-match " \\(?:Times\\|Plus\\) " name))
-        (setq name (replace-match (downcase (match-string-no-properties 0 name)) 'fixed-case 'literal name)))
+		  (string-match " \\(?:Times\\|Plus\\) " name))
+	(setq name (replace-match (downcase (match-string-no-properties 0 name)) 'fixed-case 'literal name)))
       (while (string-match "\\<Logical [Aa]nd\\>" name)
-        (setq name (replace-match "Logical AND" 'fixed-case 'literal name)))
+	(setq name (replace-match "Logical AND" 'fixed-case 'literal name)))
       (while (string-match "\\<Logical [Oo]r\\>" name)
-        (setq name (replace-match "Logical OR" 'fixed-case 'literal name)))
+	(setq name (replace-match "Logical OR" 'fixed-case 'literal name)))
       (while (string-match "\\<N-Ary\\>" name)
-        (setq name (replace-match "N-ary" 'fixed-case 'literal name)))
+	(setq name (replace-match "N-ary" 'fixed-case 'literal name)))
       (while (string-match "\\<Per-Em\\>" name)
-        (setq name (replace-match "per-Em" 'fixed-case 'literal name)))
+	(setq name (replace-match "per-Em" 'fixed-case 'literal name)))
       (while (string-match "\\<Jack-O-Lantern\\>" name)
-        (setq name (replace-match "Jack-o-Lantern" 'fixed-case 'literal name)))
+	(setq name (replace-match "Jack-o-Lantern" 'fixed-case 'literal name)))
       (while (string-match "\\<Fleur-De-Lis\\>" name)
-        (setq name (replace-match "Fleur-de-Lis" 'fixed-case 'literal name)))
+	(setq name (replace-match "Fleur-de-Lis" 'fixed-case 'literal name)))
       (while (string-match "\\<Left-To-Right\\>" name)
-        (setq name (replace-match "Left-to-Right" 'fixed-case 'literal name)))
+	(setq name (replace-match "Left-to-Right" 'fixed-case 'literal name)))
       (while (string-match "\\<Right-To-Left\\>" name)
-        (setq name (replace-match "Right-to-Left" 'fixed-case 'literal name)))
+	(setq name (replace-match "Right-to-Left" 'fixed-case 'literal name)))
       (while (string-match "\\<Minus-Or-Plus\\>" name)
-        (setq name (replace-match "Minus-or-Plus" 'fixed-case 'literal name)))
+	(setq name (replace-match "Minus-or-Plus" 'fixed-case 'literal name)))
       (while (string-match "\\<Plus-Or-Minus\\>" name)
-        (setq name (replace-match "Plus-or-Minus" 'fixed-case 'literal name)))
+	(setq name (replace-match "Plus-or-Minus" 'fixed-case 'literal name)))
       (while (string-match "\\<\\(?:Cjk\\|Apl\\|Ocr\\)\\>" name)
-        (setq name (replace-match (upcase (match-string-no-properties 0 name)) 'fixed-case 'literal name)))
+	(setq name (replace-match (upcase (match-string-no-properties 0 name)) 'fixed-case 'literal name)))
       (when (string-match "\\<\\(Ideograph\\)-\\([0-9A-Fa-f]+\\)\\'" name)
-        (setq name (replace-match (concat (match-string-no-properties 1 name)
-                                          "-"
-                                          (upcase (match-string-no-properties 2 name))) 'fixed-case 'literal name)))
+	(setq name (replace-match (concat (match-string-no-properties 1 name)
+					  "-"
+					  (upcase (match-string-no-properties 2 name))) 'fixed-case 'literal name)))
       (when (string-match "\\`Nko\\>" name)
-        (setq name (replace-match "NKo" 'fixed-case 'literal name))))
+	(setq name (replace-match "NKo" 'fixed-case 'literal name))))
     name))
 
 ;;;###autoload
@@ -6099,21 +6099,21 @@ non-nil, then a nil value will be returned when no name is
 found."
   (when (characterp char)
     (let ((name (or (car (rassoc char ucs-utils-names-corrections))
-                    (get-char-code-property char 'name))))
+		    (get-char-code-property char 'name))))
       (when (equal "<control>" name)
-        (setq name (get-char-code-property char 'old-name)))
+	(setq name (get-char-code-property char 'old-name)))
       (when (eq char ?\s)
-        (cl-callf or name "Space"))
+	(cl-callf or name "Space"))
       (when (rassoc char ucs-utils-names-deletions)
-        (setq name nil))
+	(setq name nil))
       (cond
-        ((and no-hex
-              (= (length name) 0))
-         (setq name nil))
-        ((= (length name) 0)
-         (setq name (concat "#x" (upcase (format "%02x" char)))))
-        (t
-         (ucs-utils-prettify-ucs-string name))))))
+	((and no-hex
+	      (= (length name) 0))
+	 (setq name nil))
+	((= (length name) 0)
+	 (setq name (concat "#x" (upcase (format "%02x" char)))))
+	(t
+	 (ucs-utils-prettify-ucs-string name))))))
 
 ;;;###autoload
 (defun ucs-utils-all-prettified-names (&optional progress regenerate)
@@ -6124,10 +6124,10 @@ cache.
 
 When optional REGENERATE is given, re-generate cache."
   (let* ((cache-id (format "e:%s-l:%s"
-                           emacs-version
-                           (get 'ucs-utils 'custom-version)))
-         (store-key (intern (format "all-prettified-names-%s" cache-id)))
-         (store-place ucs-utils-use-persistent-storage))
+			   emacs-version
+			   (get 'ucs-utils 'custom-version)))
+	 (store-key (intern (format "all-prettified-names-%s" cache-id)))
+	 (store-place ucs-utils-use-persistent-storage))
     (when regenerate
       (setq ucs-utils-all-prettified-names nil)
       (persistent-softest-store store-key nil store-place))
@@ -6135,32 +6135,32 @@ When optional REGENERATE is given, re-generate cache."
       (ucs-utils-all-prettified-names
        t)
       ((and (not regenerate)
-            (persistent-softest-exists-p store-key store-place)
-            (consp (setq ucs-utils-all-prettified-names
-                         (persistent-softest-fetch store-key store-place))))
+	    (persistent-softest-exists-p store-key store-place)
+	    (consp (setq ucs-utils-all-prettified-names
+			 (persistent-softest-fetch store-key store-place))))
        t)
       (t
        (let ((reporter (make-progress-reporter "Caching formatted UCS names... " 0 (length (ucs-utils-names))))
-             (counter 0)
-             (draft-list nil)
-             (prev-name nil)
-             (gc-cons-threshold 80000000)
-             (gc-cons-percentage .5))
-         (dolist (cell (ucs-utils-names))
-           (when progress
-             (progress-reporter-update reporter (cl-incf counter)))
-           (push (replace-regexp-in-string " " "_" (or (ucs-utils-pretty-name (cdr cell) 'no-hex) "")) draft-list))
-         (dolist (name (delete "" (sort draft-list 'string<)))
-           (unless (equal name prev-name)
-             (push name ucs-utils-all-prettified-names))
-           (setq prev-name name))
-         (cl-callf nreverse ucs-utils-all-prettified-names)
-         (let ((persistent-soft-inhibit-sanity-checks t))
-           (persistent-softest-store store-key
-                                     ucs-utils-all-prettified-names
-                                     store-place))
-         (persistent-softest-flush store-place)
-         (progress-reporter-done reporter)))))
+	     (counter 0)
+	     (draft-list nil)
+	     (prev-name nil)
+	     (gc-cons-threshold 80000000)
+	     (gc-cons-percentage .5))
+	 (dolist (cell (ucs-utils-names))
+	   (when progress
+	     (progress-reporter-update reporter (cl-incf counter)))
+	   (push (replace-regexp-in-string " " "_" (or (ucs-utils-pretty-name (cdr cell) 'no-hex) "")) draft-list))
+	 (dolist (name (delete "" (sort draft-list 'string<)))
+	   (unless (equal name prev-name)
+	     (push name ucs-utils-all-prettified-names))
+	   (setq prev-name name))
+	 (cl-callf nreverse ucs-utils-all-prettified-names)
+	 (let ((persistent-soft-inhibit-sanity-checks t))
+	   (persistent-softest-store store-key
+				     ucs-utils-all-prettified-names
+				     store-place))
+	 (persistent-softest-flush store-place)
+	 (progress-reporter-done reporter)))))
   ucs-utils-all-prettified-names)
 
 (defun ucs-utils--subst-char-in-region-1 (start end from-char to-char)
@@ -6170,11 +6170,11 @@ Arguments START, END, FROM-CHAR, and TO-CHAR are as documented at
 `ucs-utils-subst-char-in-region'."
   ;; done in a specific fashion to maintain markers
   (cl-loop for i from start to (1- end)
-        if (eq (char-after i) from-char)
-        do (save-excursion
-             (goto-char i)
-             (insert to-char)
-             (delete-char 1))))
+	if (eq (char-after i) from-char)
+	do (save-excursion
+	     (goto-char i)
+	     (insert to-char)
+	     (delete-char 1))))
 
 ;;; external interface (plus `ucs-utils-pretty-name' above)
 
@@ -6200,37 +6200,37 @@ symbol.
 When NAME is a character, it passes through unchanged, unless
 TEST is set, in which case it must pass TEST."
   (let ((char name)
-        (orig-fallback fallback)
-        (args (list name fallback test))
-        (retval nil))
+	(orig-fallback fallback)
+	(args (list name fallback test))
+	(retval nil))
     (if (and ucs-utils-trade-memory-for-speed
-             (gethash args ucs-utils-char-mem))
-        (gethash args ucs-utils-char-mem)
+	     (gethash args ucs-utils-char-mem))
+	(gethash args ucs-utils-char-mem)
       ;; else
       (when (and (eq test 'cdp)
-                 (not (fboundp 'cdp)))
-        (setq test 'char-displayable-p))
+		 (not (fboundp 'cdp)))
+	(setq test 'char-displayable-p))
       (when (stringp char)
-        (setq char (ucs-utils--lookup char)))
+	(setq char (ucs-utils--lookup char)))
       (when (stringp fallback)
-        (setq fallback (ucs-utils--lookup fallback))
-        (cl-assert (characterp fallback) nil "Invalid fallback: %s" orig-fallback))
+	(setq fallback (ucs-utils--lookup fallback))
+	(cl-assert (characterp fallback) nil "Invalid fallback: %s" orig-fallback))
       (setq retval (cond
-                     ((and (characterp char)
-                           (or (not test) (funcall test char)))
-                      char)
-                     ((eq fallback 'error)
-                      (error "Character invalid or undisplayable: %s" name))
-                     ((or (eq fallback 'drop)
-                          (null fallback))
-                      nil)
-                     ((vectorp fallback)
-                      fallback)
-                     (t
-                      (cl-assert (characterp fallback) nil "Invalid fallback: %s" orig-fallback)
-                      fallback)))
+		     ((and (characterp char)
+			   (or (not test) (funcall test char)))
+		      char)
+		     ((eq fallback 'error)
+		      (error "Character invalid or undisplayable: %s" name))
+		     ((or (eq fallback 'drop)
+			  (null fallback))
+		      nil)
+		     ((vectorp fallback)
+		      fallback)
+		     (t
+		      (cl-assert (characterp fallback) nil "Invalid fallback: %s" orig-fallback)
+		      fallback)))
       (when ucs-utils-trade-memory-for-speed
-        (puthash args retval ucs-utils-char-mem))
+	(puthash args retval ucs-utils-char-mem))
       retval)))
 
 ;;;###autoload
@@ -6273,7 +6273,7 @@ inner vectors may contain a sequence of characters, a literal
 string, or nil.  Eg
 
    (ucs-utils-vector '(\"Middle Dot\" \"Ampersand\" \"Horizontal Ellipsis\")
-                     '[?.           [?a ?n ?d]  [\"...\"]              ])
+		     '[?.           [?a ?n ?d]  [\"...\"]              ])
 
 or
 
@@ -6287,12 +6287,12 @@ symbol.
 If NO-FLATTEN is non-nil, then a vector-of-vectors may be returned
 if multi-character fallbacks were used as in the example above."
   (let ((strip-char :nonexistent)
-        (flattener (if no-flatten 'identity 'ucs-utils-vector-flatten)))
+	(flattener (if no-flatten 'identity 'ucs-utils-vector-flatten)))
     (cond
       ((vectorp sequence)
        (cl-callf append sequence nil))
       ((or (stringp sequence)
-           (characterp sequence))
+	   (characterp sequence))
        (cl-callf list sequence)))
     (cond
       ((eq fallback 'drop)
@@ -6305,13 +6305,13 @@ if multi-character fallbacks were used as in the example above."
       ((vectorp fallback)
        (cl-callf append fallback nil))
       ((or (stringp fallback)
-           (characterp fallback))
+	   (characterp fallback))
        (cl-callf list fallback)))
     (cl-assert (and (listp sequence) (listp fallback)) nil "SEQUENCE and FALLBACK should be lists or vectors.")
     (cl-assert (= (length sequence) (length fallback)) nil "SEQUENCE and FALLBACK should be the same length.")
     (funcall flattener (apply 'vector (delq strip-char (cl-loop for elt in sequence
-                                                             for back-elt in fallback
-                                                             collect (ucs-utils-char elt back-elt test)))))))
+							     for back-elt in fallback
+							     collect (ucs-utils-char elt back-elt test)))))))
 
 ;;;###autoload
 (defun ucs-utils-string (sequence &optional fallback test)
@@ -6360,7 +6360,7 @@ symbol."
   (condition-case nil
       (concat (ucs-utils-vector sequence 'error test))
     (error nil
-           fallback)))
+	   fallback)))
 
 ;;;###autoload
 (defun ucs-utils-subst-char-in-region (start end from-char to-char &optional no-undo)
@@ -6379,9 +6379,9 @@ This function is slower than `subst-char-in-region'."
   (setq to-char   (ucs-utils-char to-char 'error))
   (if no-undo
       (let ((buffer-undo-list nil)
-            (modified (buffer-modified-p)))
-        (ucs-utils--subst-char-in-region-1 start end from-char to-char)
-        (set-buffer-modified-p modified))
+	    (modified (buffer-modified-p)))
+	(ucs-utils--subst-char-in-region-1 start end from-char to-char)
+	(set-buffer-modified-p modified))
     ;; else
     (ucs-utils--subst-char-in-region-1 start end from-char to-char)))
 
@@ -6403,18 +6403,18 @@ run as all completion candidates are pre-generated."
       (ucs-utils-orig-read-char-by-name prompt)
     ;; else
     (let* ((gc-cons-threshold 80000000)
-           (gc-cons-percentage .5)
-           (input (ido-completing-read
-                  prompt
-                  (cl-remove-if #'(lambda (x)
-                                 (and ucs-utils-hide-numbered-cjk-ideographs (string-match-p "_Ideograph[_-][0-9a-fA-F]+\\'" x)))
-                             (ucs-utils-all-prettified-names 'progress)) nil nil nil 'character-name-history)))
+	   (gc-cons-percentage .5)
+	   (input (ido-completing-read
+		  prompt
+		  (cl-remove-if #'(lambda (x)
+				 (and ucs-utils-hide-numbered-cjk-ideographs (string-match-p "_Ideograph[_-][0-9a-fA-F]+\\'" x)))
+			     (ucs-utils-all-prettified-names 'progress)) nil nil nil 'character-name-history)))
       (when (string-match-p "\\`[0-9a-fA-F]+\\'" input)
-        (cl-callf2 concat "#x" input))
+	(cl-callf2 concat "#x" input))
       (if (string-match-p "\\`#" input)
-          (read input)
-        ;; else
-        (ucs-utils--lookup input)))))
+	  (read input)
+	;; else
+	(ucs-utils--lookup input)))))
 
 ;;; interactive commands
 
@@ -6435,36 +6435,36 @@ prefix ARGs, replace the current character or region with
 its UCS name translation."
   (interactive)
   (let ((result nil)
-        (print-level nil)
-        (print-length nil))
+	(print-level nil)
+	(print-length nil))
     (cl-callf or arg current-prefix-arg)
     (cond
       ((and (not pos)
-            (use-region-p))
+	    (use-region-p))
        (dolist (char (string-to-list (buffer-substring-no-properties (region-beginning) (region-end))))
-         (push (ucs-utils-pretty-name char) result))
+	 (push (ucs-utils-pretty-name char) result))
        (setq result (nreverse result)))
       (t
        (save-excursion
-         (goto-char (or pos (point)))
-         (setq result (ucs-utils-pretty-name (char-after))))))
+	 (goto-char (or pos (point)))
+	 (setq result (ucs-utils-pretty-name (char-after))))))
     (cl-assert result nil "Failed to find name for character at: %s" pos)
     (cond
       ((equal arg '(4))
        (ucs-utils--with-mocked-function 'frame-width 0
-         (pp-display-expression result "*Pp Eval Output*")))
+	 (pp-display-expression result "*Pp Eval Output*")))
       ((consp arg)
        (if (and (not pos)
-                (use-region-p))
-           (progn
-             (let ((begin (region-beginning)))
-               (delete-region (region-beginning) (region-end))
-               (goto-char begin)
-               (pp result (current-buffer))))
-         ;; else
-         (goto-char (or pos (point)))
-         (insert (concat "\"" (prin1 result) "\""))
-         (delete-char 1)))
+		(use-region-p))
+	   (progn
+	     (let ((begin (region-beginning)))
+	       (delete-region (region-beginning) (region-end))
+	       (goto-char begin)
+	       (pp result (current-buffer))))
+	 ;; else
+	 (goto-char (or pos (point)))
+	 (insert (concat "\"" (prin1 result) "\""))
+	 (delete-char 1)))
       (t
        (pp-display-expression result "*Pp Eval Output*")))
     result))
@@ -6487,10 +6487,10 @@ INHERIT is as documented at `ucs-insert'."
   (interactive
    (list
     (if (and (use-region-p)
-             (ucs-utils-char (buffer-substring-no-properties (region-beginning) (region-end)) nil))
-        (prog1
-          (ucs-utils-char (buffer-substring-no-properties (region-beginning) (region-end)) nil)
-          (delete-region (region-beginning) (region-end)))
+	     (ucs-utils-char (buffer-substring-no-properties (region-beginning) (region-end)) nil))
+	(prog1
+	  (ucs-utils-char (buffer-substring-no-properties (region-beginning) (region-end)) nil)
+	  (delete-region (region-beginning) (region-end)))
       ;; else
       (ucs-utils-read-char-by-name "Unicode (name or hex): " 'ido))
     (prefix-numeric-value current-prefix-arg)

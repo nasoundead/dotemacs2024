@@ -8,9 +8,9 @@
   "Run BODY with projectile's project-root cache disabled. This is necessary if
 you want to interactive with a project other than the one you're in."
   `(let (projectile-project-name
-         projectile-require-project-root
-         projectile-cached-buffer-file-name
-         projectile-cached-project-root)
+	 projectile-require-project-root
+	 projectile-cached-buffer-file-name
+	 projectile-cached-project-root)
      ,@body))
 
 ;;;###autoload
@@ -72,11 +72,11 @@ If NOCACHE, don't fetch a cached answer."
   "Fuzzy-find a file under DIR."
   (without-project-cache!
    (let* ((default-directory (file-truename dir))
-          (projectile-project-root default-directory))
+	  (projectile-project-root default-directory))
      (call-interactively
       ;; completion modules may remap this command
       (or (command-remapping #'projectile-find-file)
-          #'projectile-find-file)))))
+	  #'projectile-find-file)))))
 
 ;;;###autoload
 (defun sea-project-browse (dir)
@@ -85,4 +85,4 @@ If NOCACHE, don't fetch a cached answer."
     (call-interactively
      ;; completion modules may remap this command
      (or (command-remapping #'find-file)
-         #'find-file))))
+	 #'find-file))))

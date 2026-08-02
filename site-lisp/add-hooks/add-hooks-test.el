@@ -33,50 +33,50 @@
 (ert-deftest add-hooks-pair ()
   ;; One to one
   (fixture (add-hooks-pair 'a 'a)
-           (should (equal a-hook '(a))))
+	   (should (equal a-hook '(a))))
   ;; One to many
   (fixture (add-hooks-pair 'a '(a b))
-           (should (equal a-hook '(b a))))
+	   (should (equal a-hook '(b a))))
   ;; Many to one
   (fixture (add-hooks-pair '(a b) 'a)
-           (should (equal a-hook '(a)))
-           (should (equal b-hook '(a))))
+	   (should (equal a-hook '(a)))
+	   (should (equal b-hook '(a))))
   ;; Many to many
   (fixture (add-hooks-pair '(a b) '(a b))
-           (should (equal a-hook '(b a)))
-           (should (equal b-hook '(b a))))
+	   (should (equal a-hook '(b a)))
+	   (should (equal b-hook '(b a))))
   ;; Verbose
   (fixture (add-hooks-pair 'a-hook 'a)
-           (should (equal a-hook '(a))))
+	   (should (equal a-hook '(a))))
   ;; Lambda
   (fixture (add-hooks-pair 'a function)
-           (should (equal a-hook (list function)))))
+	   (should (equal a-hook (list function)))))
 
 (ert-deftest add-hooks ()
   ;; Multiple
   (fixture (add-hooks '((a . a) (b . b)))
-           (should (equal a-hook '(a)))
-           (should (equal b-hook '(b))))
+	   (should (equal a-hook '(a)))
+	   (should (equal b-hook '(b))))
   ;; One to one
   (fixture (add-hooks '((a . a)))
-           (should (equal a-hook '(a))))
+	   (should (equal a-hook '(a))))
   ;; One to many
   (fixture (add-hooks '((a . (a b))))
-           (should (equal a-hook '(b a))))
+	   (should (equal a-hook '(b a))))
   ;; Many to one
   (fixture (add-hooks '(((a b) . a)))
-           (should (equal a-hook '(a)))
-           (should (equal b-hook '(a))))
+	   (should (equal a-hook '(a)))
+	   (should (equal b-hook '(a))))
   ;; Many to many
   (fixture (add-hooks '(((a b) . (a b))))
-           (should (equal a-hook '(b a)))
-           (should (equal b-hook '(b a))))
+	   (should (equal a-hook '(b a)))
+	   (should (equal b-hook '(b a))))
   ;; Verbose
   (fixture (add-hooks '((a-hook . a)))
-           (should (equal a-hook '(a))))
+	   (should (equal a-hook '(a))))
   ;; Lambda
   (fixture (add-hooks `((a ,function)))
-           (should (equal a-hook (list function)))))
+	   (should (equal a-hook (list function)))))
 
 (provide 'add-hooks-test)
 ;;; add-hooks-test.el ends here

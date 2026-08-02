@@ -58,9 +58,9 @@
 (defun blink-search-grep-pdf-preview (file page submatches)
   (if blink-search-grep-pdf-preview-timer (cancel-timer blink-search-grep-pdf-preview-timer))
   (setq blink-search-grep-pdf-preview-timer
-        (run-with-idle-timer blink-search-grep-pdf-preview-idle-time nil
-                             (lambda ()
-                               (blink-search-grep-pdf-real-preview file page submatches)))))
+	(run-with-idle-timer blink-search-grep-pdf-preview-idle-time nil
+			     (lambda ()
+			       (blink-search-grep-pdf-real-preview file page submatches)))))
 
 
 (defun blink-search-grep-pdf-clean ()

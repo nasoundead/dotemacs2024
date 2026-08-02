@@ -10,12 +10,12 @@
 ;; Last-Updated: 2022-11-04 08:41:34
 ;;           By: Andy Stewart
 ;; URL: https://www.github.org/manateelazycat/blink-search-imenu
-;; Keywords: 
+;; Keywords:
 ;; Compatibility: GNU Emacs 28.2
 ;;
 ;; Features that might be required by this library:
 ;;
-;; 
+;;
 ;;
 
 ;;; This file is NOT part of GNU Emacs
@@ -40,7 +40,7 @@
 ;;; Commentary:
 ;;
 ;; IMenu backend for blink-search
-;; 
+;;
 
 ;;; Installation:
 ;;
@@ -57,7 +57,7 @@
 
 ;;; Customize:
 ;;
-;; 
+;;
 ;;
 ;; All of the above can customize by:
 ;;      M-x customize-group RET blink-search-imenu RET
@@ -71,12 +71,12 @@
 
 ;;; Acknowledgements:
 ;;
-;; 
+;;
 ;;
 
 ;;; TODO
 ;;
-;; 
+;;
 ;;
 
 ;;; Require
@@ -88,41 +88,41 @@
   (when (blink-search-epc-live-p blink-search-epc-process)
     (with-current-buffer blink-search-start-buffer
       (let ((candidates (blink-search-imenu-get-candidates)))
-        (when candidates (blink-search-call-async "search_imenu_update" candidates))))))
+	(when candidates (blink-search-call-async "search_imenu_update" candidates))))))
 
 (defun blink-search-imenu-get-candidates ()
   (ignore-errors
     (mapcar (lambda (info) (list (car info) (marker-position (cdr info))))
-            (let* ((index (ignore-errors (imenu--make-index-alist t))))
-              (when index
-                (blink-search-imenu-build-candidates
-                 (delete (assoc "*Rescan*" index) index)))))))
+	    (let* ((index (ignore-errors (imenu--make-index-alist t))))
+	      (when index
+		(blink-search-imenu-build-candidates
+		 (delete (assoc "*Rescan*" index) index)))))))
 
 (defun blink-search-imenu-build-candidates (alist)
   (cl-remove-if
    (lambda (c)
      (or (string-equal (car c) "Types")
-         (string-equal (car c) "Variables")
-         ))
+	 (string-equal (car c) "Variables")
+	 ))
    (cl-loop for elm in alist
-            nconc (cond
-                   ((imenu--subalist-p elm)
-                    (blink-search-imenu-build-candidates
-                     (cl-loop for (e . v) in (cdr elm) collect
-                              (cons
-                               e
-                               (if (integerp v) (copy-marker v) v)))))
-                   ((listp (cdr elm))
-                    (and elm (list elm)))
-                   (t
-                    (and (cdr elm)
-                         (setcdr elm (pcase (cdr elm)
-                                       ((and ov (pred overlayp))
-                                        (copy-overlay ov))
-                                       ((and mk (or (pred markerp)
-                                                    (pred integerp)))
-                                        (copy-marker mk))))
-                         (list elm)))))))
+	    nconc (cond
+		   ((imenu--subalist-p elm)
+		    (blink-search-imenu-build-candidates
+		     (cl-loop for (e . v) in (cdr elm) collect
+			      (cons
+			       e
+			       (if (integerp v) (copy-marker v) v)))))
+		   ((listp (cdr elm))
+		    (and elm (list elm)))
+		   (t
+		    (and (cdr elm)
+			 (setcdr elm (pcase (cdr elm)
+				       ((and ov (pred overlayp))
+					(copy-overlay ov))
+				       ((and mk (or (pred markerp)
+						    (pred integerp)))
+					(copy-marker mk))))
+			 (list elm)))))))
 
 (defun blink-search-imenu-do (point)
   (goto-char point)
@@ -133,4 +133,3 @@
 (provide 'blink-search-imenu)
 
 ;;; blink-search-imenu.el ends here
-

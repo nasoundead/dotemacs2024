@@ -48,7 +48,7 @@
 (put 'dired-find-alternate-file 'disabled nil)
 
 ;; Making electric-indent behave sanely
-(setq-default electric-indent-inhibit t)
+(setq-default electric-indent-inhibit nil)
 ;; Make the backspace properly erase the tab instead of
 ;; removing 1 space at a time.
 (setq backward-delete-char-untabify-method 'hungry)

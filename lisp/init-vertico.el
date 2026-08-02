@@ -21,13 +21,13 @@
   ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
   ;;       orderless-component-separator #'orderless-escapable-split-on-space)
   (setq completion-styles '(orderless basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion)))))
+	completion-category-defaults nil
+	completion-category-overrides '((file (styles . (partial-completion)))))
   :config
   (with-eval-after-load 'pyim
     (defun my-orderless-regexp (orig-func component)
       (let ((result (funcall orig-func component)))
-        (pyim-cregexp-build result)))
+	(pyim-cregexp-build result)))
     (advice-add 'orderless-regexp :around #'my-orderless-regexp)))
 
 (use-package marginalia

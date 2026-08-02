@@ -1,7 +1,7 @@
 (require 'init-utils)
 (use-package evil
   :straight (:host github
-             :repo "emacs-evil/evil")
+	     :repo "emacs-evil/evil")
   :init
   (setq evil-magic 'very-magic)
   (setq evil-search-module 'evil-search)
@@ -14,7 +14,7 @@
 (use-package evil-escape
   :after evil
   :straight (:host github
-             :repo "syl20bnr/evil-escape")
+	     :repo "syl20bnr/evil-escape")
   :custom
   (evil-escape-key-sequence "jk")
   (evil-escape-delay 0.2)
@@ -66,23 +66,23 @@
 
   (defun +evil--embrace-get-pair (char)
     (if-let* ((pair (cdr-safe (assoc (string-to-char char) evil-surround-pairs-alist))))
-        pair
+	pair
       (if-let* ((pair (assoc-default char embrace--pairs-list)))
-          (if-let* ((real-pair (and (functionp (embrace-pair-struct-read-function pair))
-                                    (funcall (embrace-pair-struct-read-function pair)))))
-              real-pair
-            (cons (embrace-pair-struct-left pair) (embrace-pair-struct-right pair)))
-        (cons char char))))
+	  (if-let* ((real-pair (and (functionp (embrace-pair-struct-read-function pair))
+				    (funcall (embrace-pair-struct-read-function pair)))))
+	      real-pair
+	    (cons (embrace-pair-struct-left pair) (embrace-pair-struct-right pair)))
+	(cons char char))))
 
   (defun +evil--embrace-escaped ()
     "Backslash-escaped surround character support for embrace."
     (let ((char (read-char "\\")))
       (if (eq char 27)
-          (cons "" "")
-        (let ((pair (+evil--embrace-get-pair (string char)))
-              (text (if (sp-point-in-string) "\\\\%s" "\\%s")))
-          (cons (format text (car pair))
-                (format text (cdr pair)))))))
+	  (cons "" "")
+	(let ((pair (+evil--embrace-get-pair (string char)))
+	      (text (if (sp-point-in-string) "\\\\%s" "\\%s")))
+	  (cons (format text (car pair))
+		(format text (cdr pair)))))))
 
   (defun +evil--embrace-latex ()
     "LaTeX command support for embrace."
@@ -94,11 +94,11 @@
 
   ;; Add escaped-sequence support to embrace
   (push (cons ?\\ (make-embrace-pair-struct
-                   :key ?\\
-                   :read-function #'+evil--embrace-escaped
-                   :left-regexp "\\[[{(]"
-                   :right-regexp "\\[]})]"))
-        (default-value 'embrace--pairs-list))
+		   :key ?\\
+		   :read-function #'+evil--embrace-escaped
+		   :left-regexp "\\[[{(]"
+		   :right-regexp "\\[]})]"))
+	(default-value 'embrace--pairs-list))
 
   ;; Add extra pairs
   (add-hook 'LaTeX-mode-hook #'embrace-LaTeX-mode-hook)
@@ -131,28 +131,28 @@ the new algorithm is confusing, like in python or ruby."
 
 (use-package evil-multiedit
   :commands (evil-multiedit-match-all
-             evil-multiedit-match-and-next
-             evil-multiedit-match-and-prev
-             evil-multiedit-match-symbol-and-next
-             evil-multiedit-match-symbol-and-prev
-             evil-multiedit-toggle-or-restrict-region
-             evil-multiedit-next
-             evil-multiedit-prev
-             evil-multiedit-abort
-             evil-multiedit-ex-match))
+	     evil-multiedit-match-and-next
+	     evil-multiedit-match-and-prev
+	     evil-multiedit-match-symbol-and-next
+	     evil-multiedit-match-symbol-and-prev
+	     evil-multiedit-toggle-or-restrict-region
+	     evil-multiedit-next
+	     evil-multiedit-prev
+	     evil-multiedit-abort
+	     evil-multiedit-ex-match))
 
 (use-package evil-mc
   :commands (evil-mc-make-cursor-here evil-mc-make-all-cursors
-                                      evil-mc-undo-all-cursors evil-mc-pause-cursors
-                                      evil-mc-resume-cursors evil-mc-make-and-goto-first-cursor
-                                      evil-mc-make-and-goto-last-cursor
-                                      evil-mc-make-cursor-move-next-line
-                                      evil-mc-make-cursor-move-prev-line evil-mc-make-cursor-at-pos
-                                      evil-mc-has-cursors-p evil-mc-make-and-goto-next-cursor
-                                      evil-mc-skip-and-goto-next-cursor evil-mc-make-and-goto-prev-cursor
-                                      evil-mc-skip-and-goto-prev-cursor evil-mc-make-and-goto-next-match
-                                      evil-mc-skip-and-goto-next-match evil-mc-skip-and-goto-next-match
-                                      evil-mc-make-and-goto-prev-match evil-mc-skip-and-goto-prev-match)
+				      evil-mc-undo-all-cursors evil-mc-pause-cursors
+				      evil-mc-resume-cursors evil-mc-make-and-goto-first-cursor
+				      evil-mc-make-and-goto-last-cursor
+				      evil-mc-make-cursor-move-next-line
+				      evil-mc-make-cursor-move-prev-line evil-mc-make-cursor-at-pos
+				      evil-mc-has-cursors-p evil-mc-make-and-goto-next-cursor
+				      evil-mc-skip-and-goto-next-cursor evil-mc-make-and-goto-prev-cursor
+				      evil-mc-skip-and-goto-prev-cursor evil-mc-make-and-goto-next-match
+				      evil-mc-skip-and-goto-next-match evil-mc-skip-and-goto-next-match
+				      evil-mc-make-and-goto-prev-match evil-mc-skip-and-goto-prev-match)
   :init
   (defvar evil-mc-key-map (make-sparse-keymap))
   :config
@@ -160,10 +160,10 @@ the new algorithm is confusing, like in python or ruby."
 
   ;; Add custom commands to whitelisted commands
   (dolist (fn '(sea/deflate-space-maybe sea/inflate-space-maybe
-                                        sea/backward-to-bol-or-indent sea/forward-to-last-non-comment-or-eol
-                                        sea/backward-kill-to-bol-and-indent sea/newline-and-indent))
+					sea/backward-to-bol-or-indent sea/forward-to-last-non-comment-or-eol
+					sea/backward-kill-to-bol-and-indent sea/newline-and-indent))
     (push (cons fn '((:default . evil-mc-execute-default-call)))
-          evil-mc-custom-known-commands))
+	  evil-mc-custom-known-commands))
 
   ;; disable evil-escape in evil-mc; causes unwanted text on invocation
   (push 'evil-escape-mode evil-mc-incompatible-minor-modes)

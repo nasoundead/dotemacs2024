@@ -50,4 +50,3 @@ Call a second time to restore the original window configuration."
 	(setq this-command 'sanityinc/unsplit-window))
     (window-configuration-to-register :sanityinc/split-window)
     (switch-to-buffer-other-window nil)))
-

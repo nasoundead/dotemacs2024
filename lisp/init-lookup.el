@@ -49,18 +49,18 @@
 
 (defvar +lookup-provider-url-alist
   (append '(("Google"            +lookup--online-backend-google "https://google.com/search?q=%s")
-            ("Google images"     "https://www.google.com/images?q=%s")
-            ("Google maps"       "https://maps.google.com/maps?q=%s")
-            ("Project Gutenberg" "http://www.gutenberg.org/ebooks/search/?query=%s")
-            ("DuckDuckGo"        +lookup--online-backend-duckduckgo "https://duckduckgo.com/?q=%s")
-            ("DevDocs.io"        "https://devdocs.io/#q=%s")
-            ("StackOverflow"     "https://stackoverflow.com/search?q=%s")
-            ("Github"            "https://github.com/search?ref=simplesearch&q=%s")
-            ("Youtube"           "https://youtube.com/results?aq=f&oq=&search_query=%s")
-            ("Wolfram alpha"     "https://wolframalpha.com/input/?i=%s")
-            ("Wikipedia"         "https://wikipedia.org/search-redirect.php?language=en&go=Go&search=%s")
-            ("Rust Docs" "https://doc.rust-lang.org/edition-guide/?search=%s"))
-          )
+	    ("Google images"     "https://www.google.com/images?q=%s")
+	    ("Google maps"       "https://maps.google.com/maps?q=%s")
+	    ("Project Gutenberg" "http://www.gutenberg.org/ebooks/search/?query=%s")
+	    ("DuckDuckGo"        +lookup--online-backend-duckduckgo "https://duckduckgo.com/?q=%s")
+	    ("DevDocs.io"        "https://devdocs.io/#q=%s")
+	    ("StackOverflow"     "https://stackoverflow.com/search?q=%s")
+	    ("Github"            "https://github.com/search?ref=simplesearch&q=%s")
+	    ("Youtube"           "https://youtube.com/results?aq=f&oq=&search_query=%s")
+	    ("Wolfram alpha"     "https://wolframalpha.com/input/?i=%s")
+	    ("Wikipedia"         "https://wikipedia.org/search-redirect.php?language=en&go=Go&search=%s")
+	    ("Rust Docs" "https://doc.rust-lang.org/edition-guide/?search=%s"))
+	  )
   "An alist that maps online resources to either:
 
   1. A search url (needs on '%s' to substitute with an url encoded query),
@@ -139,30 +139,30 @@ Dictionary.app behind the scenes to get definitions.")
   :commands dumb-jump-result-follow
   :config
   (setq dumb-jump-default-project sea-emacs-dir
-        dumb-jump-aggressive nil
-        dumb-jump-selector 'ivy)
+	dumb-jump-aggressive nil
+	dumb-jump-selector 'ivy)
   (add-hook 'dumb-jump-after-jump-hook #'better-jumper-set-jump))
 
 (defadvice! sea-set-jump-a (orig-fn &rest args)
   "Set a jump point and ensure ORIG-FN doesn't set any new jump points."
   (better-jumper-set-jump (if (markerp (car args)) (car args)))
   (let ((evil--jumps-jumping t)
-        (better-jumper--jumping t))
+	(better-jumper--jumping t))
     (apply orig-fn args)))
 
 (defadvice! sea-set-jump-maybe-a (orig-fn &rest args)
   "Set a jump point if ORIG-FN returns non-nil."
   (let ((origin (point-marker))
-        (result
-         (let* ((evil--jumps-jumping t)
-                (better-jumper--jumping t))
-           (apply orig-fn args))))
+	(result
+	 (let* ((evil--jumps-jumping t)
+		(better-jumper--jumping t))
+	   (apply orig-fn args))))
     (unless result
       (with-current-buffer (marker-buffer origin)
-        (better-jumper-set-jump
-         (if (markerp (car args))
-             (car args)
-           origin))))
+	(better-jumper-set-jump
+	 (if (markerp (car args))
+	     (car args)
+	   origin))))
     result))
 (use-package better-jumper
   :after evil
@@ -208,9 +208,9 @@ Dictionary.app behind the scenes to get definitions.")
   (add-hook '+lookup-documentation-functions #'+lookup-dash-docsets-backend-fn)
   :config
   (setq dash-docs-enable-debugging sea-debug-mode
-        dash-docs-docsets-path (concat sea-etc-dir "docsets/")
-        dash-docs-min-length 2
-        dash-docs-browser-func #'eww)
+	dash-docs-docsets-path (concat sea-etc-dir "docsets/")
+	dash-docs-min-length 2
+	dash-docs-browser-func #'eww)
 
   ;; Before `gnutls' is loaded, `gnutls-algorithm-priority' is treated as a
   ;; lexical variable, which breaks `+lookup*fix-gnutls-error'
@@ -232,8 +232,8 @@ See https://github.com/magit/ghub/issues/81"
 
 
 (define-key! text-mode-map
-    [remap +lookup/definition] #'+lookup/word-definition
-    [remap +lookup/references] #'+lookup/word-synonyms)
+  [remap +lookup/definition] #'+lookup/word-definition
+  [remap +lookup/references] #'+lookup/word-synonyms)
 
 
 

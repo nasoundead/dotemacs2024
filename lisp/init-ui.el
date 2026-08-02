@@ -46,16 +46,20 @@
 	     :type git
 	     :host github
 	     :repo "protesilaos/modus-themes")
-  ;; :config
-  ;; (load-theme 'modus-vivendi-tinted :no-confirm-loading)
-  )
+  :config
+  (load-theme 'modus-vivendi-deuteranopia t))
+(use-package mindre-theme
+  :ensure t
+  :straight (:host github :repo "erikbackman/mindre-theme")
+  :disabled t
+  :custom
+  (mindre-use-more-bold nil)
+  (mindre-use-faded-lisp-parens t)
+  :config
+  (load-theme 'mindre t))
 
 (use-package apropospriate-theme
-  :ensure t
-  ;; :config
-  ;; (load-theme 'apropospriate-dark t)
-  ;; (load-theme 'apropospriate-light t)
-  )
+  :ensure t)
 
 (use-package doom-themes
   :ensure t

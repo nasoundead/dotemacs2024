@@ -90,7 +90,7 @@
   (catch 'find-match
     (dolist (buffer (buffer-list))
       (when (string-equal (buffer-file-name buffer) filepath)
-        (throw 'find-match buffer)))
+	(throw 'find-match buffer)))
     nil))
 
 (defun blink-search-grep-file-do (file line column)

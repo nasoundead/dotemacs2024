@@ -5,7 +5,7 @@
   "Return non-nil if icons are displayable."
   (and (or (display-graphic-p) (daemonp))
        (or (featurep 'all-the-icons)
-           (require 'all-the-icons nil t))))
+	   (require 'all-the-icons nil t))))
 
 (defun sea-unquote (exp)
   "Return EXP unquoted."
@@ -22,12 +22,12 @@
 (defun sea--resolve-hook-forms (hooks)
   (declare (pure t) (side-effect-free t))
   (cl-loop with quoted-p = (eq (car-safe hooks) 'quote)
-           for hook in (sea-enlist (sea-unquote hooks))
-           if (eq (car-safe hook) 'quote)
-            collect (cadr hook)
-           else if quoted-p
-            collect hook
-           else collect (intern (format "%s-hook" (symbol-name hook)))))
+	   for hook in (sea-enlist (sea-unquote hooks))
+	   if (eq (car-safe hook) 'quote)
+	    collect (cadr hook)
+	   else if quoted-p
+	    collect hook
+	   else collect (intern (format "%s-hook" (symbol-name hook)))))
 
 (defmacro add-hook! (&rest args)
   "A convenience macro for `add-hook'. Takes, in order:
@@ -53,30 +53,30 @@ Body forms can access the hook's arguments through the let-bound variable
 `args'."
   (declare (indent defun) (debug t))
   (let ((hook-fn 'add-hook)
-        append-p local-p)
+	append-p local-p)
     (while (keywordp (car args))
       (pcase (pop args)
-        (:append (setq append-p t))
-        (:local  (setq local-p t))
-        (:remove (setq hook-fn 'remove-hook))))
+	(:append (setq append-p t))
+	(:local  (setq local-p t))
+	(:remove (setq hook-fn 'remove-hook))))
     (let ((hooks (sea--resolve-hook-forms (pop args)))
-          (funcs
-           (let ((val (car args)))
-             (if (memq (car-safe val) '(quote function))
-                 (if (cdr-safe (cadr val))
-                     (cadr val)
-                   (list (cadr val)))
-               (list args))))
-          forms)
+	  (funcs
+	   (let ((val (car args)))
+	     (if (memq (car-safe val) '(quote function))
+		 (if (cdr-safe (cadr val))
+		     (cadr val)
+		   (list (cadr val)))
+	       (list args))))
+	  forms)
       (dolist (fn funcs)
-        (setq fn (if (symbolp fn)
-                     `(function ,fn)
-                   `(lambda (&rest _) ,@args)))
-        (dolist (hook hooks)
-          (push (if (eq hook-fn 'remove-hook)
-                    `(remove-hook ',hook ,fn ,local-p)
-                  `(add-hook ',hook ,fn ,append-p ,local-p))
-                forms)))
+	(setq fn (if (symbolp fn)
+		     `(function ,fn)
+		   `(lambda (&rest _) ,@args)))
+	(dolist (hook hooks)
+	  (push (if (eq hook-fn 'remove-hook)
+		    `(remove-hook ',hook ,fn ,local-p)
+		  `(add-hook ',hook ,fn ,append-p ,local-p))
+		forms)))
       `(progn ,@(if append-p (nreverse forms) forms)))))
 
 
@@ -85,27 +85,27 @@ Body forms can access the hook's arguments through the let-bound variable
 compilation. This will no-op on features that have been disabled by the user."
   (declare (indent defun) (debug t))
   (unless (and (symbolp targets)
-               (memq targets (bound-and-true-p sea-disabled-packages)))
+	       (memq targets (bound-and-true-p sea-disabled-packages)))
     (list (if (or (not (bound-and-true-p byte-compile-current-file))
-                  (dolist (next (sea-enlist targets))
-                    (unless (keywordp next)
-                      (if (symbolp next)
-                          (require next nil :no-error)
-                        (load next :no-message :no-error)))))
-              #'progn
-            #'with-no-warnings)
-          (if (symbolp targets)
-              `(with-eval-after-load ',targets ,@body)
-            (pcase (car-safe targets)
-              ((or :or :any)
-               (macroexp-progn
-                (cl-loop for next in (cdr targets)
-                         collect `(after! ,next ,@body))))
-              ((or :and :all)
-               (dolist (next (cdr targets))
-                 (setq body `((after! ,next ,@body))))
-               (car body))
-              (_ `(after! (:and ,@targets) ,@body)))))))
+		  (dolist (next (sea-enlist targets))
+		    (unless (keywordp next)
+		      (if (symbolp next)
+			  (require next nil :no-error)
+			(load next :no-message :no-error)))))
+	      #'progn
+	    #'with-no-warnings)
+	  (if (symbolp targets)
+	      `(with-eval-after-load ',targets ,@body)
+	    (pcase (car-safe targets)
+	      ((or :or :any)
+	       (macroexp-progn
+		(cl-loop for next in (cdr targets)
+			 collect `(after! ,next ,@body))))
+	      ((or :and :all)
+	       (dolist (next (cdr targets))
+		 (setq body `((after! ,next ,@body))))
+	       (car body))
+	      (_ `(after! (:and ,@targets) ,@body)))))))
 
 (defun sea-keyword-intern (str)
   "Converts STR (a string) into a keyword (`keywordp')."
@@ -126,22 +126,22 @@ Accepts the same arguments as `message'."
   `(when sea-debug-mode
      (let ((inhibit-message (active-minibuffer-window)))
        (message
-        ,(concat (propertize "sea " 'face 'font-lock-comment-face)
-                 (when (bound-and-true-p sea--current-module)
-                   (propertize
-                    (format "[%s/%s] "
-                            (sea-keyword-name (car sea--current-module))
-                            (cdr sea--current-module))
-                    'face 'warning))
-                 format-string)
-        ,@args))))
+	,(concat (propertize "sea " 'face 'font-lock-comment-face)
+		 (when (bound-and-true-p sea--current-module)
+		   (propertize
+		    (format "[%s/%s] "
+			    (sea-keyword-name (car sea--current-module))
+			    (cdr sea--current-module))
+		    'face 'warning))
+		 format-string)
+	,@args))))
 
 (defun FILE! ()
   "Return the emacs lisp file this macro is called from."
   (cond ((bound-and-true-p byte-compile-current-file))
-        (load-file-name)
-        (buffer-file-name)
-        ((stringp (car-safe current-load-list)) (car current-load-list))))
+	(load-file-name)
+	(buffer-file-name)
+	((stringp (car-safe current-load-list)) (car current-load-list))))
 
 (defun DIR! ()
   "Returns the directory of the emacs lisp file this macro is called from."
@@ -159,21 +159,21 @@ directory path). If omitted, the lookup is relative to either `load-file-name',
 If NOERROR is non-nil, don't throw an error if the file doesn't exist."
   (unless path
     (setq path (or (DIR!)
-                   (error "Could not detect path to look for '%s' in"
-                          filename))))
+		   (error "Could not detect path to look for '%s' in"
+			  filename))))
   (let ((file (if path `(expand-file-name ,filename ,path) filename)))
     `(condition-case e
-         (load ,file ,noerror ,(not sea-debug-mode))
+	 (load ,file ,noerror ,(not sea-debug-mode))
        ((debug sea-error) (signal (car e) (cdr e)))
        ((debug error)
-        (let* ((source (file-name-sans-extension ,file))
-               (err (cond 
-                          ((cons 'sea-module-error sea-emacs-dir)))))
-          (signal (car err)
-                  (list (file-relative-name
-                         (concat source ".el")
-                         (cdr err))
-                        e)))))))
+	(let* ((source (file-name-sans-extension ,file))
+	       (err (cond
+			  ((cons 'sea-module-error sea-emacs-dir)))))
+	  (signal (car err)
+		  (list (file-relative-name
+			 (concat source ".el")
+			 (cdr err))
+			e)))))))
 
 
 (defmacro defadvice! (symbol arglist &optional docstring &rest body)
@@ -191,13 +191,13 @@ DOCSTRING and BODY are as in `defun'.
   (let (where-alist)
     (while (keywordp (car body))
       (push `(cons ,(pop body) (sea-enlist ,(pop body)))
-            where-alist))
+	    where-alist))
     `(progn
        (defun ,symbol ,arglist ,docstring ,@body)
        ,(when where-alist
-          `(dolist (targets (list ,@(nreverse where-alist)))
-             (dolist (target (cdr targets))
-               (advice-add target (car targets) #',symbol)))))))
+	  `(dolist (targets (list ,@(nreverse where-alist)))
+	     (dolist (target (cdr targets))
+	       (advice-add target (car targets) #',symbol)))))))
 
 
 ;; 自动扫描 .emacs.d/lisp/core 下的 .el 文件，然后把它编译到 .emacs.d/lisp/core/.build/ 下面。
@@ -219,7 +219,7 @@ DOCSTRING and BODY are as in `defun'.
 (let* (;; Dir & files
        (core-lisp-dir (concat user-emacs-directory "lisp/core/"))
        (build-dir (progn (make-directory (concat core-lisp-dir ".build/") t)
-                         (concat core-lisp-dir ".build/")))
+			 (concat core-lisp-dir ".build/")))
        (build-files (directory-files build-dir))
        (newer-lisp-file nil)
        ;; Don't bother me.
@@ -233,29 +233,29 @@ DOCSTRING and BODY are as in `defun'.
        (version-control 'never)
        (generated-autoload-file (concat build-dir "autoloads.el")))
   (cl-letf (((symbol-function #'byte-compile-log-1) #'ignore)
-            ((symbol-function #'byte-compile-log-file) #'ignore)
-            ((symbol-function #'byte-compile-log-warning) #'ignore))
+	    ((symbol-function #'byte-compile-log-file) #'ignore)
+	    ((symbol-function #'byte-compile-log-warning) #'ignore))
     (add-to-list 'load-path build-dir)
     (dolist (file (directory-files core-lisp-dir))
       (unless (string-prefix-p "." file)
-        ;; Make symlinks of site-lisp files in build-dir.  This is needed for
-        ;; `byte-compile-file' and `update-directory-autoloads'.
-        (unless (member file build-files)
-          (make-symbolic-link (expand-file-name (concat core-lisp-dir file))
-                              (expand-file-name (concat build-dir file))))
-        ;; Byte compile
-        (let ((byte-file (concat build-dir
-                                 (file-name-sans-extension file)
-                                 ".elc")))
-          (when (file-newer-than-file-p (concat core-lisp-dir file) byte-file)
-            (setq newer-lisp-file t)
-            (byte-compile-file (concat build-dir file))))))
+	;; Make symlinks of site-lisp files in build-dir.  This is needed for
+	;; `byte-compile-file' and `update-directory-autoloads'.
+	(unless (member file build-files)
+	  (make-symbolic-link (expand-file-name (concat core-lisp-dir file))
+			      (expand-file-name (concat build-dir file))))
+	;; Byte compile
+	(let ((byte-file (concat build-dir
+				 (file-name-sans-extension file)
+				 ".elc")))
+	  (when (file-newer-than-file-p (concat core-lisp-dir file) byte-file)
+	    (setq newer-lisp-file t)
+	    (byte-compile-file (concat build-dir file))))))
     ;; Generate autoload file
     (when newer-lisp-file
       (unless (file-exists-p generated-autoload-file)
-        (with-current-buffer (find-file-noselect generated-autoload-file)
-          (insert ";; -*- lexical-binding: t -*-\n")
-          (save-buffer)))
+	(with-current-buffer (find-file-noselect generated-autoload-file)
+	  (insert ";; -*- lexical-binding: t -*-\n")
+	  (save-buffer)))
       (update-directory-autoloads build-dir)
       (byte-compile-file (concat build-dir "autoloads.el")))
     ;; Load autoload file

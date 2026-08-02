@@ -121,9 +121,9 @@
 (defun blink-search-pdf-preview (file page submatches)
   (if blink-search-pdf-preview-timer (cancel-timer blink-search-pdf-preview-timer))
   (setq blink-search-pdf-preview-timer
-        (run-with-idle-timer blink-search-pdf-preview-idle-time nil
-                             (lambda ()
-                               (blink-search-pdf-real-preview file page submatches)))))
+	(run-with-idle-timer blink-search-pdf-preview-idle-time nil
+			     (lambda ()
+			       (blink-search-pdf-real-preview file page submatches)))))
 
 
 (defun blink-search-pdf-clean ()

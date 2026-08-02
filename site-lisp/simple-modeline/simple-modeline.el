@@ -63,8 +63,8 @@ Otherwise behave as if called interactively."
   :global t
   (if simple-modeline-mode
       (progn
-        ;; Set the new mode-line-format
-        (setq-default mode-line-format '(:eval simple-modeline--mode-line)))
+	;; Set the new mode-line-format
+	(setq-default mode-line-format '(:eval simple-modeline--mode-line)))
     (progn
       ;; Restore the original mode-line format
       (setq-default mode-line-format simple-modeline--default-mode-line))))

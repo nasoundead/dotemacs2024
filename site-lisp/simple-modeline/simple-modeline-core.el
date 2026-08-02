@@ -49,7 +49,7 @@
      simple-modeline-segment-major-mode))
   "Simple modeline segments."
   :type '(list (repeat :tag "Left aligned" function)
-               (repeat :tag "Right aligned" function))
+	       (repeat :tag "Right aligned" function))
   :package-version '(simple-modeline . "1.2"))
 
 ;;
@@ -91,21 +91,21 @@
 (defun simple-modeline--format (left-segments right-segments)
   "Return a string of `window-width' length containing LEFT-SEGMENTS and RIGHT-SEGMENTS, aligned respectively."
   (let* ((left (simple-modeline--format-segments left-segments))
-         (right (simple-modeline--format-segments right-segments))
-         (reserve (length right)))
+	 (right (simple-modeline--format-segments right-segments))
+	 (reserve (length right)))
     (concat
      left
      (propertize " "
-                 'display `((space :align-to (- right ,reserve 1)))
-                 'face '(:inherit simple-modeline-space))
+		 'display `((space :align-to (- right ,reserve 1)))
+		 'face '(:inherit simple-modeline-space))
      right)))
 
 (defun simple-modeline--format-segments (segments)
   "Return a string from a list of SEGMENTS."
   (format-mode-line (mapcar
-                     (lambda (segment)
-                       `(:eval (,segment)))
-                     segments)))
+		     (lambda (segment)
+		       `(:eval (,segment)))
+		     segments)))
 
 (provide 'simple-modeline-core)
 ;;; simple-modeline-core.el ends here

@@ -87,7 +87,7 @@
 (defun blink-search-buffer-list-update ()
   (when (blink-search-epc-live-p blink-search-epc-process)
     (if (featurep 'sort-tab)
-        (blink-search-call-async "search_sort_buffer_list_update" (mapcar #'buffer-name (append sort-tab-visible-buffers (buffer-list))))
+	(blink-search-call-async "search_sort_buffer_list_update" (mapcar #'buffer-name (append sort-tab-visible-buffers (buffer-list))))
       (blink-search-call-async "search_buffer_list_update" (mapcar #'buffer-name (buffer-list))))))
 
 (add-to-list 'blink-search-start-update-list #'blink-search-buffer-list-update t)
