@@ -236,14 +236,18 @@
                              (format-time-string "%Y%m%d%H%M%S"))
                      org-roam-directory))
          (auto-title (not (and topic (not (string-empty-p topic))))))
-    (message "正在生成 TOEIC 笔记 (约 30-60 秒) ...")
+    (message "正在生成 TOEIC 笔记 ...")
     (let* ((buf (get-buffer-create " *toeic-ai*"))
-           content)
+           content
+           (start (float-time)))
       (with-current-buffer buf (erase-buffer))
       (org-ai-prompt prompt :output-buffer buf)
-      (with-timeout (180 (error "AI 请求超时"))
-        (while org-ai--current-request-buffer-for-stream
-          (sit-for 1)))
+      (while (and org-ai--current-request-buffer-for-stream
+                  (< (- (float-time) start) 180))
+        (accept-process-output nil 0.5)
+        (redisplay))
+      (when org-ai--current-request-buffer-for-stream
+        (error "AI 请求超时"))
       (with-current-buffer buf
         (setq content (buffer-string)))
       (kill-buffer buf)
