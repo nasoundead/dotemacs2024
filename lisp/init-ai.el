@@ -92,23 +92,15 @@
   (setq org-ai-default-chat-model "deepseek-chat")
   (add-to-list 'org-ai-openai-chat-models
 	       '("deepseek-chat" . "api.deepseek.com"))
-  (setq org-ai--openai-chat-base-url "https://api.deepseek.com/v1")
+  (setq org-ai--openai-chat-base-url
+	(or (getenv "AI_API_BASE_URL") "https://api.deepseek.com/v1"))
   (setq org-ai-openai-api-token
-	(lambda () (getenv "DEEPSEEK_API_KEY")))
-  ;; --- Ollama 本地模型 ---
-  (defun my/org-ai-get-ollama-models ()
-    "Fetch installed Ollama model list for org-ai."
-    (let* ((output (shell-command-to-string "ollama list"))
-	   (lines (split-string output "\n" t))
-	   models)
-      (dolist (line (cdr lines))
-	(when (string-match "^\\([^[:space:]]+\\)" line)
-	  (push (match-string 1 line) models)))
-      (nreverse models)))
-  (setq org-ai-openai-chat-models
-	(append org-ai-openai-chat-models
-		(mapcar (lambda (m) (cons m "localhost:11434"))
-			(my/org-ai-get-ollama-models))))
+	(lambda () (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY"))))
+  ;; --- Ollama 本地模型 (已禁用) ---
+  ;; (setq org-ai-openai-chat-models
+  ;;       (append org-ai-openai-chat-models
+  ;;               (mapcar (lambda (m) (cons m "localhost:11434"))
+  ;;                       (my/org-ai-get-ollama-models))))
   ;; yasnippet 集成
   (org-ai-install-yasnippets))
 
@@ -198,5 +190,73 @@
 ;; standard Emacs key sequences, such as `M-xxx`. This approach should
 ;; not conflict with Evil's keybindings, as Evil primarily avoids
 ;; using `M-xxx` bindings.
+
+
+;; ── TOEIC 学习 ──
+(defun sea/toeic-generate-article ()
+  "调用 AI 生成一篇托业级英文文章，创建 org-roam 笔记。
+含原文、阅读理解题、答案、词汇拆解、句型分析。"
+  (interactive)
+  (straight-use-package 'org-ai)
+  (require 'org)
+  (require 'org-ai)
+  (require 'org-roam)
+  (let* ((topic (read-string "文章主题 (可选，回车随机): "))
+	 (prompt
+	  (concat
+	   "Generate a TOEIC-level English article"
+	   (if (string-empty-p topic) ""
+	     (format " about \"%s\"" topic))
+	   ". Output a valid Org-mode document with these sections:\n\n"
+	   "* Original Article\n  The full article (300-500 words).\n\n"
+	   "* Reading Comprehension\n  5 multiple-choice questions formatted as:\n"
+	   "  Q1. question\n    A) ...  B) ...  C) ...  D) ...\n\n"
+	   "* Answers\n  Q1. A - brief explanation\n\n"
+	   "* Article Breakdown\n  Paragraph-by-paragraph Chinese translation.\n\n"
+	   "* Key Vocabulary\n  10-15 words in a table:\n"
+	   "  | Word | Definition | Example |\n\n"
+	   "* Key Phrases & Patterns\n  Important phrases and sentence patterns.\n\n"
+	   "* Word Roots & Derivatives\n"
+	   "  For 5-8 key words, show root, derivatives with examples.\n\n"
+	   "Output ONLY the Org content, no extra commentary."))
+	 (title (or (and (not (string-empty-p topic)) topic) "TOEIC Article"))
+	 (slug (org-roam--get-title-slug title))
+	 (file-path (expand-file-name
+		     (format "%s-toeic-%s.org" slug
+			     (format-time-string "%Y%m%d%H%M%S"))
+		     org-roam-directory)))
+    (message "正在生成 TOEIC 笔记 (约 30-60 秒) ...")
+    (let* ((resp (org-ai-prompt prompt))
+	   (content (if (stringp resp) resp (car resp))))
+      (unless content
+	(user-error "AI 未返回内容，请检查 API Key"))
+      (with-temp-buffer
+	(insert "#+title: " title "\n")
+	(insert "#+date: "
+		(let ((system-time-locale "C"))
+		  (format-time-string "[%Y-%m-%d %a %H:%M]"))
+		"\n")
+	(insert "#+last_modified: \n\n")
+	(insert content)
+	(write-region nil nil file-path nil 'silent))
+      (org-roam-db-sync)
+      (find-file file-path)
+      (message "TOEIC 笔记已创建: %s" file-path))))
+
+(defun sea/toeic-open-index ()
+  "打开或创建 TOEIC 学习索引 org 文件。"
+  (interactive)
+  (let ((idx (expand-file-name "toeic-index.org" org-roam-directory)))
+    (unless (file-exists-p idx)
+      (with-temp-buffer
+	(insert "#+title: TOEIC 学习索引\n")
+	(insert "#+date: "
+		(let ((system-time-locale "C"))
+		  (format-time-string "[%Y-%m-%d %a %H:%M]"))
+		"\n\n")
+	(insert "* 托业阅读练习\n")
+	(write-region nil nil idx nil 'silent)))
+    (find-file idx)
+    (unless (derived-mode-p 'org-mode) (org-mode))))
 
 (provide 'init-ai)

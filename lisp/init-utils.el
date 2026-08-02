@@ -153,28 +153,53 @@
       (setq count (1+ count)))
     (message "已删除 %d 个临时文件" count)))
 
-(defun sea/fix-el-eol ()
-  "修复 ~/.emacs.d 下自有 .el 文件的行尾：清除 ^M，转为平台行尾。
+(defun sea/fix-eol ()
+  "修复当前文件行尾：清除 ^M，转为平台行尾。"
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "\r" nil t)
+      (replace-match "")))
+  (set-buffer-file-coding-system (if sys/winp 'utf-8-dos 'utf-8-unix))
+  (message "行尾已修复，请保存"))
 
+(defun sea/dos2unix ()
+  "将当前文件行尾从 CRLF 转为 LF。"
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (search-forward "\r" nil t)
+      (replace-match "")))
+  (set-buffer-file-coding-system 'utf-8-unix)
+  (message "已转为 Unix 行尾 (LF)，请保存"))
+
+(defun sea/unix2dos ()
+  "将当前文件行尾从 LF 转为 CRLF。"
+  (interactive)
+  (set-buffer-file-coding-system 'utf-8-dos)
+  (message "已标记为 DOS 行尾 (CRLF)，请保存"))
+
+(defun sea/fix-el-eol-batch ()
+  "修复 ~/.emacs.d 下自有 .el 文件的行尾：清除 ^M，转为平台行尾。
 跳过 straight/ elpa/ 等第三方仓库目录。"
   (interactive)
   (let ((dir (expand-file-name user-emacs-directory))
-        (skip-dirs '("straight" "elpa" "eln-cache" ".cache" "auto-save-list"))
-        (fixed 0))
+	(skip-dirs '("straight" "elpa" "eln-cache" ".cache" "auto-save-list"))
+	(fixed 0))
     (dolist (file (directory-files-recursively dir "\\.el$"))
       (unless (cl-some (lambda (d)
-                         (string-match-p (concat "[/\\\\]" d "[/\\\\]") file))
-                       skip-dirs)
-        (with-current-buffer (find-file-noselect file)
-          (save-excursion
-            (goto-char (point-min))
-            (while (search-forward "\r" nil t)
-              (replace-match "")))
-          (set-buffer-file-coding-system
-           (if sys/winp 'utf-8-dos 'utf-8-unix))
-          (save-buffer)
-          (kill-buffer)
-          (setq fixed (1+ fixed)))))
+			 (string-match-p (concat "[/\\\\]" d "[/\\\\]") file))
+		       skip-dirs)
+	(with-current-buffer (find-file-noselect file)
+	  (save-excursion
+	    (goto-char (point-min))
+	    (while (search-forward "\r" nil t)
+	      (replace-match "")))
+	  (set-buffer-file-coding-system
+	   (if sys/winp 'utf-8-dos 'utf-8-unix))
+	  (save-buffer)
+	  (kill-buffer)
+	  (setq fixed (1+ fixed)))))
     (message "已修复 %d 个 .el 文件" fixed)))
 
 (provide 'init-utils)
