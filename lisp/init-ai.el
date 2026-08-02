@@ -236,18 +236,40 @@
                              (format-time-string "%Y%m%d%H%M%S"))
                      org-roam-directory))
          (auto-title (not (and topic (not (string-empty-p topic))))))
-    (message "正在生成 TOEIC 笔记 ...")
+    (message "正在请求 DeepSeek ...")
     (let* ((buf (get-buffer-create " *toeic-ai*"))
            content
-           (start (float-time)))
-      (with-current-buffer buf (erase-buffer))
-      (org-ai-prompt prompt :output-buffer buf)
+           (api-key (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY")))
+           (url "https://api.deepseek.com/v1/chat/completions")
+           (payload (json-encode
+                     `((model . "deepseek-chat")
+                       (messages . [((role . "user") (content . ,prompt))])
+                       (stream . :json-false)))))
+      (unless api-key
+        (user-error "请设置 DEEPSEEK_API_KEY 环境变量"))
+      (with-current-buffer buf
+        (erase-buffer)
+        (let ((url-request-method "POST")
+              (url-request-extra-headers
+               `(("Content-Type" . "application/json")
+                 ("Authorization" . ,(concat "Bearer " api-key))))
+              (url-request-data payload))
+          (url-retrieve-synchronously url t t 120)))
+      (goto-char (point-min))
+      (re-search-forward "\n\n" nil t)
+      (let* ((json (json-parse-buffer :object-type 'plist))
+             (choices (gethash "choices" json))
+             (msg (gethash "message" (aref choices 0))))
+        (setq content (gethash "content" msg)))
+      (kill-buffer buf)
       (while (and org-ai--current-request-buffer-for-stream
                   (< (- (float-time) start) 180))
         (accept-process-output nil 0.5)
-        (redisplay))
+        (when (zerop (mod (floor (- (float-time) start)) 5))
+          (message "等待响应中 ... (%ds)" (floor (- (float-time) start)))))
       (when org-ai--current-request-buffer-for-stream
         (error "AI 请求超时"))
+      (message "响应完成，处理中 ...")
       (with-current-buffer buf
         (setq content (buffer-string)))
       (kill-buffer buf)
