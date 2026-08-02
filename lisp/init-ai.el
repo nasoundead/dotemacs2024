@@ -237,31 +237,34 @@
                      org-roam-directory))
          (auto-title (not (and topic (not (string-empty-p topic))))))
     (message "正在请求 DeepSeek ...")
-    (let* ((buf (get-buffer-create " *toeic-ai*"))
-           content
-           (api-key (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY")))
+    (let* ((api-key (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY")))
            (url "https://api.deepseek.com/v1/chat/completions")
            (payload (json-encode
                      `((model . "deepseek-chat")
                        (messages . [((role . "user") (content . ,prompt))])
-                       (stream . :json-false)))))
+                       (stream . :json-false))))
+           done content)
       (unless api-key
         (user-error "请设置 DEEPSEEK_API_KEY 环境变量"))
-      (with-current-buffer buf
-        (erase-buffer)
-        (let ((url-request-method "POST")
-              (url-request-extra-headers
-               `(("Content-Type" . "application/json")
-                 ("Authorization" . ,(concat "Bearer " api-key))))
-              (url-request-data payload))
-          (url-retrieve-synchronously url t t 120)))
-      (goto-char (point-min))
-      (re-search-forward "\n\n" nil t)
-      (let* ((json (json-parse-buffer :object-type 'plist))
-             (choices (gethash "choices" json))
-             (msg (gethash "message" (aref choices 0))))
-        (setq content (gethash "content" msg)))
-      (kill-buffer buf)
+      (let ((url-request-method "POST")
+            (url-request-extra-headers
+             `(("Content-Type" . "application/json")
+               ("Authorization" . ,(concat "Bearer " api-key))))
+            (url-request-data payload))
+        (url-retrieve url
+                      (lambda (_status)
+                        (goto-char (point-min))
+                        (re-search-forward "\n\n" nil t)
+                        (let* ((json (json-parse-buffer :object-type 'plist))
+                               (choices (gethash "choices" json))
+                               (msg (gethash "message" (aref choices 0))))
+                          (setq content (gethash "content" msg))
+                          (setq done t)))))
+      (while (not done)
+        (accept-process-output nil 0.5)
+        (sleep-for 0 100))
+      (unless content
+        (user-error "AI 未返回内容，请检查网络和 API Key"))
       (while (and org-ai--current-request-buffer-for-stream
                   (< (- (float-time) start) 180))
         (accept-process-output nil 0.5)
