@@ -261,8 +261,7 @@
                           (setq content (gethash "content" msg))
                           (setq done t)))))
       (while (not done)
-        (accept-process-output nil 0.5)
-        (sleep-for 0 100))
+        (sit-for 1))
       (unless content
         (user-error "AI 未返回内容，请检查网络和 API Key"))
       (while (and org-ai--current-request-buffer-for-stream
