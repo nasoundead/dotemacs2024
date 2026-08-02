@@ -80,6 +80,9 @@
 ;;   )
 
 ;; Org-AI: AI 辅助写作，深度集成 org-mode
+(use-package websocket
+  :straight t)
+
 (use-package org-ai
   :straight (org-ai :type git :host github :repo "rksm/org-ai")
   :defer t
@@ -89,13 +92,11 @@
   (setq org-ai-coding-system 'utf-8)
   :config
   ;; --- DeepSeek ---
+  (setq org-ai-service 'deepseek)
   (setq org-ai-default-chat-model "deepseek-chat")
-  (add-to-list 'org-ai-openai-chat-models
-	       '("deepseek-chat" . "api.deepseek.com"))
-  (setq org-ai--openai-chat-base-url
-	(or (getenv "AI_API_BASE_URL") "https://api.deepseek.com/v1"))
+  (add-to-list 'org-ai-chat-models "deepseek-chat")
   (setq org-ai-openai-api-token
-	(lambda () (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY"))))
+        (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY")))
   ;; --- Ollama 本地模型 (已禁用) ---
   ;; (setq org-ai-openai-chat-models
   ;;       (append org-ai-openai-chat-models
@@ -105,8 +106,8 @@
   (org-ai-install-yasnippets))
 
 ;; org-ai 快捷键
-(with-eval-after-load 'org-ai
-  (define-key org-ai-region-map (kbd "C-c r") #'org-ai-region))
+;; (with-eval-after-load 'org-ai
+;;   (define-key org-ai-region-map (kbd "C-c r") #'org-ai-region))
 
 
 ;; (use-package ollama-buddy
@@ -193,12 +194,21 @@
 
 
 ;; ── TOEIC 学习 ──
+(defun sea/toeic-slug (title)
+  "Convert TITLE to a file-name-safe slug."
+  (replace-regexp-in-string
+   " " "-" (replace-regexp-in-string "[^[:alnum:] ]" "" (downcase title))))
+
 (defun sea/toeic-generate-article ()
   "调用 AI 生成一篇托业级英文文章，创建 org-roam 笔记。
 含原文、阅读理解题、答案、词汇拆解、句型分析。"
   (interactive)
-  (straight-use-package 'org-ai)
   (require 'org)
+  ;; 手动注册 straight repos 到 load-path（绕过 :after org 延迟）
+  (let ((repos (expand-file-name "straight/repos" user-emacs-directory)))
+    (dolist (dir (directory-files repos t "^[^.]"))
+      (when (file-directory-p dir)
+        (add-to-list 'load-path dir))))
   (require 'org-ai)
   (require 'org-roam)
   (let* ((topic (read-string "文章主题 (可选，回车随机): "))
@@ -219,26 +229,47 @@
 	   "* Word Roots & Derivatives\n"
 	   "  For 5-8 key words, show root, derivatives with examples.\n\n"
 	   "Output ONLY the Org content, no extra commentary."))
-	 (title (or (and (not (string-empty-p topic)) topic) "TOEIC Article"))
-	 (slug (org-roam--get-title-slug title))
-	 (file-path (expand-file-name
-		     (format "%s-toeic-%s.org" slug
-			     (format-time-string "%Y%m%d%H%M%S"))
-		     org-roam-directory)))
+         (title (or (and (not (string-empty-p topic)) topic) "TOEIC Article"))
+         (slug (sea/toeic-slug title))
+         (file-path (expand-file-name
+                     (format "%s-toeic-%s.org" slug
+                             (format-time-string "%Y%m%d%H%M%S"))
+                     org-roam-directory))
+         (auto-title (not (and topic (not (string-empty-p topic))))))
     (message "正在生成 TOEIC 笔记 (约 30-60 秒) ...")
-    (let* ((resp (org-ai-prompt prompt))
-	   (content (if (stringp resp) resp (car resp))))
-      (unless content
-	(user-error "AI 未返回内容，请检查 API Key"))
+    (let* ((buf (get-buffer-create " *toeic-ai*"))
+           content)
+      (with-current-buffer buf (erase-buffer))
+      (org-ai-prompt prompt :output-buffer buf)
+      (with-timeout (180 (error "AI 请求超时"))
+        (while org-ai--current-request-buffer-for-stream
+          (sit-for 1)))
+      (with-current-buffer buf
+        (setq content (buffer-string)))
+      (kill-buffer buf)
+      (unless (and content (not (string-empty-p content)))
+        (user-error "AI 未返回内容"))
+      ;; 如果未指定主题，从 AI 返回的文章中提取标题
+      (when auto-title
+        (when (string-match "\\* Original Article\n[ \t]*\\(.+\\)" content)
+          (let ((new-title (string-trim (match-string 1 content))))
+            (unless (string-empty-p new-title)
+              (setq title new-title)
+              (setq slug (sea/toeic-slug title))
+              (setq file-path (expand-file-name
+                               (format "%s-toeic-%s.org" slug
+                                       (format-time-string "%Y%m%d%H%M%S"))
+                               org-roam-directory))))))
       (with-temp-buffer
-	(insert "#+title: " title "\n")
-	(insert "#+date: "
-		(let ((system-time-locale "C"))
-		  (format-time-string "[%Y-%m-%d %a %H:%M]"))
-		"\n")
-	(insert "#+last_modified: \n\n")
-	(insert content)
-	(write-region nil nil file-path nil 'silent))
+        (insert "#+title: " title "\n")
+        (insert "#+date: "
+                (let ((system-time-locale "C"))
+                  (format-time-string "[%Y-%m-%d %a %H:%M]"))
+                "\n")
+        (insert "#+last_modified: \n\n")
+        (insert content)
+        (make-directory (file-name-directory file-path) t)
+        (write-region nil nil file-path nil 'silent))
       (org-roam-db-sync)
       (find-file file-path)
       (message "TOEIC 笔记已创建: %s" file-path))))
