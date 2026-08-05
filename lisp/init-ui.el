@@ -47,7 +47,8 @@
 	     :host github
 	     :repo "protesilaos/modus-themes")
   :config
-  (load-theme 'modus-vivendi-deuteranopia t))
+  ;; (load-theme 'modus-vivendi-deuteranopia t)
+  )
 (use-package mindre-theme
   :ensure t
   :straight (:host github :repo "erikbackman/mindre-theme")
@@ -56,7 +57,8 @@
   (mindre-use-more-bold nil)
   (mindre-use-faded-lisp-parens t)
   :config
-  (load-theme 'mindre t))
+  ;; (load-theme 'mindre t)
+  )
 
 (use-package apropospriate-theme
   :ensure t)
@@ -67,7 +69,7 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
 	doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;; (load-theme 'doom-one t)
+  (load-theme 'doom-tokyo-night t)
 
   ;; Enable flashing mode-line on errors
   ;; (doom-themes-visual-bell-config)
