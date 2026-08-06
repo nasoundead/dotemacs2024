@@ -52,11 +52,11 @@
 		    (emoji . "Segoe UI Emoji")  ; Windows
 		    ;; (emoji . "Apple Color Emoji")  ; macOS
 		    ;; (emoji . "Noto Color Emoji")  ; Linux
-		    (fixed . "Iosevka Comfy Fixed")
-		    (fixed-serif . "Iosevka Comfy Motion")
-		    (variable . "Iosevka Comfy Motion Duo")
-		    (wide . "Iosevka Comfy Wide")
-		    (tall . "Iosevka Comfy Motion")
+		    ;; (fixed . "Iosevka Comfy Fixed")
+		    ;; (fixed-serif . "Iosevka Comfy Motion")
+		    ;; (variable . "Iosevka Comfy Motion Duo")
+		    ;; (wide . "Iosevka Comfy Wide")
+		    ;; (tall . "Iosevka Comfy Motion")
 		    )
   ;; (tall . "Monospace"))
   "Fonts to use.")

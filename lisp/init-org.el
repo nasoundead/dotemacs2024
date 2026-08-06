@@ -209,32 +209,9 @@
   :hook (org-mode . org-modern-mode)
   :custom
   (org-modern-heading-numbers t)
-  ;; (org-modern-star ["⦿" "⌾" "⊚" "🞅" "▸" "▹"])
+  (org-modern-star ["⦿" "⌾" "⊚" "🞅" "▸" "▹"])
   (org-modern-hide-stars t)
   )
-
-;; (use-package org-visual-outline
-;;   :straight (org-visual-outline :type git :host github :repo "legalnonsense/org-visual-outline")
-;;   :hook (org-mode . (lambda ()
-;;		      (org-visual-outline-mode)
-;;		      (org-dynamic-bullets-mode)
-;;		      (org-visual-indent-mode)))
-;;   :config
-;;   (setq org-visual-indent-color-indent '((1 (:background "blue" :foreground "blue" :height .1))
-;;					 (2 (:background "red" :foreground "red" :height .1))
-;;					 (3 (:background "green" :foreground "green" :height .1))))
-;;   (setq org-visual-indent-color-indent
-;;	(cl-loop for x from 1 to 8
-;;		 with color = nil
-;;		 do (setq color (or (face-foreground
-;;				     (intern
-;;				      (concat "org-level-"
-;;					      (number-to-string x))))
-;;				    (face-foreground 'org-level-1)))
-;;		 collect `(,x ,(list
-;;				:background color
-;;				:foreground color
-;;				:height .1)))))
 
 (use-package org-roam
   :after org
