@@ -66,9 +66,12 @@
 (add-hook 'after-init-hook #'save-place-mode)
 
 ;; auto-save 文件统一放到缓存目录，不在工作目录产生 # 文件
+(let ((dir (concat sea-cache-dir "auto-save/")))
+  (unless (file-directory-p dir)
+    (make-directory dir t)))
 (setq auto-save-file-name-transforms
       `((".*" ,(concat sea-cache-dir "auto-save/") t)))
-(setq auto-save-list-file-prefix (concat sea-cache-dir "auto-save-list/.saves-"))
+(setq auto-save-list-file-prefix (concat sea-cache-dir "auto-save/.saves-"))
 
 ;; Keep track of recently opened files
 (use-package recentf

@@ -22,9 +22,12 @@
   (require 'init-font))
 (require 'init-modeline)
 (require 'init-highlight)
-(require 'init-pyim)
+
 (require 'init-vertico)
 (require 'init-corfu)
+
+(require 'init-pyim)
+(require 'init-fanyi)
 
 (require 'init-ai)
 (require 'init-hydra)
@@ -42,8 +45,8 @@
 (require 'init-web)
 
 
-(setq custom-file (concat user-emacs-directory "custom.el"))
-(load custom-file t t)
+;; (setq custom-file (concat user-emacs-directory "custom.el"))
+;; (load custom-file t t)
 (dolist (dir (list sea-cache-dir sea-etc-dir))
   (unless (file-directory-p dir)
     (make-directory dir t)))

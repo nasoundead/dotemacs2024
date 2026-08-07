@@ -1,17 +1,3 @@
-;; (use-package fanyi
-;;   :ensure t
-;;   :custom
-;;   (fanyi-providers '(;; 海词
-;;		     ;; fanyi-haici-provider
-;;		     ;; 有道同义词词典
-;;		     fanyi-youdao-thesaurus-provider
-;;		     ;; Etymonline
-;;		     fanyi-etymon-provider
-;;		     ;; Longman
-;;		     ;; fanyi-longman-provider)
-;;		     )))
-
-
 ;; (use-package avy
 ;;   :ensure t
 ;;   :bind (("C-;" . avy-goto-char)))
@@ -23,10 +9,6 @@
 ;;               :repo "cute-jumper/ace-pinyin")
 ;;   :config
 ;;   (ace-pinyin-global-mode +1))
-
-(use-package bing-dict
-  :ensure t
-  :bind ("C-c f" . bing-dict-brief))
 
 (defun sea/revert-auto-encoding ()
   "自动检测当前文件编码并重新读取，标记为 UTF-8 保存。"
