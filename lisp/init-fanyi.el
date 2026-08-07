@@ -21,23 +21,23 @@
   ;; ts-2: 使用 Google 在 en, fr 和 ru 间进行翻译，翻译的是光标附近的句子或选中的文本，结果将以 overlay 的方式显示在当前位置
   ;; ts-3: 使用 Google 翻译 buffer 中所有长度大于 6 的单词，将鼠标放到被翻译的单词上后，翻译结果将以 popup 方式显示
   (setq gt-preset-translators
-	`((ts-1 . ,(gt-translator
-		    :taker (gt-taker :langs '(en zh) :text 'word)
-		    :engines (gt-bing-engine)
-		    :render (gt-overlay-render)))
-    (ts-2 . ,(gt-translator
-		    :taker (gt-taker :langs '(en zh) :text 'sentence)
-		    :engines (gt-bing-engine)
-		    :render (gt-overlay-render)))
-	  (ts-3 . ,(gt-translator
-		    :taker (gt-taker :langs '(en zh) :text 'sentence)
-		    :engines (gt-google-engine)
-		    :render (gt-overlay-render)))
-	  (ts-4 . ,(gt-translator
-		    :taker (gt-taker :langs '(en zh) :text 'buffer
-				     :pick 'word :pick-pred (lambda (w) (length> w 6)))
-		    :engines (gt-google-engine)
-		    :render (gt-overlay-render :type 'help-echo)))))
+	`((ts-bing-word . ,(gt-translator
+			    :taker (gt-taker :langs '(en zh) :text 'word)
+			    :engines (gt-bing-engine)
+			    :render (gt-overlay-render)))
+	  (ts-bing-sentence . ,(gt-translator
+				:taker (gt-taker :langs '(en zh) :text 'sentence)
+				:engines (gt-bing-engine)
+				:render (gt-overlay-render)))
+	  (ts-google-sentence . ,(gt-translator
+				  :taker (gt-taker :langs '(en zh) :text 'sentence)
+				  :engines (gt-google-engine)
+				  :render (gt-overlay-render)))
+	  (ts-google-buffer-len-gt-6 . ,(gt-translator
+					 :taker (gt-taker :langs '(en zh) :text 'buffer
+							  :pick 'word :pick-pred (lambda (w) (length> w 6)))
+					 :engines (gt-google-engine)
+					 :render (gt-overlay-render :type 'help-echo)))))
   )
 
 (provide 'init-fanyi)

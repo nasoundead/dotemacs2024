@@ -240,6 +240,7 @@
       :desc "Org Capture"             :nv "X"  #'org-capture
       :desc "IMenu"                   :nv "i"  #'consult-imenu
       :desc "IMenu"                   :nv "I"  #'consult-imenu-multi
+      :desc "Translate"               :nv "t"  #'gt-translate
       ;; :desc "Blink Search"            :nv "."  #'+project-blink-search
 
       ;; C-u is used by evil

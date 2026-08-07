@@ -184,4 +184,9 @@
 	  (setq fixed (1+ fixed)))))
     (message "已修复 %d 个 .el 文件" fixed)))
 
+(defun sea/open-emacs-dired ()
+  "直接以 dired 打开 .emacs.d 目录。"
+  (interactive)
+  (dired user-emacs-directory))
+
 (provide 'init-utils)
