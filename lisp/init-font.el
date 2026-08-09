@@ -48,8 +48,8 @@
 		    (default . "Maple Mono NF CN")
 		    ;; (default . "SarasaTermSCNerd")
 		    (cjk . "Microsoft Yahei")
-		    (symbol . "Symbola")
-		    (emoji . "Segoe UI Emoji")  ; Windows
+		    ;; (symbol . "Symbola")
+		    ;; (emoji . "Segoe UI Emoji")  ; Windows
 		    ;; (emoji . "Apple Color Emoji")  ; macOS
 		    ;; (emoji . "Noto Color Emoji")  ; Linux
 		    ;; (fixed . "Iosevka Comfy Fixed")
@@ -63,7 +63,7 @@
 
 (defun sea--get-font-family (key)
     (let ((font (alist-get key sea-fonts)))
-	(if (string-empty-p font)
+	(if (or (null font) (string-empty-p font))
 	    (alist-get 'default sea-fonts)
 	font)))
 

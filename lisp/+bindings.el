@@ -241,6 +241,7 @@
       :desc "IMenu"                   :nv "i"  #'consult-imenu
       :desc "IMenu"                   :nv "I"  #'consult-imenu-multi
       :desc "Translate"               :nv "t"  #'gt-translate
+      :desc "Translate (LLM)"         :nv "T"  #'sea/gt-llm-translate
       ;; :desc "Blink Search"            :nv "."  #'+project-blink-search
 
       ;; C-u is used by evil

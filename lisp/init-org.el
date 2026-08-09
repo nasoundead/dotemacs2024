@@ -112,11 +112,12 @@
        (if sys/winp 'utf-8-dos 'utf-8-unix))))
   (add-hook 'org-mode-hook #'sea/org-force-utf-8)
   (add-hook 'before-save-hook #'sea/org-force-utf-8)
+  (add-hook 'org-mode-hook #'visual-line-mode)
   ;; 强制设置正文与标题的缩进关系（每级标题的正文额外缩进）
-  (setq org-indent-indentation-per-level 2)  ; 每级缩进 2 空格
-  (setq org-indent-text-line-function 'org-indent-text-line)  ; 正文缩进函数
+  ;; (setq org-indent-indentation-per-level 2)  ; 每级缩进 2 空格
+  ;; (setq org-indent-text-line-function 'org-indent-text-line)  ; 正文缩进函数
   ;; 禁用可能干扰缩进的设置
-  (setq org-adapt-indentation t)
+  ;; (setq org-adapt-indentation t)
   (setq org-todo-keywords '((sequence "TODO(t)" "DOING(i)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)"))
 	org-todo-keyword-faces '(("HANGUP" . warning)))
   ;; Babel
@@ -127,17 +128,17 @@
   ;; 隐藏 emphasis 标记符 (* / _ + = ~)，只显示样式
   (setq org-hide-emphasis-markers t)
   ;; Make verbatim with highlight text background.
-  (add-to-list 'org-emphasis-alist
-	       '("=" (:background "#fef7ca")))
+  ;; (add-to-list 'org-emphasis-alist
+  ;;	       '("=" (:background "#fef7ca")))
   ;; Make deletion(obsolote) text foreground with dark gray.
-  (add-to-list 'org-emphasis-alist
-	       '("+" (:foreground "dark gray"
-				  :strike-through t)))
+  ;; (add-to-list 'org-emphasis-alist
+  ;;	       '("+" (:foreground "dark gray"
+  ;;				  :strike-through t)))
   ;; Make code style around with box.
-  (add-to-list 'org-emphasis-alist
-	       '("~" (:box (:line-width 1
-					:color "grey75"
-					:style released-button))))
+  ;; (add-to-list 'org-emphasis-alist
+  ;;	       '("~" (:box (:line-width 1
+  ;;					:color "grey75"
+  ;;					:style released-button))))
   )
 
 ;; Rich text clipboard
@@ -205,7 +206,9 @@
 ;;   ;; org-superstar-prettify-item-bullets nil
 ;;   :hook (org-mode . org-superstar-mode))
 
+(straight-use-package 'org-modern)
 (use-package org-modern
+  :straight t
   :hook (org-mode . org-modern-mode)
   :custom
   (org-modern-heading-numbers t)
@@ -341,9 +344,10 @@
   (org-download-heading-lvl nil)
   (org-download-timestamp "%Y%m%d-%H%M%S_")
   (org-image-actual-width 300)
+  (org-download-annotate-function 'ignore)
+  :init
   (when (eq system-type 'windows-nt)
     (setq org-download-screenshot-method "convert clipboard: %s"))
-  (org-download-annotate-function 'ignore)
   ;; :bind
   ;; ("C-M-y" . org-download-screenshot)
   :bind (:map org-mode-map
@@ -359,10 +363,7 @@
 	org-appear-autoentities t
 	org-appear-autolinks nil))
 
-(use-package ace-pinyin
-  :defer t
-  :config
-  (ace-pinyin-global-mode +1))
+
 
 (use-package svg-tag-mode
   :hook (org-mode . svg-tag-mode)

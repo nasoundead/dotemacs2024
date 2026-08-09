@@ -290,6 +290,7 @@
 		      (write-region nil nil file-path nil 'silent))
 		     (org-roam-db-sync)
 		     (find-file file-path)
+		     (visual-line-mode 1)
 		     (message "TOEIC 笔记已创建: %s" file-path))))
 
 (defun sea/toeic-open-index ()
