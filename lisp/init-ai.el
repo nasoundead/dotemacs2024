@@ -90,18 +90,21 @@
   :init
   ;; 确保编码
   (setq org-ai-coding-system 'utf-8)
+  (add-hook 'org-mode-hook #'org-ai-mode)
+  (org-ai-global-mode 1)
   :config
-  ;; --- DeepSeek ---
-  (setq org-ai-service 'deepseek)
-  (setq org-ai-default-chat-model "deepseek-chat")
-  (add-to-list 'org-ai-chat-models "deepseek-chat")
-  (setq org-ai-openai-api-token
-	(or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY")))
-  ;; --- Ollama 本地模型 (已禁用) ---
-  ;; (setq org-ai-openai-chat-models
-  ;;       (append org-ai-openai-chat-models
-  ;;               (mapcar (lambda (m) (cons m "localhost:11434"))
-  ;;                       (my/org-ai-get-ollama-models))))
+  ;; --- LLM 配置 (通过环境变量适配不同机器/不同模型) ---
+  ;; AI_HOST、AI_MODEL、AI_API_KEY 与 init-fanyi.el 共用同一组变量
+  (let* ((host  (or (getenv "AI_HOST")  "https://api.deepseek.com"))
+	 (model (or (getenv "AI_MODEL") "deepseek-chat"))
+	 (key   (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY"))))
+    (setq org-ai-service
+	  (cond ((string-match-p "deepseek" host) 'deepseek)
+		((string-match-p "openai" host)   'openai)
+		(t                                'openai)))
+    (setq org-ai-default-chat-model model)
+    (add-to-list 'org-ai-chat-models model)
+    (setq org-ai-openai-api-token key))
   ;; yasnippet 集成
   (org-ai-install-yasnippets))
 
@@ -235,18 +238,25 @@
 				  (format-time-string "%Y%m%d%H%M%S"))
 			  org-roam-directory))
 	      (auto-title (string-empty-p topic))
-	      (api-key (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY"))))
+	      (api-key (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY")))
+	      (api-host (or (getenv "AI_HOST") "https://api.deepseek.com"))
+	      (api-path (or (getenv "AI_PATH") "/chat/completions"))
+	      (api-model (or (getenv "AI_MODEL") "deepseek-chat"))
+	      (api-url (concat api-host
+			       (if (string-suffix-p "/" api-host)
+				   (substring api-path 1)
+				 api-path))))
 	      (unless api-key
-		(user-error "请设置 DEEPSEEK_API_KEY 环境变量"))
-	      (message "正在请求 DeepSeek ...")
-	      (let* ((url "https://api.deepseek.com/v1/chat/completions")
+		(user-error "请设置 AI_API_KEY 或 DEEPSEEK_API_KEY 环境变量"))
+	      (message "正在请求 AI (%s) ..." api-model)
+	      (let* ((url api-url)
 		     (url-request-method "POST")
 		     (url-request-extra-headers
 		      `(("Content-Type" . "application/json")
 			("Authorization" . ,(concat "Bearer " api-key))))
 		     (url-request-data
 		      (json-encode
-		       `((model . "deepseek-chat")
+		       `((model . ,api-model)
 			 (messages . [((role . "user") (content . ,prompt))])
 			 (stream . :json-false))))
 		     (resp-buf (url-retrieve-synchronously url))
