@@ -31,176 +31,67 @@
 ;;; Code:
 ;;
 ;;
-;; (use-package gptel
-;;   :defer t
-;;   :config
-;;   (setq gptel-coding-system 'utf-8)
-;;   (setq gptel-response-coding-system 'utf-8)
-;;   (when (fboundp 'gptel-curl--get-args)
-;;     (advice-remove 'gptel-curl--get-args #'gptel-curl--get-args)
-;;     (defun my-gptel-curl--get-args (orig-func info token)
-;;       "Advice for gptel-curl--get-args to force UTF-8 on Windows."
-;;       (let* ((data (plist-get info :data))
-;;	     (data-json (encode-coding-string (gptel--json-encode data) 'utf-8 t))
-;;	     (url (plist-get info :url))
-;;	     (headers (plist-get info :headers))
-;;	     (args (list "-s" "-S" "-X" "POST"
-;;			 "-H" "Content-Type: application/json; charset=utf-8"
-;;			 "-H" "Accept: application/json; charset=utf-8")))
-;;	(dolist (header headers)
-;;	  (setq args (append args (list "-H" header))))
-;;	(setq args (append args (list "-d" data-json url)))
-;;	args))
-;;     (advice-add 'gptel-curl--get-args :around #'my-gptel-curl--get-args))
-;;   (add-hook 'gptel-after-response-hook
-;;	    (lambda ()
-;;	      (set-buffer-process-coding-system 'utf-8 'utf-8)
-;;	      (set-buffer-file-coding-system 'utf-8)))
-;;   (setq gptel-model   'deepseek-chat
-;;	gptel-backend
-;;	(gptel-make-openai "DeepSeek"
-;;	  :host "api.deepseek.com"
-;;	  :endpoint "/chat/completions"
-;;	  :stream t
-;;	  :key (lambda () (getenv "DEEPSEEK_API_KEY"))
-;;	  :models '(deepseek-chat deepseek-coder)))
-;;   (defun get-ollama-models ()
-;;     "Fetch the list of installed Ollama models."
-;;     (let* ((output (shell-command-to-string "ollama list"))
-;;	   (lines (split-string output "\n" t))
-;;	   models)
-;;       (dolist (line (cdr lines))
-;;	(when (string-match "^\\([^[:space:]]+\\)" line)
-;;	  (push (match-string 1 line) models)))
-;;       (nreverse models)))
-;;   (gptel-make-ollama "Ollama"
-;;     :host "localhost:11434"
-;;     :stream t
-;;     :models (get-ollama-models))
-;;   )
 
-;; Org-AI: AI 辅助写作，深度集成 org-mode
-(use-package websocket
-  :straight t)
-
-(use-package org-ai
-  :straight (org-ai :type git :host github :repo "rksm/org-ai")
-  :defer t
-  :after org
-  :init
-  ;; 确保编码
-  (setq org-ai-coding-system 'utf-8)
-  (add-hook 'org-mode-hook #'org-ai-mode)
-  (org-ai-global-mode 1)
+(use-package gptel
   :config
-  ;; --- LLM 配置 (通过环境变量适配不同机器/不同模型) ---
-  ;; AI_HOST、AI_MODEL、AI_API_KEY 与 init-fanyi.el 共用同一组变量
-  (let* ((host  (or (getenv "AI_HOST")  "https://api.deepseek.com"))
-	 (model (or (getenv "AI_MODEL") "deepseek-chat"))
+  (setq gptel-coding-system 'utf-8)
+  (setq gptel-response-coding-system 'utf-8)
+  (let* ((host  (or (getenv "AI_HOST")  "api.deepseek.com"))
+	 (path  (or (getenv "AI_PATH")  "/chat/completions"))
+	 (model (intern (or (getenv "AI_MODEL") "deepseek-chat")))
 	 (key   (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY"))))
-    (setq org-ai-service
-	  (cond ((string-match-p "deepseek" host) 'deepseek)
-		((string-match-p "openai" host)   'openai)
-		(t                                'openai)))
-    (setq org-ai-default-chat-model model)
-    (add-to-list 'org-ai-chat-models model)
-    (setq org-ai-openai-api-token key))
-  ;; yasnippet 集成
-  (org-ai-install-yasnippets))
+    (setq gptel-api-key key)
+    (setq gptel-backend
+	  (gptel-make-openai "LLM"
+	    :host host
+	    :endpoint path
+	    :stream t
+	    :key gptel-api-key
+	    :models (list model)))
+    (setq gptel-model model))
 
-;; org-ai 快捷键
-;; (with-eval-after-load 'org-ai
-;;   (define-key org-ai-region-map (kbd "C-c r") #'org-ai-region))
+  ;; 自动把Markdown格式转为Org原生格式 (默认已开启)
+  ;; 设置默认系统提示词 (替代旧版已删除的 gptel-default-system-prompt)
+  (setf (alist-get 'default gptel-directives)
+	"输出纯文本Org-mode内容，禁止使用任何标记语法（不要用*加粗*、/斜体/、=代码=、~原样~），正文直接写。标题用*层级。列表用-短横线。")
+)
 
+;; ;; Org-AI: AI 辅助写作，深度集成 org-mode
+;; (use-package websocket
+;;   :straight t)
 
-;; (use-package ollama-buddy
-;;   :ensure t
-;;   :straight (ollama-buddy
-;;	     :type git
-;;	     :host github
-;;	     :repo "captainflasmr/ollama-buddy")
-;;   :bind
-;;   ("C-c o" . ollama-buddy-role-transient-menu)
-;;   ("C-c O" . ollama-buddy-transient-menu))
-
-;; (use-package tabnine
-;;  :custom
-;;  (tabnine-wait 1)
-;;  (tabnine-minimum-prefix-length 0)
-;;  ;; (tabnine-executable-args (list "--log-level" "Error" "--no-lsp" "false"))
-;;  :hook
-;;  (on-first-input . tabnine-start-process)
-;;  (prog-mode . tabnine-mode)
-;;  (text-mode . tabnine-mode)
-;;  (kill-emacs . tabnine-kill-process)
-;;  :config
-;;  (define-key tabnine-completion-map [tab] nil)
-;;  (define-key tabnine-completion-map (kbd "M-f") #'tabnine-accept-completion-by-word)
-;;  (define-key tabnine-completion-map (kbd "M-<return>") #'tabnine-accept-completion-by-line)
-;;  (define-key tabnine-completion-map (kbd "C-g") #'tabnine-clear-overlay)
-;;  (define-key tabnine-completion-map (kbd "M-[") #'tabnine-next-completion)
-;;  (define-key tabnine-completion-map (kbd "M-]") #'tabnine-previous-completion)
-;;  )
-;; The free version of TabNine is good enough,
-;; and below code is recommended that TabNine not always
-;; prompt me to purchase a paid version in a large project.
-;; (defadvice company-echo-show (around disable-tabnine-upgrade-message activate)
-;;   (let ((company-message-func (ad-get-arg 0)))
-;;     (when (and company-message-func
-;;                (stringp (funcall company-message-func)))
-;;       (unless (string-match "The free version of TabNine only indexes up to" (funcall company-message-func))
-;;         ad-do-it))))
-
-;; (use-package minuet
-;; :straight (minuet
-;;	   :type git
-;;	   :host github
-;;	   :repo "emacsmirror/minuet")
-;;  :bind
-;;  (("M-y" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
-;;   ("M-i" . #'minuet-show-suggestion) ;; use overlay for completion
-;;   ("C-c m" . #'minuet-configure-provider)
-;;   :map minuet-active-mode-map
-;;   ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
-;;   ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
-;;   ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
-;;   ("M-A" . #'minuet-accept-suggestion) ;; accept whole completion
-;;   ;; Accept the first line of completion, or N lines with a numeric-prefix:
-;;   ;; e.g. C-u 2 M-a will accepts 2 lines of completion.
-;;   ("M-a" . #'minuet-accept-suggestion-line)
-;;   ("M-e" . #'minuet-dismiss-suggestion))
-
-;;  :init
-;;  ;; if you want to enable auto suggestion.
-;;  ;; Note that you can manually invoke completions without enable minuet-auto-suggestion-mode
-;;  (add-hook 'prog-mode-hook #'minuet-auto-suggestion-mode)
-
-;;  :config
-;;  ;; You can use M-x minuet-configure-provider to interactively configure provider and model
-;;  (setq minuet-provider 'openai-fim-compatible)
-
-;;  (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 64))
-
-;; For Evil users: When defining `minuet-ative-mode-map` in insert
-;; or normal states, the following one-liner is required.
-
-;; (add-hook 'minuet-active-mode-hook #'evil-normalize-keymaps)
-
-;; This is *not* necessary when defining `minuet-active-mode-map`.
-
-;; To minimize frequent overhead, it is recommended to avoid adding
-;; `evil-normalize-keymaps` to `minuet-active-mode-hook`. Instead,
-;; bind keybindings directly within `minuet-active-mode-map` using
-;; standard Emacs key sequences, such as `M-xxx`. This approach should
-;; not conflict with Evil's keybindings, as Evil primarily avoids
-;; using `M-xxx` bindings.
-
+;; (use-package org-ai
+;;   :straight (org-ai :type git :host github :repo "rksm/org-ai")
+;;   :defer t
+;;   :after org
+;;   :init
+;;   ;; 确保编码
+;;   (setq org-ai-coding-system 'utf-8)
+;;   (add-hook 'org-mode-hook #'org-ai-mode)
+;;   (org-ai-global-mode 1)
+;;   :config
+;;   ;; --- LLM 配置 (通过环境变量适配不同机器/不同模型) ---
+;;   ;; AI_HOST、AI_MODEL、AI_API_KEY 与 init-fanyi.el 共用同一组变量
+;;   (let* ((host  (or (getenv "AI_HOST")  "https://api.deepseek.com"))
+;; 	 (model (or (getenv "AI_MODEL") "deepseek-chat"))
+;; 	 (key   (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY"))))
+;;     (setq org-ai-service
+;; 	  (cond ((string-match-p "deepseek" host) 'deepseek)
+;; 		((string-match-p "openai" host)   'openai)
+;; 		(t                                'openai)))
+;;     (setq org-ai-default-chat-model model)
+;;     (add-to-list 'org-ai-chat-models model)
+;;     (setq org-ai-openai-api-token key))
+;;   (setq org-ai-default-chat-system-prompt
+;; 	"你需要使用Org-mode原生格式输出内容：标题用*层级标记、无序列表用短横-、代码块用#+begin_src包裹，禁止Markdown的#标题、```代码围栏符号。")
+;;   ;; yasnippet 集成
+;;   (org-ai-install-yasnippets))
 
 ;; ── TOEIC 学习 ──
 (defun sea/toeic-slug (title)
-       "Convert TITLE to a file-name-safe slug."
-       (replace-regexp-in-string
-	" " "-" (replace-regexp-in-string "[^[:alnum:] ]" "" (downcase title))))
+  "Convert TITLE to a file-name-safe slug."
+  (replace-regexp-in-string
+   " " "-" (replace-regexp-in-string "[^[:alnum:] ]" "" (downcase title))))
 
 (defun sea/toeic-generate-article ()
        "调用 AI 生成一篇托业级英文文章，创建 org-roam 笔记。
@@ -268,13 +159,13 @@
 		       (unless (re-search-forward "\n\n" nil t)
 			       (kill-buffer)
 			       (user-error "API 返回格式异常，可能是 API Key 无效"))
-               (condition-case err
-                   (let* ((json (json-parse-buffer :object-type 'alist))
-                          (choices (cdr (assoc 'choices json)))
-                          (msg (cdr (assoc 'message (aref choices 0)))))
-                     (setq content (cdr (assoc 'content msg))))
-                 (error (kill-buffer)
-                        (user-error "AI 响应解析失败: %s" (error-message-string err))))
+	       (condition-case err
+		   (let* ((json (json-parse-buffer :object-type 'alist))
+			  (choices (cdr (assoc 'choices json)))
+			  (msg (cdr (assoc 'message (aref choices 0)))))
+		     (setq content (cdr (assoc 'content msg))))
+		 (error (kill-buffer)
+			(user-error "AI 响应解析失败: %s" (error-message-string err))))
 		       (kill-buffer))
 		     (unless (and content (not (string-empty-p content)))
 			     (user-error "AI 未返回内容，请检查网络和 API Key"))

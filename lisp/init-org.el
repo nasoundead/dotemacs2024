@@ -145,9 +145,9 @@
 (use-package org-rich-yank
   :bind (:map org-mode-map
 	  ("C-M-y" . org-rich-yank)))
-(use-package valign
-  :custom (valign-fancy-bar t)
-  :hook (org-mode . valign-mode))
+;; (use-package valign
+;;   :custom (valign-fancy-bar t)
+;;   :hook (org-mode . valign-mode))
 
 ;; Table of contents
 (use-package toc-org
