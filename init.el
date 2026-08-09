@@ -22,9 +22,9 @@
   (require 'init-font))
 (require 'init-modeline)
 (require 'init-highlight)
-
 (require 'init-vertico)
 (require 'init-corfu)
+(require 'init-navi)
 
 (require 'init-pyim)
 (require 'init-fanyi)

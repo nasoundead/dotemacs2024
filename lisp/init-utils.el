@@ -1,15 +1,3 @@
-;; (use-package avy
-;;   :ensure t
-;;   :bind (("C-;" . avy-goto-char)))
-
-;; (use-package ace-pinyin
-;;   :straight (ace-pinyin
-;;               :type git
-;;               :host github
-;;               :repo "cute-jumper/ace-pinyin")
-;;   :config
-;;   (ace-pinyin-global-mode +1))
-
 (defun sea/revert-auto-encoding ()
   "自动检测当前文件编码并重新读取，标记为 UTF-8 保存。"
   (interactive)

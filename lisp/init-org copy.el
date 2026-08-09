@@ -629,10 +629,6 @@
 	org-appear-autosubmarkers t
 	org-appear-autolinks nil))
 
-(use-package ace-pinyin
- :config
- (ace-pinyin-global-mode +1))
-
 (use-package svg-tag-mode
   :hook (org-mode . svg-tag-mode)
   :config

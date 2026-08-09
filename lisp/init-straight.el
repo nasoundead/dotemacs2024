@@ -16,6 +16,8 @@
 ;;   '(blink-search :type git :host github :repo "manateelazycat/blink-search"))
 
 (straight-use-package 'use-package)
+(require 'use-package-core)
+(require 'use-package-ensure)
 (setq straight-use-package-by-default t)
 
 (provide 'init-straight)
