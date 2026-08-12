@@ -210,4 +210,27 @@
     (find-file idx)
     (unless (derived-mode-p 'org-mode) (org-mode))))
 
+;; ── ellama: LLM 补全 / 对话 ──
+(use-package llm
+  :straight t
+  :init
+  (setq llm-warn-on-nonfree nil))
+
+;; (use-package ellama
+;;   :straight t
+;;   :after llm
+;;   :init
+;;   (setq ellama-auto-scroll t)
+;;   (setq ellama-keymap-prefix "C-c e")
+;;   :config
+;;   (require 'llm-deepseek)
+;;   (let* ((host (or (getenv "AI_HOST") "https://api.deepseek.com"))
+;; 	 (model (or (getenv "AI_MODEL") "deepseek-chat"))
+;; 	 (key (or (getenv "AI_API_KEY") (getenv "DEEPSEEK_API_KEY"))))
+;;     (setq ellama-provider
+;; 	  (if (string-match-p "deepseek" host)
+;; 	      (make-llm-deepseek :key key :chat-model model)
+;; 	    (make-llm-openai-compatible :url host :key key :chat-model model))))
+;;   (ellama-context-header-line-global-mode +1))
+
 (provide 'init-ai)

@@ -110,12 +110,31 @@
     (when (derived-mode-p 'org-mode)
       (set-buffer-file-coding-system
        (if sys/winp 'utf-8-dos 'utf-8-unix))))
+  (defun sea/org-table-copy-html-to-clipboard ()
+    (interactive)
+    (unless (org-at-table-p) (user-error "光标要放在表格里"))
+    (let ((html (orgtbl-to-html (org-table-to-lisp) nil)))
+      (kill-new html)
+      (message "HTML表格复制完成，粘贴Excel")))
+  (defun sea/org-paste-excel-as-table ()
+    "把剪贴板里Excel复制的TSV直接转换成Org表格插入"
+    (interactive)
+    (let ((clip (current-kill 0 t)))
+      (with-temp-buffer
+        (insert clip)
+        ;; 调用内置转换函数
+        (org-table-create-or-convert-from-region (point-min) (point-max))
+        (buffer-substring (point-min) (point-max)))
+      )
+    (org-table-align)
+    (message "✅ Excel表格已经转为Org表格"))
+
   (add-hook 'org-mode-hook #'sea/org-force-utf-8)
   (add-hook 'before-save-hook #'sea/org-force-utf-8)
   (add-hook 'org-mode-hook #'visual-line-mode)
   ;; 强制设置正文与标题的缩进关系（每级标题的正文额外缩进）
-  ;; (setq org-indent-indentation-per-level 2)  ; 每级缩进 2 空格
-  ;; (setq org-indent-text-line-function 'org-indent-text-line)  ; 正文缩进函数
+  (setq org-indent-indentation-per-level 2)  ; 每级缩进 2 空格
+  (setq org-indent-text-line-function 'org-indent-text-line)  ; 正文缩进函数
   ;; 禁用可能干扰缩进的设置
   ;; (setq org-adapt-indentation t)
   (setq org-todo-keywords '((sequence "TODO(t)" "DOING(i)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)"))
@@ -145,9 +164,9 @@
 (use-package org-rich-yank
   :bind (:map org-mode-map
 	  ("C-M-y" . org-rich-yank)))
-;; (use-package valign
-;;   :custom (valign-fancy-bar t)
-;;   :hook (org-mode . valign-mode))
+(use-package valign
+  :custom (valign-fancy-bar t)
+  :hook (org-mode . valign-mode))
 
 ;; Table of contents
 (use-package toc-org
@@ -196,25 +215,25 @@
 	org-tree-slide-skip-done nil
 	org-tree-slide-skip-comments t
 	org-tree-slide-skip-outline-level 3))
-;;;; org-superstar
-;; (use-package org-superstar
-;;   :custom
-;;   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "𐰧" "►" "▻")
-;;   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
-;;   ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
-;;   org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
-;;   ;; org-superstar-prettify-item-bullets nil
-;;   :hook (org-mode . org-superstar-mode))
-
-(straight-use-package 'org-modern)
-(use-package org-modern
-  :straight t
-  :hook (org-mode . org-modern-mode)
+;; org-superstar
+(use-package org-superstar
   :custom
-  (org-modern-heading-numbers t)
-  (org-modern-star ["⦿" "⌾" "⊚" "🞅" "▸" "▹"])
-  (org-modern-hide-stars t)
-  )
+  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "𐰧" "►" "▻")
+  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
+  org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
+  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
+  ;; org-superstar-prettify-item-bullets nil
+  :hook (org-mode . org-superstar-mode))
+
+;; (straight-use-package 'org-modern)
+;; (use-package org-modern
+;;   :straight t
+;;   :hook (org-mode . org-modern-mode)
+;;   :custom
+;;   (org-modern-heading-numbers t)
+;;   (org-modern-star ["⦿" "⌾" "⊚" "🞅" "▸" "▹"])
+;;   (org-modern-hide-stars t)
+;;   )
 
 (use-package org-roam
   :after org
