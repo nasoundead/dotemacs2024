@@ -121,10 +121,10 @@
     (interactive)
     (let ((clip (current-kill 0 t)))
       (with-temp-buffer
-        (insert clip)
-        ;; 调用内置转换函数
-        (org-table-create-or-convert-from-region (point-min) (point-max))
-        (buffer-substring (point-min) (point-max)))
+	(insert clip)
+	;; 调用内置转换函数
+	(org-table-create-or-convert-from-region (point-min) (point-max))
+	(buffer-substring (point-min) (point-max)))
       )
     (org-table-align)
     (message "✅ Excel表格已经转为Org表格"))
@@ -220,7 +220,7 @@
   :custom
   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "𐰧" "►" "▻")
   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
-  org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
+  ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
   ;; org-superstar-prettify-item-bullets nil
   :hook (org-mode . org-superstar-mode))

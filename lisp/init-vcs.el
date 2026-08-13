@@ -4,26 +4,25 @@
 (use-package transient
   :ensure t
   ;; 可选：延迟加载，很多时候 magit 会触发加载，也可以去掉
-  :defer t
-  :config
-  ;; 这里放 transient 的自定义配置，没有就空着
-  )
-  
-;; Git
-(use-package magit
-  :defer t
+  :demand t
   :init
   ;; Must be set early to prevent ~/.emacs.d/transient from being created
   (setq transient-levels-file  (concat sea-etc-dir "transient/levels")
 	transient-values-file  (concat sea-etc-dir "transient/values")
 	transient-history-file (concat sea-etc-dir "transient/values")
 	transient-history-file (concat sea-etc-dir "transient/history"))
+  )
+  
+;; Git
+(use-package magit
+  :defer t
+  :after transient
   :config
   ;; (setq magit-completing-read-function 'ivy-completing-read)
   )
 
-(use-package magit-popup
-  :defer t)
+;; (use-package magit-popup
+;;   :defer t)
 
 ;; Gitflow externsion for Magit
 (use-package magit-gitflow
