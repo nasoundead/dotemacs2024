@@ -108,7 +108,11 @@
 		       ((x-list-fonts "Apple Color Emoji") "Apple Color Emoji")  ; macOS 备选
 		       ((x-list-fonts "Noto Color Emoji") "Noto Color Emoji")  ; Linux 备选
 		       (t default-font))  ; 无匹配字体时使用默认
-		      nil 'prepend)))
+		      nil 'prepend)
+
+    ;; org-superstar 标题 bullet 字符 Maple Mono 不覆盖，用 Segoe UI Symbol 兜底
+    (dolist (codepoint '(#x29BF #x233E #x229A #x1F785 #x25B8 #x25B9))
+      (set-fontset-font t codepoint "Segoe UI Symbol"))))
 
 (sea-load-default-font)
 (sea-load-face-font)

@@ -164,6 +164,28 @@
 (use-package org-rich-yank
   :bind (:map org-mode-map
 	  ("C-M-y" . org-rich-yank)))
+
+;; Markdown -> Org: 把剪贴板里的 Markdown（如 AI 回复）转成 Org 插入
+(defun sea/yank-markdown-as-org ()
+  "Convert markdown from the clipboard to Org and insert at point."
+  (interactive)
+  (let ((md (current-kill 0 t))
+	(coding-system-for-read 'utf-8)
+	(coding-system-for-write 'utf-8)
+	result)
+    (unless md (user-error "剪贴板里没有文本"))
+    (setq result
+	  (with-temp-buffer
+	    (insert md)
+	    (shell-command-on-region
+	     (point-min) (point-max)
+	     "pandoc -f markdown -t org --wrap=none"
+	     nil t)
+	    (buffer-string)))
+    (insert result)))
+(define-key! org-mode-map
+  "C-c C-y" #'sea/yank-markdown-as-org)
+
 (use-package valign
   :custom (valign-fancy-bar t)
   :hook (org-mode . valign-mode))
@@ -221,7 +243,7 @@
   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "𐰧" "►" "▻")
   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
   ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
-  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
+  org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
   ;; org-superstar-prettify-item-bullets nil
   :hook (org-mode . org-superstar-mode))
 
