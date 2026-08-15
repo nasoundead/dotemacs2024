@@ -151,17 +151,27 @@
   (add-hook 'org-mode-hook #'sea/org-force-utf-8)
   (add-hook 'before-save-hook #'sea/org-force-utf-8)
   (add-hook 'org-mode-hook #'visual-line-mode)
+  ;; ui enhance
+  (defun enhance-ui-for-orgmode ()
+    "enhance ui for orgmode."
+    (when sea-prettify-org-symbols-alist
+	(if prettify-symbols-alist
+      (push sea-prettify-org-symbols-alist prettify-symbols-alist)
+    (setq prettify-symbols-alist sea-prettify-org-symbols-alist)))
+    (prettify-symbols-mode)
+    (toggle-truncate-lines))
+  (add-hook 'org-mode-hook #'enhance-ui-for-orgmode)
   ;; 强制设置正文与标题的缩进关系（每级标题的正文额外缩进）
   (setq org-indent-indentation-per-level 2)  ; 每级缩进 2 空格
   (setq org-indent-text-line-function 'org-indent-text-line)  ; 正文缩进函数
   ;; 禁用可能干扰缩进的设置
   ;; (setq org-adapt-indentation t)
   (setq org-todo-keywords '((sequence "TODO(t)" "DOING(i)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)"))
-	org-todo-keyword-faces '(("HANGUP" . warning)))
+	  org-todo-keyword-faces '(("HANGUP" . warning)))
   ;; Babel
   (setq org-confirm-babel-evaluate nil
-	org-src-fontify-natively t
-	org-src-tab-acts-natively t)
+    org-src-fontify-natively t
+    org-src-tab-acts-natively t)
   (org-babel-do-load-languages 'org-babel-load-languages load-language-alist)
   ;; 隐藏 emphasis 标记符 (* / _ + = ~)，只显示样式
   (setq org-hide-emphasis-markers t)
@@ -189,6 +199,26 @@
 (use-package valign
   :custom (valign-fancy-bar t)
   :hook (org-mode . valign-mode))
+
+;; Prose look: variable-pitch for text, fixed-pitch for code/tables
+(use-package mixed-pitch
+  :ensure t
+  :hook (org-mode . mixed-pitch-mode)
+  :custom
+  (mixed-pitch-set-height t)
+  (mixed-pitch-variable-pitch-cursor 'box)
+  :config
+  (dolist (face '(org-date org-tag org-code org-verbatim org-block
+                  org-link font-lock-comment-face))
+    (add-to-list 'mixed-pitch-fixed-pitch-faces face)))
+
+;; org 外观：折叠块、省略号、行内 LaTeX、引用/诗句着色、隐藏星号/标记符
+(setq org-hide-leading-stars t)
+(setq org-hide-emphasis-markers t)
+(setq org-hide-block-startup t)
+(setq org-ellipsis "▼")
+(setq org-highlight-latex-and-related '(native entities))
+(setq org-fontify-quote-and-verse-blocks t)
 
 ;; Table of contents
 (use-package toc-org
@@ -413,6 +443,8 @@
 
 (use-package org-appear
   :hook (org-mode . org-appear-mode)
+  :custom
+  (org-appear-delay 0.1)
   :config
   (setq org-appear-autoemphasis t
 	org-appear-autosubmarkers t

@@ -54,7 +54,7 @@
 		    ;; (emoji . "Noto Color Emoji")  ; Linux
 		    ;; (fixed . "Iosevka Comfy Fixed")
 		    ;; (fixed-serif . "Iosevka Comfy Motion")
-		    ;; (variable . "Iosevka Comfy Motion Duo")
+		    (variable . "Georgia")
 		    ;; (wide . "Iosevka Comfy Wide")
 		    ;; (tall . "Iosevka Comfy Motion")
 		    )
