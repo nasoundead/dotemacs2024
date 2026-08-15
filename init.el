@@ -27,13 +27,13 @@
 (require 'init-navi)
 
 (require 'init-pyim)
-(require 'init-fanyi)
 
 (require 'init-ai)
 (require 'init-hydra)
 (require 'init-folding)
 (require 'init-flycheck)
 (require 'init-vcs)
+(require 'init-fanyi)
 
 (require 'init-treemacs)
 ;; (require 'init-treesitter)

@@ -49,7 +49,7 @@
 		    ;; (default . "SarasaTermSCNerd")
 		    (cjk . "Microsoft Yahei")
 		    ;; (symbol . "Symbola")
-		    ;; (emoji . "Segoe UI Emoji")  ; Windows
+		    (emoji . "Segoe UI Emoji")  ; Windows
 		    ;; (emoji . "Apple Color Emoji")  ; macOS
 		    ;; (emoji . "Noto Color Emoji")  ; Linux
 		    ;; (fixed . "Iosevka Comfy Fixed")
@@ -111,8 +111,9 @@
 		      nil 'prepend)
 
     ;; org-superstar 标题 bullet 字符 Maple Mono 不覆盖，用 Segoe UI Symbol 兜底
-    (dolist (codepoint '(#x29BF #x233E #x229A #x1F785 #x25B8 #x25B9))
-      (set-fontset-font t codepoint "Segoe UI Symbol"))))
+    ;; (dolist (codepoint '(#x29BF #x233E #x229A #x1F785 #x25B8 #x25B9))
+    ;;   (set-fontset-font t codepoint "Segoe UI Symbol"))
+	  ))
 
 (sea-load-default-font)
 (sea-load-face-font)

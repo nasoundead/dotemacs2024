@@ -3,11 +3,16 @@
 	     :type git
 	     :host github
 	     :repo "emacsmirror/pdd"))
+(use-package transient
+  :ensure t
+  :demand t)
+
 (use-package gt
   :straight (gt
 	     :type git
 	     :host github
 	     :repo "lorniu/gt.el")
+  :after transient
   :config
   (setq gt-langs '(en zh))
   (setq gt-taker-text 'word)      ; 默认情况下，初始文本是光标下的单词。如果有文本选中，优先使用选中文本

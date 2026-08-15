@@ -25,10 +25,10 @@
 ;;   :defer t)
 
 ;; Gitflow externsion for Magit
-(use-package magit-gitflow
-  :after transient
-  :diminish magit-gitflow-mode
-  :init (add-hook 'magit-mode-hook #'turn-on-magit-gitflow))
+;; (use-package magit-gitflow
+;;   :after transient
+;;   :diminish magit-gitflow-mode
+;;   :init (add-hook 'magit-mode-hook #'turn-on-magit-gitflow))
 
 
 ;;; Pop up last commit information of current line

@@ -121,14 +121,33 @@
     (interactive)
     (let ((clip (current-kill 0 t)))
       (with-temp-buffer
-	(insert clip)
-	;; 调用内置转换函数
-	(org-table-create-or-convert-from-region (point-min) (point-max))
-	(buffer-substring (point-min) (point-max)))
-      )
-    (org-table-align)
-    (message "✅ Excel表格已经转为Org表格"))
-
+        (insert clip)
+        ;; 调用内置转换函数
+        (org-table-create-or-convert-from-region (point-min) (point-max))
+        (buffer-substring (point-min) (point-max)))
+            )
+          (org-table-align)
+          (message "✅ Excel表格已经转为Org表格"))
+  ;; Markdown -> Org: 把剪贴板里的 Markdown（如 AI 回复）转成 Org 插入
+  (defun sea/yank-markdown-as-org ()
+    "Convert markdown from the clipboard to Org and insert at point."
+    (interactive)
+    (let ((md (current-kill 0 t))
+    (coding-system-for-read 'utf-8)
+    (coding-system-for-write 'utf-8)
+    result)
+      (unless md (user-error "剪贴板里没有文本"))
+      (setq result
+      (with-temp-buffer
+        (insert md)
+        (shell-command-on-region
+        (point-min) (point-max)
+        "pandoc -f markdown -t org --wrap=none"
+        nil t)
+        (buffer-string)))
+      (insert result)))
+  (define-key! org-mode-map
+    "C-c C-y" #'sea/yank-markdown-as-org)
   (add-hook 'org-mode-hook #'sea/org-force-utf-8)
   (add-hook 'before-save-hook #'sea/org-force-utf-8)
   (add-hook 'org-mode-hook #'visual-line-mode)
@@ -165,26 +184,7 @@
   :bind (:map org-mode-map
 	  ("C-M-y" . org-rich-yank)))
 
-;; Markdown -> Org: 把剪贴板里的 Markdown（如 AI 回复）转成 Org 插入
-(defun sea/yank-markdown-as-org ()
-  "Convert markdown from the clipboard to Org and insert at point."
-  (interactive)
-  (let ((md (current-kill 0 t))
-	(coding-system-for-read 'utf-8)
-	(coding-system-for-write 'utf-8)
-	result)
-    (unless md (user-error "剪贴板里没有文本"))
-    (setq result
-	  (with-temp-buffer
-	    (insert md)
-	    (shell-command-on-region
-	     (point-min) (point-max)
-	     "pandoc -f markdown -t org --wrap=none"
-	     nil t)
-	    (buffer-string)))
-    (insert result)))
-(define-key! org-mode-map
-  "C-c C-y" #'sea/yank-markdown-as-org)
+
 
 (use-package valign
   :custom (valign-fancy-bar t)
@@ -243,7 +243,8 @@
   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "𐰧" "►" "▻")
   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
   ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
-  org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
+  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
+  (setq org-superstar-headline-bullets-list '("◉" "○" "●" "◇" "▸" "▹"))
   ;; org-superstar-prettify-item-bullets nil
   :hook (org-mode . org-superstar-mode))
 
@@ -384,7 +385,7 @@
   (org-download-image-dir "images")
   (org-download-heading-lvl nil)
   (org-download-timestamp "%Y%m%d-%H%M%S_")
-  (org-image-actual-width 300)
+  (org-image-actual-width 600)
   (org-download-annotate-function 'ignore)
   :init
   (when (eq system-type 'windows-nt)
@@ -394,7 +395,21 @@
   :bind (:map org-mode-map
 	  ("<f2>" . org-download-clipboard))
   :config
-  (require 'org-download))
+  (require 'org-download)
+  ;; org-download-clipboard 会无条件调用 org-id-get-create，
+  ;; 给当前标题插一个 :PROPERTIES:/:ID: 抽屉。这里把它压掉。
+  (defun sea/org-download-clipboard--no-id (orig &rest args)
+    (cl-letf (((symbol-function #'org-id-get-create) #'ignore))
+      (apply orig args)))
+  (advice-add #'org-download-clipboard :around #'sea/org-download-clipboard--no-id))
+
+;; Web page -> Org (requires pandoc for HTML->Org conversion)
+(use-package org-web-tools
+  :after org
+  :bind (:map org-mode-map
+	  ("C-c w r" . org-web-tools-read-url-as-org)
+	  ("C-c w e" . org-web-tools-insert-web-page-as-entry)
+	  ("C-c w l" . org-web-tools-insert-link-for-url)))
 
 (use-package org-appear
   :hook (org-mode . org-appear-mode)
