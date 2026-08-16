@@ -47,14 +47,14 @@
 		    ;; (default . "Iosevka Comfy")
 		    (default . "Maple Mono NF CN")
 		    ;; (default . "SarasaTermSCNerd")
-		    (cjk . "Microsoft Yahei")
+		    ;; (cjk . "Microsoft Yahei")
 		    ;; (symbol . "Symbola")
-		    (emoji . "Segoe UI Emoji")  ; Windows
+		    ;; (emoji . "Segoe UI Emoji")  ; Windows
 		    ;; (emoji . "Apple Color Emoji")  ; macOS
 		    ;; (emoji . "Noto Color Emoji")  ; Linux
 		    ;; (fixed . "Iosevka Comfy Fixed")
 		    ;; (fixed-serif . "Iosevka Comfy Motion")
-		    (variable . "Georgia")
+		    ;; (variable . "Georgia")
 		    ;; (wide . "Iosevka Comfy Wide")
 		    ;; (tall . "Iosevka Comfy Motion")
 		    )
@@ -84,21 +84,29 @@
     (set-face-attribute 'fixed-pitch-serif nil :family fixed-serif-font)))
 
 (defun sea-load-charset-font (&optional font)
-    "Load charset font configuration with fallback."
-    (let ((default-font (or font (format "%s-%s"
-					 (sea--get-font-family 'default)
-					 sea-font-size)))
-	  (cjk-font (sea--get-font-family 'cjk))
-	  (symbol-font (sea--get-font-family 'symbol))
-	  (emoji-font (sea--get-font-family 'emoji)))
+  "Load charset font configuration with fallback."
+  (let ((default-font (or font (format "%s-%s"
+				       (sea--get-font-family 'default)
+				       sea-font-size)))
+	(cjk-font (sea--get-font-family 'cjk))
+	(symbol-font (sea--get-font-family 'symbol))
+	(emoji-font (sea--get-font-family 'emoji)))
     (set-frame-font default-font)
 
     ;; 设置 CJK 字符集
     (dolist (charset '(kana han hangul cjk-misc bopomofo))
-	(set-fontset-font t charset cjk-font))
+      (set-fontset-font t charset cjk-font))
 
     ;; 设置符号字符集
     (set-fontset-font t 'symbol symbol-font)
+
+    ;; org-superstar bullet 字符（○ ● ◉ ◇ ▸ ▹）被 Emacs 归到 chinese-gbk，
+    ;; 默认回退会显示成方块。这里给这些码点单独指定 iso10646 registry 的
+    ;; Maple Mono 兜底，不改变 frame 默认字体的 registry（避免影响 svg-tag 等）。
+    (dolist (codepoint '(#x25C9 #x25CB #x25CF #x25C7 #x25B8 #x25B9))
+      (set-fontset-font t codepoint
+			(font-spec :family (sea--get-font-family 'default)
+				   :registry "iso10646-1")))
 
     ;; 设置 Emoji 字体，添加多个备选方案
     (set-fontset-font t 'emoji
@@ -110,10 +118,7 @@
 		       (t default-font))  ; 无匹配字体时使用默认
 		      nil 'prepend)
 
-    ;; org-superstar 标题 bullet 字符 Maple Mono 不覆盖，用 Segoe UI Symbol 兜底
-    ;; (dolist (codepoint '(#x29BF #x233E #x229A #x1F785 #x25B8 #x25B9))
-    ;;   (set-fontset-font t codepoint "Segoe UI Symbol"))
-	  ))
+    ))
 
 (sea-load-default-font)
 (sea-load-face-font)

@@ -3,9 +3,6 @@
 	     :type git
 	     :host github
 	     :repo "emacsmirror/pdd"))
-(use-package transient
-  :ensure t
-  :demand t)
 
 (use-package gt
   :straight (gt

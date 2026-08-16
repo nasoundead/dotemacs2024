@@ -98,6 +98,13 @@
   (org-level-7 ((t (:weight bold))))
   (org-level-8 ((t (:weight bold))))
   :config
+  ;; org 外观：折叠块、省略号、行内 LaTeX、引用/诗句着色、隐藏星号/标记符
+  (setq org-hide-leading-stars t)
+  (setq org-hide-emphasis-markers t)
+  (setq org-hide-block-startup t)
+  (setq org-ellipsis "▼")
+  (setq org-highlight-latex-and-related '(native entities))
+  (setq org-fontify-quote-and-verse-blocks t)
   ;; 确保正文跟随标题缩进的核心配置
   (setq org-startup-indented t)  ; 启动时自动启用缩进模式
   ;; 启动时自动显示内联图片
@@ -121,30 +128,30 @@
     (interactive)
     (let ((clip (current-kill 0 t)))
       (with-temp-buffer
-        (insert clip)
-        ;; 调用内置转换函数
-        (org-table-create-or-convert-from-region (point-min) (point-max))
-        (buffer-substring (point-min) (point-max)))
-            )
-          (org-table-align)
-          (message "✅ Excel表格已经转为Org表格"))
+	(insert clip)
+	;; 调用内置转换函数
+	(org-table-create-or-convert-from-region (point-min) (point-max))
+	(buffer-substring (point-min) (point-max)))
+      )
+    (org-table-align)
+    (message "✅ Excel表格已经转为Org表格"))
   ;; Markdown -> Org: 把剪贴板里的 Markdown（如 AI 回复）转成 Org 插入
   (defun sea/yank-markdown-as-org ()
     "Convert markdown from the clipboard to Org and insert at point."
     (interactive)
     (let ((md (current-kill 0 t))
-    (coding-system-for-read 'utf-8)
-    (coding-system-for-write 'utf-8)
-    result)
+	  (coding-system-for-read 'utf-8)
+	  (coding-system-for-write 'utf-8)
+	  result)
       (unless md (user-error "剪贴板里没有文本"))
       (setq result
-      (with-temp-buffer
-        (insert md)
-        (shell-command-on-region
-        (point-min) (point-max)
-        "pandoc -f markdown -t org --wrap=none"
-        nil t)
-        (buffer-string)))
+	    (with-temp-buffer
+	      (insert md)
+	      (shell-command-on-region
+	       (point-min) (point-max)
+	       "pandoc -f markdown -t org --wrap=none"
+	       nil t)
+	      (buffer-string)))
       (insert result)))
   (define-key! org-mode-map
     "C-c C-y" #'sea/yank-markdown-as-org)
@@ -155,9 +162,9 @@
   (defun enhance-ui-for-orgmode ()
     "enhance ui for orgmode."
     (when sea-prettify-org-symbols-alist
-	(if prettify-symbols-alist
-      (push sea-prettify-org-symbols-alist prettify-symbols-alist)
-    (setq prettify-symbols-alist sea-prettify-org-symbols-alist)))
+      (if prettify-symbols-alist
+	  (push sea-prettify-org-symbols-alist prettify-symbols-alist)
+	(setq prettify-symbols-alist sea-prettify-org-symbols-alist)))
     (prettify-symbols-mode)
     (toggle-truncate-lines))
   (add-hook 'org-mode-hook #'enhance-ui-for-orgmode)
@@ -167,38 +174,35 @@
   ;; 禁用可能干扰缩进的设置
   ;; (setq org-adapt-indentation t)
   (setq org-todo-keywords '((sequence "TODO(t)" "DOING(i)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)"))
-	  org-todo-keyword-faces '(("HANGUP" . warning)))
+	org-todo-keyword-faces '(("HANGUP" . warning)))
   ;; Babel
   (setq org-confirm-babel-evaluate nil
-    org-src-fontify-natively t
-    org-src-tab-acts-natively t)
+	org-src-fontify-natively t
+	org-src-tab-acts-natively t)
   (org-babel-do-load-languages 'org-babel-load-languages load-language-alist)
   ;; 隐藏 emphasis 标记符 (* / _ + = ~)，只显示样式
-  (setq org-hide-emphasis-markers t)
   ;; Make verbatim with highlight text background.
-  ;; (add-to-list 'org-emphasis-alist
-  ;;	       '("=" (:background "#fef7ca")))
+  (add-to-list 'org-emphasis-alist
+	       '("=" (:foreground "#d82880" :underline (:color "#e860b0"))))
   ;; Make deletion(obsolote) text foreground with dark gray.
-  ;; (add-to-list 'org-emphasis-alist
-  ;;	       '("+" (:foreground "dark gray"
-  ;;				  :strike-through t)))
+  (add-to-list 'org-emphasis-alist
+	       '("+" (:foreground "dark gray"
+				  :strike-through t)))
   ;; Make code style around with box.
-  ;; (add-to-list 'org-emphasis-alist
-  ;;	       '("~" (:box (:line-width 1
-  ;;					:color "grey75"
-  ;;					:style released-button))))
-  )
+  (add-to-list 'org-emphasis-alist
+	       '("~" (:box (:line-width 1
+					:color "grey75"
+					:style released-button))))
+  );org
 
 ;; Rich text clipboard
 (use-package org-rich-yank
   :bind (:map org-mode-map
 	  ("C-M-y" . org-rich-yank)))
 
-
-
-(use-package valign
-  :custom (valign-fancy-bar t)
-  :hook (org-mode . valign-mode))
+;; (use-package valign
+;;   :custom (valign-fancy-bar t)
+;;   :hook (org-mode . valign-mode))
 
 ;; Prose look: variable-pitch for text, fixed-pitch for code/tables
 (use-package mixed-pitch
@@ -209,16 +213,8 @@
   (mixed-pitch-variable-pitch-cursor 'box)
   :config
   (dolist (face '(org-date org-tag org-code org-verbatim org-block
-                  org-link font-lock-comment-face))
+			   org-link font-lock-comment-face))
     (add-to-list 'mixed-pitch-fixed-pitch-faces face)))
-
-;; org 外观：折叠块、省略号、行内 LaTeX、引用/诗句着色、隐藏星号/标记符
-(setq org-hide-leading-stars t)
-(setq org-hide-emphasis-markers t)
-(setq org-hide-block-startup t)
-(setq org-ellipsis "▼")
-(setq org-highlight-latex-and-related '(native entities))
-(setq org-fontify-quote-and-verse-blocks t)
 
 ;; Table of contents
 (use-package toc-org
@@ -268,15 +264,15 @@
 	org-tree-slide-skip-comments t
 	org-tree-slide-skip-outline-level 3))
 ;; org-superstar
-(use-package org-superstar
-  :custom
-  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "𐰧" "►" "▻")
-  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
-  ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
-  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
-  (setq org-superstar-headline-bullets-list '("◉" "○" "●" "◇" "▸" "▹"))
-  ;; org-superstar-prettify-item-bullets nil
-  :hook (org-mode . org-superstar-mode))
+;; (use-package org-superstar
+;;   :custom
+;;   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "𐰧" "►" "▻")
+;;   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
+;;   ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
+;;   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
+;;   ;; (setq org-superstar-headline-bullets-list '("◉" "○" "●" "◇" "▸" "▹"))
+;;   ;; org-superstar-prettify-item-bullets nil
+;;   :hook (org-mode . org-superstar-mode))
 
 ;; (straight-use-package 'org-modern)
 ;; (use-package org-modern
@@ -287,6 +283,11 @@
 ;;   (org-modern-star ["⦿" "⌾" "⊚" "🞅" "▸" "▹"])
 ;;   (org-modern-hide-stars t)
 ;;   )
+
+;; LaTeX 公式预览：行内公式默认偏小，放大
+(with-eval-after-load 'org
+  (setq org-format-latex-options
+	(plist-put org-format-latex-options :scale 2.0)))
 
 (use-package org-roam
   :after org
@@ -454,6 +455,7 @@
 
 
 (use-package svg-tag-mode
+  :demand t
   :hook (org-mode . svg-tag-mode)
   :config
   (defun mk/svg-checkbox-empty()
