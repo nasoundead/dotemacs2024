@@ -173,8 +173,9 @@
   (setq org-indent-text-line-function 'org-indent-text-line)  ; 正文缩进函数
   ;; 禁用可能干扰缩进的设置
   ;; (setq org-adapt-indentation t)
-  (setq org-todo-keywords '((sequence "TODO(t)" "DOING(i)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)"))
-	org-todo-keyword-faces '(("HANGUP" . warning)))
+  (setq org-todo-keywords '((sequence "TODO(t)" "WORK(w)" "HANGUP(h)" "|" "DONE(d)" "CANCEL(c)"))
+	org-todo-keyword-faces '(("HANGUP" . warning))
+	org-log-done 'time)
   ;; Babel
   (setq org-confirm-babel-evaluate nil
 	org-src-fontify-natively t
@@ -264,15 +265,15 @@
 	org-tree-slide-skip-comments t
 	org-tree-slide-skip-outline-level 3))
 ;; org-superstar
-;; (use-package org-superstar
-;;   :custom
-;;   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "𐰧" "►" "▻")
-;;   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
-;;   ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
-;;   ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
-;;   ;; (setq org-superstar-headline-bullets-list '("◉" "○" "●" "◇" "▸" "▹"))
-;;   ;; org-superstar-prettify-item-bullets nil
-;;   :hook (org-mode . org-superstar-mode))
+(use-package org-superstar
+  :custom
+  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "𐰧" "►" "▻")
+  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
+  ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
+  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
+  (org-superstar-headline-bullets-list '("◉" "○" "●" "◇" "▸" "▹"))
+  ;; org-superstar-prettify-item-bullets nil
+  :hook (org-mode . org-superstar-mode))
 
 ;; (straight-use-package 'org-modern)
 ;; (use-package org-modern
@@ -403,10 +404,24 @@
   (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
   :after org-roam
   :config
-  (setq org-roam-ui-sync-theme t
+  (setq org-roam-ui-sync-theme nil
 	org-roam-ui-follow t
 	org-roam-ui-update-on-save t
-	org-roam-ui-open-on-start t))
+	org-roam-ui-open-on-start t
+	;; 匹配 mindre 亮色主题的配色，覆盖默认同步主题（默认同步非 doom 主题时颜色不协调）
+	org-roam-ui-custom-theme
+	'((bg . "#F5F5F5")
+	  (bg-alt . "#f2f3f5")
+	  (fg . "#2e3338")
+	  (fg-alt . "#585c60")
+	  (red . "#9E0000")
+	  (orange . "#d47500")
+	  (yellow . "#54433a")
+	  (green . "#16524F")
+	  (cyan . "#0071bc")
+	  (blue . "#23457f")
+	  (violet . "#5c3e99")
+	  (magenta . "#a1427a"))))
 
 
 (use-package org-download

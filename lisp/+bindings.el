@@ -39,6 +39,9 @@
       :n "M-="   #'text-scale-increase
       :n "M--"   #'text-scale-decrease
 
+      ;; Frame maximize
+      :g "<f11>" #'toggle-frame-maximized
+
       :enm "C-h"   #'evil-window-left
       :enm "C-j"   #'evil-window-down
       :enm "C-k"   #'evil-window-up
@@ -121,6 +124,8 @@
 	  "l"     #'enlarge-window-horizontally
 	  "j"     #'enlarge-window
 	  "k"     #'shrink-window
+	  ;; Toggle fullscreen
+	  "f"     #'toggle-frame-fullscreen
 	  ))
 
       ;; evil-commentary

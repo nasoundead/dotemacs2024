@@ -94,19 +94,19 @@
     (set-frame-font default-font)
 
     ;; 设置 CJK 字符集
-    (dolist (charset '(kana han hangul cjk-misc bopomofo))
+    (dolist (charset '(kana han hangul cjk-misc bopomofo chinese-gbk))
       (set-fontset-font t charset cjk-font))
 
     ;; 设置符号字符集
     (set-fontset-font t 'symbol symbol-font)
 
     ;; org-superstar bullet 字符（○ ● ◉ ◇ ▸ ▹）被 Emacs 归到 chinese-gbk，
-    ;; 默认回退会显示成方块。这里给这些码点单独指定 iso10646 registry 的
-    ;; Maple Mono 兜底，不改变 frame 默认字体的 registry（避免影响 svg-tag 等）。
+    ;; 默认回退会显示成方块。这里给这些码点单独指定 Maple Mono 兜底。
+    ;; 不指定 registry，让 Emacs 按 family 直接匹配（指定 iso10646-1 在
+    ;; Windows 下可能匹配不到字体，导致回退到中文字体后成方块）。
     (dolist (codepoint '(#x25C9 #x25CB #x25CF #x25C7 #x25B8 #x25B9))
       (set-fontset-font t codepoint
-			(font-spec :family (sea--get-font-family 'default)
-				   :registry "iso10646-1")))
+			(font-spec :family (sea--get-font-family 'default))))
 
     ;; 设置 Emoji 字体，添加多个备选方案
     (set-fontset-font t 'emoji
