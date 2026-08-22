@@ -56,7 +56,15 @@
  (global-lsp-bridge-mode)
 
  ;; Windows 下显式指定 Python（默认自动找 python.exe，通常无需设置）
- (setq lsp-bridge-python-command "python")
+ (cond
+  ((eq system-type 'windows-nt)
+    (setq lsp-bridge-python-command
+          (expand-file-name "~/.emacs.d/.venv/Scripts/python.exe")))
+  ((eq system-type 'gnu/linux)
+    (setq lsp-bridge-python-command
+          (expand-file-name "~/.emacs.d/.venv/bin/python3")))
+  (t
+    (setq lsp-bridge-python-command "python3")))  ; 默认回退
 
  ;; 补全菜单外观
  (setq acm-enable-icon t)

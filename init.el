@@ -36,7 +36,7 @@
 (require 'init-fanyi)
 
 (require 'init-treemacs)
-(require 'init-treesitter)
+;; (require 'init-treesitter)
 (require 'init-lsp-bridge)
 ;; (require 'init-lsp)
 (require 'init-org)
