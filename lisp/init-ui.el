@@ -56,7 +56,7 @@
   (mindre-use-more-bold nil)
   (mindre-use-faded-lisp-parens t)
   :config
-  (load-theme 'mindre t)
+  ;; (load-theme 'mindre t)
   )
 
 (use-package apropospriate-theme
@@ -68,7 +68,7 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
 	doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;; (load-theme 'doom-tokyo-night t)
+  (load-theme 'doom-dracula t)
 
   ;; Enable flashing mode-line on errors
   ;; (doom-themes-visual-bell-config)

@@ -23,7 +23,7 @@
 (require 'init-modeline)
 (require 'init-highlight)
 (require 'init-vertico)
-(require 'init-corfu)
+;; (require 'init-corfu)                  ; corfu 已被 lsp-bridge 的 acm 平替
 (require 'init-navi)
 
 (require 'init-pyim)
@@ -36,10 +36,11 @@
 (require 'init-fanyi)
 
 (require 'init-treemacs)
-;; (require 'init-treesitter)
-(require 'init-lsp)
+(require 'init-treesitter)
+(require 'init-lsp-bridge)
+;; (require 'init-lsp)
 (require 'init-org)
-(require 'init-py)
+;; (require 'init-py)
 (require 'init-go)
 (require 'init-rust)
 (require 'init-web)

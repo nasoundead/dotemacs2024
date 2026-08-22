@@ -267,10 +267,7 @@
 ;; org-superstar
 (use-package org-superstar
   :custom
-  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "𐰧" "►" "▻")
-  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
   ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ")
-  ;; org-superstar-headline-bullets-list '("⦿" "⌾" "⊚" "🞅" "▸" "▹")
   (org-superstar-headline-bullets-list '("◉" "○" "●" "◇" "▸" "▹"))
   ;; org-superstar-prettify-item-bullets nil
   :hook (org-mode . org-superstar-mode))
