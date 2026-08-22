@@ -63,9 +63,13 @@
       ;; :n  "L" #'previous-buffer
       :n  "]b" #'next-buffer
       :n  "[b" #'previous-buffer
-      :nv "gd" #'+lookup/definition
-      :nv "gr" #'+lookup/references
-      :nv "gi" #'+lookup/implementations
+      ;; LSP navigation (lsp-bridge), Zed vim-mode style
+      :desc "definition"       :nv "gd" #'lsp-bridge-find-def
+      :desc "implementation"   :nv "gi" #'lsp-bridge-find-impl
+      :desc "references"       :nv "gr" #'lsp-bridge-find-references
+      :desc "type definition"  :nv "gt" #'lsp-bridge-find-type-def
+      :desc "rename"           :n  "gn" #'lsp-bridge-rename
+      :desc "documentation"    :n  "K"  #'lsp-bridge-popup-documentation
       ;; repeat in visual mode (FIXME buggy)
       :v  "."  #'evil-repeat
       ;; don't leave visual mode after shifting
